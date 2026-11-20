@@ -82,7 +82,7 @@ export function BusinessCard({
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={handleKeyDown}
-      className="group relative flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-red-500/50 dark:hover:border-red-500/50 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-red-500/50"
+      className="group relative flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-red-500/50 dark:hover:border-red-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500/50"
     >
       {/* Business Image Banner */}
       <div
@@ -97,7 +97,7 @@ export function BusinessCard({
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           onError={() => setImgSrc(FALLBACK_IMAGE)}
         />
-        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent opacity-80" />
 
         {/* Top Badges */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
@@ -109,17 +109,17 @@ export function BusinessCard({
           type="button"
           onClick={handleSaveClick}
           aria-label={saved ? "Remove from bookmarks" : "Save business"}
-          className={`absolute top-3 left-3 p-2 rounded-xl backdrop-blur-md transition-all z-30 pointer-events-auto cursor-pointer ${
+          className={`absolute top-3 left-3 p-2 rounded-xl backdrop-blur-md transition-all z-30 pointer-events-auto cursor-pointer shadow-sm ${
             saved
-              ? "bg-red-600 text-white shadow-md ring-2 ring-white/30"
-              : "bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200 hover:text-red-600"
+              ? "bg-red-600 text-white shadow-md ring-2 ring-white/40"
+              : "bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 hover:text-red-600"
           }`}
         >
           <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
         </button>
 
         {/* Location pill over image */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-[11px] font-medium">
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[11px] font-semibold border border-white/10 shadow-sm">
           <MapPin className="w-3 h-3 text-red-400" />
           <span>
             {business.city}, {business.state}
@@ -132,11 +132,11 @@ export function BusinessCard({
         <div>
           {/* Business Type & Category */}
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-            <span className="text-red-600 dark:text-red-400 font-bold">
+            <span className="text-red-600 dark:text-red-400 font-bold uppercase tracking-wider text-[11px]">
               {business.businessType}
             </span>
-            <span>·</span>
-            <span className="truncate">{business.category}</span>
+            <span className="text-slate-300 dark:text-slate-600">·</span>
+            <span className="truncate text-slate-600 dark:text-slate-300 font-medium">{business.category}</span>
           </div>
 
           {/* Business Name */}
@@ -202,7 +202,7 @@ export function BusinessCard({
           <Link
             href={`/businesses/${business.slug}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white dark:hover:bg-red-600 dark:hover:text-white text-xs font-bold transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 group-hover:bg-red-600 group-hover:text-white dark:group-hover:bg-red-600 dark:group-hover:text-white text-xs font-bold transition-all shadow-xs"
           >
             <span>View Details</span>
             <ArrowRight className="w-3 h-3" />

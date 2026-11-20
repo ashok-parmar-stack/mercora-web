@@ -46,7 +46,7 @@ export function BusinessProfileHeader({
             sizes="100vw"
             className="object-cover opacity-90"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
         </div>
 
         {/* Profile Info Bar */}
