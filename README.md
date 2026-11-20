@@ -1,4 +1,4 @@
-# Mercora Web App
+# Mercora Web
 
 Standalone Next.js 16+ Web Application containing both the **Admin Dashboard** and **User/Client Platform** for Mercora.
 
