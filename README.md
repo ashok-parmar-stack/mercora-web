@@ -1,6 +1,12 @@
-# Mercora Admin Dashboard
+# Mercora Web App
 
-Standalone Next.js 16+ Admin Dashboard for the Mercora B2B Platform.
+Standalone Next.js 16+ Web Application containing both the **Admin Dashboard** and **User/Client Platform** for Mercora.
+
+## Features
+
+- **Admin Operations (`/admin`)**: Category management, Geography, HSN master sync, Roles & Permissions, User management, Audit logs, and System settings.
+- **User & Client Marketplace**: Business directories, Category browsing, Location filters, Enquiries, Saved businesses, and Profile management.
+- **Authentication**: JWT authentication with role-based access control, session refresh, and device tracking.
 
 ## Requirements
 
@@ -14,10 +20,11 @@ Standalone Next.js 16+ Admin Dashboard for the Mercora B2B Platform.
    ```bash
    cp .env.example .env
    ```
-2. Ensure `NEXT_PUBLIC_API_URL` and `INTERNAL_API_URL` point to your Mercora Cloud API:
+2. Verify environment configuration:
    ```env
-   NEXT_PUBLIC_API_URL=/api
-   INTERNAL_API_URL=http://127.0.0.1:5001
+   NEXT_PUBLIC_APP_NAME="Mercora Deal OS"
+   NEXT_PUBLIC_API_URL="/api"
+   INTERNAL_BACKEND_URL="http://127.0.0.1:5001"
    PORT=9000
    ```
 3. Install dependencies:
