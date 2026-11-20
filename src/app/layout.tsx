@@ -3,6 +3,10 @@ import React from 'react';
 import './globals.css';
 import { GlobalWheelHandler } from '../components/common/GlobalWheelHandler';
 import { Providers } from './providers';
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 /**
  * ──────────────────────────────────────────────────────────────────────────
@@ -69,7 +73,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={fontVariables}
+      className={cn(fontVariables, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <body

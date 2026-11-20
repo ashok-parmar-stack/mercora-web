@@ -20,6 +20,20 @@ import { ContactInquiryModal } from "@/features/enquiries/components/ContactInqu
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
 import { SlidersHorizontal } from "lucide-react";
+import {
+  RadixSelect as Select,
+  RadixSelectContent as SelectContent,
+  RadixSelectItem as SelectItem,
+  RadixSelectTrigger as SelectTrigger,
+  RadixSelectValue as SelectValue,
+} from "@/components/ui/RadixSelect";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/Sheet";
 
 export default function BusinessesDiscoveryPage() {
   const {

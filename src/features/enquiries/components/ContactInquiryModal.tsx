@@ -1,9 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Send, CheckCircle2 } from "lucide-react";
+import { Send, CheckCircle2 } from "lucide-react";
 import { submitEnquiry } from "../../businesses/api/business-api";
 import { APP_MESSAGES } from "@/config/messages.config";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/Dialog";
 
 export interface ContactInquiryModalProps {
   isOpen: boolean;
@@ -28,8 +35,6 @@ export function ContactInquiryModal({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,28 +62,20 @@ export function ContactInquiryModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800 mb-5">
-          <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-              Send Business Inquiry
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Contacting: <strong className="text-red-600">{businessName}</strong>
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-lg p-6 sm:p-8">
+        <DialogHeader className="pb-3 border-b border-slate-100 dark:border-slate-800">
+          <DialogTitle className="text-lg font-bold text-slate-900 dark:text-white">
+            Send Business Inquiry
+          </DialogTitle>
+          <DialogDescription className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Contacting verified supplier: <strong className="text-red-600 font-bold">{businessName}</strong>
+          </DialogDescription>
+        </DialogHeader>
 
         {isSuccess ? (
-          <div className="py-10 text-center space-y-3">
-            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center mx-auto">
+          <div className="py-8 text-center space-y-3">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-xs">
               <CheckCircle2 className="w-8 h-8" />
             </div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -89,7 +86,7 @@ export function ContactInquiryModal({
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+          <form onSubmit={handleSubmit} className="space-y-4 text-xs mt-2">
             {productName && (
               <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 text-red-700 dark:text-red-300 font-semibold">
                 Product of interest: {productName}
@@ -106,7 +103,7 @@ export function ContactInquiryModal({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g. Rahul Sharma"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden focus:border-red-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
               />
             </div>
 
@@ -121,7 +118,7 @@ export function ContactInquiryModal({
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+91 98765 00000"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden focus:border-red-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
                 />
               </div>
 
@@ -134,7 +131,7 @@ export function ContactInquiryModal({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="rahul@company.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden focus:border-red-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
                 />
               </div>
             </div>
@@ -149,7 +146,7 @@ export function ContactInquiryModal({
                 value={requirement}
                 onChange={(e) => setRequirement(e.target.value)}
                 placeholder={APP_MESSAGES.placeholders.inquiryMessage}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white outline-hidden focus:border-red-500"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 resize-y"
               />
             </div>
 
@@ -157,14 +154,14 @@ export function ContactInquiryModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50"
+                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold transition-all shadow-md shadow-red-600/30 disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold transition-all shadow-md shadow-red-600/30 hover:shadow-lg hover:shadow-red-600/40 disabled:opacity-50 cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 <span>{isSubmitting ? "Sending..." : "Submit Inquiry"}</span>
@@ -172,7 +169,7 @@ export function ContactInquiryModal({
             </div>
           </form>
         )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
