@@ -1,0 +1,36 @@
+{
+  "name": "mercora-admin-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack -p 9000",
+    "build": "next build --webpack",
+    "build:vercel": "npm run build",
+    "start": "next start -p 9000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@swc/helpers": "^0.5.5",
+    "axios": "^1.20.0",
+    "caniuse-lite": "^1.0.30001810",
+    "lucide-react": "^0.378.0",
+    "next": "^16.3.8",
+    "next-themes": "^0.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-dropzone": "^20.1.2",
+    "react-hook-form": "^7.88.0",
+    "zod": "^4.6.5",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,167 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { Home, ArrowLeft } from "lucide-react";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { BusinessProfileHeader } from "@/features/businesses/components/details/BusinessProfileHeader";
+import { BusinessOverview } from "@/features/businesses/components/details/BusinessOverview";
+import { BusinessProducts } from "@/features/businesses/components/details/BusinessProducts";
+import { BusinessServices } from "@/features/businesses/components/details/BusinessServices";
+import { BusinessLocation } from "@/features/businesses/components/details/BusinessLocation";
+import { BusinessContactPanel } from "@/features/businesses/components/details/BusinessContactPanel";
+import { BusinessSourceInfo } from "@/features/businesses/components/details/BusinessSourceInfo";
+import { ContactInquiryModal } from "@/features/enquiries/components/ContactInquiryModal";
+import { SavedBusinessesDrawer } from "@/features/saved-businesses/components/SavedBusinessesDrawer";
+import { useBusinessDetails } from "@/features/businesses/hooks/use-business-details";
+import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
+import { LoadingState } from "@/components/common/LoadingState";
+import { ErrorState } from "@/components/common/ErrorState";
+import { APP_MESSAGES } from "@/config/messages.config";
+
+export default function BusinessProfileDetailPage() {
+  const params = useParams();
+  const slug = (params?.slug as string) || "";
+
+  const { business, isLoading, error, refresh } = useBusinessDetails(slug);
+  const { savedIds, isSaved, toggleSave } = useSavedBusinesses();
+
+  const [activeTab, setActiveTab] = useState("overview");
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
+  const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string | undefined>();
+
+  const handleShare = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard?.writeText(window.location.href);
+      alert(APP_MESSAGES.success.linkCopied);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+      <Header savedCount={savedIds.length} />
+
+      {/* Breadcrumb Bar */}
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+          <nav className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <Link href="/" className="hover:text-red-600 transition-colors">
+              <Home className="w-3.5 h-3.5" />
+            </Link>
+            <span>/</span>
+            <Link href="/businesses" className="hover:text-slate-900 dark:hover:text-white transition-colors">
+              Businesses
+            </Link>
+            <span>/</span>
+            <span className="text-slate-900 dark:text-white font-bold truncate max-w-[200px]">
+              {business ? business.name : slug}
+            </span>
+          </nav>
+
+          <Link
+            href="/businesses"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-600 transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to Directory</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {isLoading ? (
+          <LoadingState message="Loading business profile..." />
+        ) : error || !business ? (
+          <ErrorState
+            title="Business Not Found"
+            message={error || APP_MESSAGES.errors.businessNotFound}
+            onRetry={refresh}
+          />
+        ) : (
+          <div className="space-y-8">
+            {/* Header Card */}
+            <BusinessProfileHeader
+              business={business}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              isSaved={isSaved(business.id)}
+              onToggleSave={() => toggleSave(business.id)}
+              onContactClick={() => {
+                setSelectedProduct(undefined);
+                setIsInquiryModalOpen(true);
+              }}
+              onShareClick={handleShare}
+            />
+
+            {/* Content Grid: Left Main + Right Contact */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+              {/* Left / Center Tab Content */}
+              <div className="lg:col-span-2 space-y-6">
+                {activeTab === "overview" && <BusinessOverview business={business} />}
+                {activeTab === "products" && (
+                  <BusinessProducts
+                    products={business.products || []}
+                    onEnquire={(p) => {
+                      setSelectedProduct(p.name);
+                      setIsInquiryModalOpen(true);
+                    }}
+                  />
+                )}
+                {activeTab === "contact" && <BusinessLocation business={business} />}
+                {activeTab === "location" && <BusinessLocation business={business} />}
+                {activeTab === "reviews" && (
+                  <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8">
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">
+                      Buyer Ratings & Reviews
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      {business.reviewCount} verified commercial ratings recorded.
+                    </p>
+                  </div>
+                )}
+
+                {/* Source & Verification Info Box */}
+                <BusinessSourceInfo business={business} />
+              </div>
+
+              {/* Right Sidebar: Contact Panel */}
+              <div className="w-full">
+                <BusinessContactPanel
+                  business={business}
+                  onOpenInquiry={() => {
+                    setSelectedProduct(undefined);
+                    setIsInquiryModalOpen(true);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </main>
+
+      {/* Modals & Drawers */}
+      {business && (
+        <ContactInquiryModal
+          isOpen={isInquiryModalOpen}
+          onClose={() => setIsInquiryModalOpen(false)}
+          businessId={business.id}
+          businessName={business.name}
+          productName={selectedProduct}
+        />
+      )}
+
+      <SavedBusinessesDrawer
+        isOpen={isSavedDrawerOpen}
+        onClose={() => setIsSavedDrawerOpen(false)}
+        savedBusinesses={business ? [business] : []}
+        onRemove={toggleSave}
+      />
+
+      <Footer />
+    </div>
+  );
+}

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 240" fill="none">
+  <!-- Mercora Official Brand Logo (Emblem + Wordmark) -->
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@800&amp;display=swap');
+      .mercora-text {
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 130px;
+        letter-spacing: 0.03em;
+        fill: #1D2027;
+      }
+    </style>
+  </defs>
+
+  <!-- 1. Emblem (Geometric M Mark) -->
+  <g transform="translate(15, 20) scale(0.2)">
+    <!-- Obsidian Black Body -->
+    <path d="M 117 163.5 L 117 711.5 L 287 813.5 L 287 446.5 L 500 571.5 L 883 351.5 L 883 163.5 L 500 382.5 Z" fill="#1D2027"/>
+    <!-- Brand Red Accent Pillar -->
+    <path d="M 693 511.5 L 693 836.5 L 883 724.5 L 883 397.5 Z" fill="#EE3135"/>
+  </g>
+
+  <!-- 2. Wordmark: "MERCOR" -->
+  <text x="245" y="162" class="mercora-text">MERCOR</text>
+
+  <!-- 3. Signature Stylized "A" with Red Core -->
+  <g id="mercora-letter-a">
+    <!-- Outer Upward Chevron Legs -->
+    <path d="M 968 52 L 1038 178 L 1004 178 L 968 116 L 932 178 L 898 178 Z" fill="#1D2027"/>
+    <!-- Brand Red Core Triangle -->
+    <polygon points="968,142 992,178 944,178" fill="#EE3135"/>
+  </g>
+</svg>

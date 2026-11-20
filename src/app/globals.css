@@ -1,0 +1,995 @@
+@import '../styles/theme.css';
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Rethink+Sans:wght@400;500;600;700;800&family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Red Palette - UNCHANGED */
+  --theme-red: #ee3135;
+  --theme-red-hover: #d92c30;
+  --theme-red-dark: #b82029;
+  --theme-red-soft: #fff3f4;
+  --theme-red-glow: rgba(238, 49, 53, 0.25);
+
+  /* Inks & Text Colors (Bound to Theme System) */
+  --theme-ink: var(--text-secondary, #475569);
+  --theme-ink-darkest: var(--text-primary, #0f172a);
+  --theme-ink-darker: var(--text-primary, #0f172a);
+  --theme-dark: #282828;
+  --theme-dark-card: var(--surface, #1f2126);
+
+  /* Grays - UNCHANGED */
+  --theme-gray-900: #1e1e20;
+  --theme-gray-800: #353538;
+  --theme-gray-700: #4c4c4e;
+  --theme-gray-600: #636466;
+  --theme-gray-500: #73767c;
+  --theme-gray-400: #777779;
+  --theme-gray-300: #bfbebf;
+  --theme-gray-200: #e5e5e5;
+  --theme-gray-100: #f2f2f2;
+  --theme-gray-50: #fafafa;
+
+  /* Surfaces (Bound to Theme System) */
+  --theme-canvas: var(--background, #ffffff);
+  --theme-warm-line: var(--border, #e2e8f0);
+  --theme-blush: #fff7f7;
+  --theme-glass-header: rgba(255, 255, 255, 0.96);
+  --theme-glass-border: var(--border, #e6e5e4);
+  --theme-card-bg: var(--surface, #ffffff);
+  --theme-panel-bg: var(--background-secondary, #f8f9fb);
+
+  /* Semantic Status - UNCHANGED */
+  --theme-success: #2e7d32;
+  --theme-success-bg: #f0fdf4;
+  --theme-success-border: #bbf7d0;
+  --theme-warning: #b8860b;
+  --theme-warning-bg: #fffbf0;
+  --theme-warning-border: #fef08a;
+  --theme-error: #ee3135;
+  --theme-error-bg: #fff3f4;
+  --theme-error-border: #fecaca;
+
+  /*
+   * ──────────────────────────────────────────────────────────────────────────
+   * MERCORA GLOBAL TYPOGRAPHY SYSTEM (STRICT 4 APPROVED FONTS)
+   * ──────────────────────────────────────────────────────────────────────────
+   * 1. Plus Jakarta Sans  → Brand & Display (Logo, H1-H3, Hero, Headlines)
+   * 2. Rethink Sans       → Navigation & UI Controls (Nav, Buttons, Tabs, Labels, Inputs, H4-H6)
+   * 3. Work Sans          → Content & Body (Paragraphs, Descriptions, Body text)
+   * 4. Instrument Sans    → Business Data & Metrics (Tables, Data grids, Numbers, KPIs)
+   * ──────────────────────────────────────────────────────────────────────────
+   */
+  --font-display: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-ui: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-data: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Backward Compatibility Aliases */
+  --font-dm-sans: var(--font-body);
+  --theme-font-sans: var(--font-ui);
+  --theme-font-body: var(--font-body);
+  --theme-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Backward Compatibility */
+  --color-primary-500: var(--theme-red);
+  --color-primary-600: var(--theme-red-dark);
+  --color-neutral-bg: var(--theme-canvas);
+  --color-neutral-card: var(--theme-card-bg);
+  --color-neutral-border: var(--theme-warm-line);
+  --color-neutral-text: var(--theme-ink-darkest);
+  --color-neutral-muted: var(--theme-gray-700);
+
+  /* Radii */
+  --theme-radius-sm: 6px;
+  --theme-radius-md: 8px;
+  --theme-radius-lg: 12px;
+  --theme-radius-xl: 16px;
+  --theme-radius-full: 9999px;
+
+  /* ── Duxre-matched Type Scale ── */
+  --text-2xs: 11px;
+  /* data labels, eyebrows */
+  --text-xs: 12px;
+  /* micro labels, button caps */
+  --text-sm: 14px;
+  /* body small, nav */
+  --text-base: 16px;
+  /* body default */
+  --text-md: 18px;
+  /* lead paragraph */
+  --text-lg: 20px;
+  /* subheading */
+  --text-xl: 24px;
+  /* card heading */
+  --text-2xl: 32px;
+  /* section heading */
+  --text-3xl: 42px;
+  /* page heading */
+  --text-4xl: 52px;
+  /* hero */
+  --text-5xl: 64px;
+  /* display */
+
+  /* ── Line Heights (Duxre-matched) ── */
+  --leading-none: 1.0;
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+  --leading-loose: 1.8;
+
+  /* ── Letter Spacing (Duxre-matched) ── */
+  --tracking-tightest: -0.04em;
+  --tracking-tight: -0.025em;
+  --tracking-snug: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-wider: 0.08em;
+  --tracking-widest: 0.13em;
+}
+
+/* ── Reset ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--theme-canvas);
+  color: var(--theme-ink-darkest);
+  /* Default body = Work Sans (16px, line-height 1.5, weight 400) */
+  font-family: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}
+
+/* ── Headings H1-H3: Plus Jakarta Sans (Brand & Display) ─────────────── */
+h1 {
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 52px;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+h2 {
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+h3 {
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+/* ── Headings H4-H6: Rethink Sans (Navigation & Interface Headings) ── */
+h4 {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+h5 {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+h6 {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+/* ── Content & Paragraphs: Work Sans ─────────────────────────────── */
+p,
+article,
+summary,
+blockquote {
+  font-family: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Navigation, Buttons & Form Controls: Rethink Sans ─────────────── */
+label,
+input,
+select,
+textarea,
+button,
+nav,
+nav a,
+.nav-link,
+.sidebar-link {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Tables & Data Grids: Instrument Sans ────────────────────────── */
+table,
+th,
+td,
+[data-tabular="true"] {
+  font-family: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Theme-Aware Form Controls ─────────── */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 0.28rem;
+  border: 1.5px solid var(--border-strong, #cbd5e1);
+  background-color: var(--surface, #ffffff);
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:hover {
+  border-color: var(--primary, #ee3135);
+  box-shadow: 0 0 0 2px rgba(238, 49, 53, 0.1);
+}
+
+.dark input[type="checkbox"] {
+  border-color: var(--border, #2d2d2d);
+  background-color: var(--surface, #161616);
+}
+
+.dark input[type="checkbox"]:hover {
+  border-color: var(--border-hover, #444444);
+  background-color: var(--surface-hover, #2a2a2a);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--primary, #ee3135);
+  border-color: var(--primary, #ee3135);
+}
+
+.dark input[type="checkbox"]:checked {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.dark input[type="checkbox"]:checked::before {
+  background-color: #000000;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  width: 0.65rem;
+  height: 0.65rem;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background-color: #ffffff;
+}
+
+input[type="checkbox"]:indeterminate {
+  background-color: var(--primary, #ee3135);
+  border-color: var(--primary, #ee3135);
+}
+
+.dark input[type="checkbox"]:indeterminate {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+.dark input[type="checkbox"]:indeterminate::before {
+  background-color: #000000;
+}
+
+input[type="checkbox"]:indeterminate::before {
+  content: "";
+  width: 0.55rem;
+  height: 2px;
+  background-color: #ffffff;
+  border-radius: 1px;
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+input[type="radio"] {
+  accent-color: var(--border-focus);
+  cursor: pointer;
+}
+
+/* Disable browser number input spin arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ── Eyebrow (Duxre: small red caps, wide spacing) ── */
+.eyebrow {
+  font-family: var(--theme-font-sans);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--theme-red);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+
+/* ── Red Dot ─────────────────────────────── */
+.red-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--theme-red);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ── Callout Quote (Duxre-style left border) ── */
+.duxre-callout {
+  border-left: 3px solid var(--theme-red);
+  padding: 2px 0 2px 20px;
+  margin: 28px 0;
+  color: var(--theme-gray-600);
+  font-size: var(--text-sm);
+  line-height: var(--leading-loose);
+  font-weight: 400;
+}
+
+.duxre-callout strong {
+  font-weight: 700;
+  color: var(--theme-ink-darkest);
+}
+
+/* ── Buttons (Rethink Sans: 12-14px, 600-700, tracking 0.02-0.06em) ── */
+.btn-red {
+  background-color: var(--theme-red);
+  color: #ffffff;
+  border: 1.5px solid var(--theme-red);
+  padding: 12px 22px;
+  border-radius: var(--theme-radius-sm);
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+  transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-red:hover {
+  background-color: var(--theme-red-hover);
+  border-color: var(--theme-red-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(238, 49, 53, 0.28);
+}
+
+.btn-outline {
+  background-color: #ffffff;
+  color: var(--theme-ink-darkest);
+  border: 1.5px solid var(--theme-ink-darkest);
+  padding: 12px 20px;
+  border-radius: var(--theme-radius-sm);
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  transition: all 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  background-color: var(--theme-gray-50);
+  transform: translateY(-1px);
+}
+
+/* ── Cards ─────────────────────────────── */
+.duxre-card {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-warm-line);
+  border-radius: var(--theme-radius-lg);
+  box-shadow: 0 4px 24px rgba(20, 22, 26, 0.05);
+  transition: box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.duxre-card:hover {
+  box-shadow: 0 10px 36px rgba(20, 22, 26, 0.09);
+  border-color: #d0d0d0;
+}
+
+/* ── Container (shared shell for header, main, footer) ── */
+/* Enterprise-grade 1280px container with unified responsive padding */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Small tablets / phones (640px+) */
+@media (min-width: 640px) {
+  .container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Desktop & laptops (1024px+) */
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * MERCORA GLOBAL TYPOGRAPHY UTILITIES
+ *
+ * 1. Plus Jakarta Sans (`font-jakarta` / `font-display`)
+ *    → Brand wordmark, Display/Hero, H1, H2, H3, Page titles, Headlines
+ * 2. Rethink Sans (`font-rethink` / `font-ui`)
+ *    → Navigation, Header, Sidebar, Buttons, Tabs, Form labels, H4-H6, Badges
+ * 3. Work Sans (`font-work` / `font-body`)
+ *    → Body copy, Paragraphs, Descriptions, Helper text, Tooltips, FAQs
+ * 4. Instrument Sans (`font-instrument` / `font-data`)
+ *    → Tables, Data grids, Numbers, Metrics, KPIs, Dates, IDs, HS codes
+ * ────────────────────────────────────────────────────────────────────────── */
+@layer utilities {
+
+  /* ── 1. Approved Font Classes ── */
+  .font-jakarta {
+    font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-rethink {
+    font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-work {
+    font-family: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-instrument {
+    font-family: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* ── Functional Aliases ── */
+  .font-display {
+    font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-ui {
+    font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-body {
+    font-family: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-data {
+    font-family: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .font-mono {
+    font-family: var(--theme-font-mono);
+  }
+
+  /* ── Typography Scale Presets ── */
+  /* Display / Hero: 64px, Plus Jakarta Sans, 700–800, 1.05–1.1, -0.04em */
+  .type-display {
+    font-family: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+  }
+
+  /* H1: 52px, Plus Jakarta Sans, 700, 1.1, -0.035em */
+  .type-h1 {
+    font-family: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+  }
+
+  /* H2: 42px, Plus Jakarta Sans, 700, 1.1, -0.03em */
+  .type-h2 {
+    font-family: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  /* H3: 32px, Plus Jakarta Sans, 700, 1.15, -0.025em */
+  .type-h3 {
+    font-family: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+  }
+
+  /* H4: 24px, Rethink Sans, 600, 1.25 */
+  .type-h4 {
+    font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  /* H5: 20px, Rethink Sans, 600, 1.3 */
+  .type-h5 {
+    font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* H6: 18px, Rethink Sans, 600, 1.35 */
+  .type-h6 {
+    font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  /* Large Body: 18px, Work Sans, 400, 1.65 */
+  .type-body-large {
+    font-family: var(--font-work), 'Work Sans', system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.65;
+  }
+
+  /* Default Body: 16px, Work Sans, 400, 1.5–1.65 */
+  .type-body {
+    font-family: var(--font-work), 'Work Sans', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  /* Small Body: 14px, Work Sans, 400, 1.5 */
+  .type-body-small {
+    font-family: var(--font-work), 'Work Sans', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* Micro Text: 12px, Rethink Sans, 500–600, 1.4 */
+  .type-micro {
+    font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+
+  /* Button Text: 12–14px, Rethink Sans, 600–700, 0.02–0.06em */
+  .type-btn {
+    font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  /* Tabular / Metric Data: Instrument Sans */
+  .type-data {
+    font-family: var(--font-instrument), 'Instrument Sans', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.8s infinite;
+}
+
+/* OPT-06: Consolidated shimmer utility — use this instead of inlining all before:* classes */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-hover);
+}
+
+.skeleton-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  animation: shimmer 1.8s infinite;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent);
+}
+
+.dark .skeleton-shimmer::before {
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+ * DARK THEME ADAPTATION BRIDGE v2 (Applies globally across all components)
+ * ────────────────────────────────────────────────────────────────────────── */
+html.dark,
+html.dark body {
+  background-color: var(--background) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Surfaces & Containers */
+.dark .bg-white {
+  background-color: var(--surface) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-50\/40,
+.dark .bg-gray-50\/60,
+.dark .bg-gray-50\/70,
+.dark .bg-gray-50\/80 {
+  background-color: var(--background-secondary) !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: var(--border) !important;
+}
+
+/* Sidebar uses deepest layer */
+.dark aside,
+.dark [role="navigation"] {
+  background-color: var(--sidebar-bg) !important;
+  border-color: var(--sidebar-border) !important;
+}
+
+/* Borders */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-200\/80,
+.dark .border-gray-300,
+.dark .divide-gray-100> :not([hidden])~ :not([hidden]),
+.dark .divide-gray-200> :not([hidden])~ :not([hidden]) {
+  border-color: var(--border) !important;
+}
+
+/* Text & Typography */
+.dark .text-gray-900,
+.dark .text-gray-950 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-800,
+.dark .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+.dark .text-gray-400 {
+  color: #64748b !important;
+}
+
+/* Hover States */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: var(--border-hover) !important;
+}
+
+.dark .hover\:border-gray-300:hover,
+.dark .hover\:border-gray-200:hover {
+  border-color: var(--border-hover) !important;
+}
+
+.dark .hover\:text-gray-900:hover,
+.dark .hover\:text-gray-800:hover {
+  color: var(--text-primary) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * DARK MODE: Clean Monochrome Adaptation (OLED Black & Charcoal)
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+/* Soft background tints → subtle monochrome overlay in dark */
+.dark .bg-brand-50,
+.dark .bg-brand-50\/20,
+.dark .bg-brand-50\/30,
+.dark .bg-brand-50\/40,
+.dark .bg-brand-50\/70,
+.dark .bg-brand-100 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Brand borders → subtle slate / monochrome in dark */
+.dark .border-brand-100,
+.dark .border-brand-200,
+.dark .border-brand-200\/80,
+.dark .border-brand-200\/90,
+.dark .border-brand-300 {
+  border-color: var(--border, #2d2d2d) !important;
+}
+
+/* Brand text → pure white in dark */
+.dark .text-brand-300,
+.dark .text-brand-400,
+.dark .text-brand-600,
+.dark .text-brand-700,
+.dark .text-brand-950 {
+  color: #ffffff !important;
+}
+
+/* Brand hover states → crisp monochrome hover in dark */
+.dark .hover\:bg-brand-50:hover,
+.dark .hover\:bg-brand-100:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .hover\:text-brand-600:hover,
+.dark .hover\:text-brand-700:hover {
+  color: #ffffff !important;
+}
+
+.dark .hover\:border-brand-300:hover,
+.dark .hover\:border-brand-600:hover {
+  border-color: var(--border-hover, #444444) !important;
+}
+
+/* Focus rings → pure white in dark */
+.dark .focus\:ring-brand-100:focus,
+.dark .ring-brand-100,
+.dark .ring-brand-900\/30 {
+  --tw-ring-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.dark .border-brand-500:not(button):not([class*="bg-brand-5"]):not([class*="bg-brand-6"]) {
+  border-color: var(--border-hover, #444444) !important;
+}
+
+/* Brand-tinted badge counters in dark */
+.dark .bg-brand-900\/40,
+.dark .bg-brand-950\/40 {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+.dark .border-brand-800\/50,
+.dark .border-brand-800\/60,
+.dark .border-brand-900\/40 {
+  border-color: var(--border, #2d2d2d) !important;
+}
+
+.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+.dark .border-blue-100,
+.dark .border-blue-200 {
+  border-color: rgba(59, 130, 246, 0.28) !important;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-700 {
+  color: #60a5fa !important;
+}
+
+/* Indigo */
+.dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.12) !important;
+}
+
+.dark .border-indigo-100,
+.dark .border-indigo-200 {
+  border-color: rgba(99, 102, 241, 0.28) !important;
+}
+
+.dark .text-indigo-600,
+.dark .text-indigo-700 {
+  color: #818cf8 !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-green-50 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+.dark .border-emerald-100,
+.dark .border-green-100,
+.dark .border-emerald-200,
+.dark .border-green-200 {
+  border-color: rgba(16, 185, 129, 0.28) !important;
+}
+
+.dark .text-emerald-600,
+.dark .text-green-600,
+.dark .text-emerald-700,
+.dark .text-green-700 {
+  color: #34d399 !important;
+}
+
+.dark .bg-purple-50,
+.dark .bg-purple-100 {
+  background-color: rgba(168, 85, 247, 0.12) !important;
+}
+
+.dark .border-purple-100,
+.dark .border-purple-200 {
+  border-color: rgba(168, 85, 247, 0.28) !important;
+}
+
+.dark .text-purple-600,
+.dark .text-purple-700 {
+  color: #c084fc !important;
+}
+
+.dark .bg-amber-50,
+.dark .bg-yellow-50,
+.dark .bg-amber-100 {
+  background-color: rgba(251, 191, 36, 0.12) !important;
+}
+
+.dark .border-amber-100,
+.dark .border-yellow-100,
+.dark .border-amber-200,
+.dark .border-yellow-200 {
+  border-color: rgba(251, 191, 36, 0.28) !important;
+}
+
+.dark .text-amber-600,
+.dark .text-yellow-600,
+.dark .text-amber-700,
+.dark .text-yellow-700 {
+  color: #fbbf24 !important;
+}
+
+.dark .bg-rose-50,
+.dark .bg-red-50,
+.dark .bg-rose-100,
+.dark .bg-red-100 {
+  background-color: rgba(248, 113, 113, 0.12) !important;
+}
+
+.dark .border-rose-100,
+.dark .border-red-100,
+.dark .border-rose-200,
+.dark .border-red-200 {
+  border-color: rgba(248, 113, 113, 0.28) !important;
+}
+
+.dark .text-rose-600,
+.dark .text-red-600,
+.dark .text-rose-700,
+.dark .text-red-700 {
+  color: #f87171 !important;
+}
+
+/* Cyan / Teal */
+.dark .bg-cyan-50,
+.dark .bg-teal-50 {
+  background-color: rgba(20, 184, 166, 0.12) !important;
+}
+
+.dark .text-cyan-600,
+.dark .text-teal-600,
+.dark .text-cyan-700,
+.dark .text-teal-700 {
+  color: #2dd4bf !important;
+}
+
+/* Orange */
+.dark .bg-orange-50 {
+  background-color: rgba(249, 115, 22, 0.12) !important;
+}
+
+.dark .text-orange-600,
+.dark .text-orange-700 {
+  color: #fb923c !important;
+}
+
+/* Form Controls & Native Elements */
+.dark select option {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark ::selection {
+  background-color: rgba(238, 49, 53, 0.3);
+  color: #ffffff;
+}
+
+/* Dark Mode Scrollbars */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}

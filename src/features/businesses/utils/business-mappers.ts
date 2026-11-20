@@ -1,0 +1,38 @@
+import { Business } from "../types/business.types";
+
+export function mapRawBusinessToModel(raw: any): Business {
+  return {
+    id: String(raw.id || raw.slug || Math.random()),
+    name: raw.name || "Unnamed Business",
+    slug: raw.slug || raw.name?.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "business",
+    logoUrl: raw.logoUrl || raw.logo,
+    imageUrl: raw.imageUrl || raw.image || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop&q=80",
+    category: raw.category || "General Trading",
+    businessType: raw.businessType || "Manufacturer",
+    industry: raw.industry || "Manufacturing",
+    city: raw.city || "Ahmedabad",
+    state: raw.state || "Gujarat",
+    pincode: raw.pincode || "380001",
+    description: raw.description || "",
+    fullOverview: raw.fullOverview || raw.description,
+    rating: Number(raw.rating || 4.5),
+    reviewCount: Number(raw.reviewCount || 10),
+    establishedYear: Number(raw.establishedYear || 2015),
+    employeeCount: raw.employeeCount || "50-200",
+    annualTurnover: raw.annualTurnover || "₹10 - 50 Cr",
+    ownershipType: raw.ownershipType || "Private Limited",
+    isVerified: Boolean(raw.isVerified ?? true),
+    tier: raw.tier || "Verified",
+    phone: raw.phone || "+91 98765 43210",
+    email: raw.email || "info@business.example.com",
+    website: raw.website || "www.business.example.com",
+    address: raw.address || `${raw.city || "Ahmedabad"}, ${raw.state || "Gujarat"}`,
+    gstin: raw.gstin || "24AAAAA0000A1Z5",
+    cin: raw.cin || "U27100GJ2015PTC084321",
+    source: raw.source || "IndiaMART",
+    sourceId: raw.sourceId || "BI-001245",
+    lastUpdated: raw.lastUpdated || "15 Apr 2025",
+    products: Array.isArray(raw.products) ? raw.products : [],
+    reviews: Array.isArray(raw.reviews) ? raw.reviews : [],
+  };
+}
