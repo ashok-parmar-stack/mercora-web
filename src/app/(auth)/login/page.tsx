@@ -9,6 +9,8 @@ import { loginServerAction } from '@/app/actions/auth-actions';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { LoadingSpinner, LogoLoader } from '@/components/ui/Loading';
 import { LoginFormAlerts } from './components/LoginFormAlerts';
+import { LoginFormHeader } from './components/LoginFormHeader';
+import { LoginFormFooter } from './components/LoginFormFooter';
 
 /* ── Zod Validation Schema ─────────────────────────────────────────────── */
 const loginSchema = z.object({
@@ -95,17 +97,7 @@ function LoginForm() {
 
   return (
     <>
-      <div className="mb-3.5 sm:mb-4 text-center">
-        <h1
-          className="text-xl sm:text-2xl font-extrabold tracking-[-0.03em] mb-1 font-jakarta"
-          style={{ color: 'var(--theme-ink-darkest)', lineHeight: 1.2 }}
-        >
-          Welcome back
-        </h1>
-        <p className="text-xs font-work" style={{ color: 'var(--theme-gray-600)', lineHeight: 1.5 }}>
-          Your listings, contacts & market intel — just where you left them.
-        </p>
-      </div>
+      <LoginFormHeader />
 
       <LoginFormAlerts
         isDisplaced={isDisplaced}
@@ -234,18 +226,7 @@ function LoginForm() {
         </div>
       </form>
 
-      <div className="mt-3.5 pt-3 text-center" style={{ borderTop: '1px solid var(--theme-warm-line)' }}>
-        <p className="text-xs font-work" style={{ color: 'var(--theme-gray-500)' }}>
-          Don&apos;t have an account?{' '}
-          <Link
-            href="/register"
-            className="font-bold font-rethink transition-colors ml-1"
-            style={{ color: 'var(--theme-red)' }}
-          >
-            Create a free account →
-          </Link>
-        </p>
-      </div>
+      <LoginFormFooter />
     </>
   );
 }
