@@ -381,3 +381,14 @@ export async function getLocationSubDistricts(districtId?: string, search?: stri
   });
   return res.data?.data || [];
 }
+
+export async function getLocationCities(stateId?: string, search?: string, options?: AbortableRequestOptions) {
+  const res = await apiClient.get('/locations/cities', {
+    params: {
+      ...(stateId ? { state_id: stateId } : {}),
+      ...(search ? { search } : {}),
+    },
+    signal: options?.signal,
+  });
+  return res.data?.data || [];
+}

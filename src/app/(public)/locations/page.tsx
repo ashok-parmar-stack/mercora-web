@@ -18,7 +18,25 @@ interface CityItem {
   slug: string;
   state?: string;
   locationType?: string;
+  businessCount?: number;
 }
+
+const FALLBACK_CLUSTERS: CityItem[] = [
+  { id: "ahmedabad", name: "Ahmedabad", slug: "ahmedabad", code: "AMD", state: "Gujarat", locationType: "Industrial Machinery & Engineering Hub" },
+  { id: "surat", name: "Surat", slug: "surat", code: "ST", state: "Gujarat", locationType: "Textiles, Diamonds & Apparel Hub" },
+  { id: "vadodara", name: "Vadodara", slug: "vadodara", code: "BRC", state: "Gujarat", locationType: "Pharmaceuticals, Chemicals & Power Hub" },
+  { id: "morbi", name: "Morbi", slug: "morbi", code: "MRB", state: "Gujarat", locationType: "Ceramics, Tiles & Sanitaryware Capital" },
+  { id: "rajkot", name: "Rajkot", slug: "rajkot", code: "RJT", state: "Gujarat", locationType: "Auto Components, Casting & Forging Hub" },
+  { id: "gandhinagar", name: "Gandhinagar", slug: "gandhinagar", code: "GND", state: "Gujarat", locationType: "Electronics, IT & Finance Hub" },
+  { id: "bharuch", name: "Bharuch", slug: "bharuch", code: "BH", state: "Gujarat", locationType: "Chemicals, Petrochemicals & Dyes" },
+  { id: "ankleshwar", name: "Ankleshwar", slug: "ankleshwar", code: "ANK", state: "Gujarat", locationType: "Chemical & Bulk Drug Industrial Estate" },
+  { id: "vapi", name: "Vapi", slug: "vapi", code: "VP", state: "Gujarat", locationType: "Chemical, Paper & Plastics Hub" },
+  { id: "jamnagar", name: "Jamnagar", slug: "jamnagar", code: "JAM", state: "Gujarat", locationType: "Brass Components & Refining" },
+  { id: "bhavnagar", name: "Bhavnagar", slug: "bhavnagar", code: "BHV", state: "Gujarat", locationType: "Ship Recycling & Plastic Machinery" },
+  { id: "pune", name: "Pune", slug: "pune", code: "PN", state: "Maharashtra", locationType: "Automobile & Heavy Engineering Corridor" },
+  { id: "mumbai", name: "Mumbai", slug: "mumbai", code: "BOM", state: "Maharashtra", locationType: "Commercial & Financial Headquarters" },
+  { id: "bengaluru", name: "Bengaluru", slug: "bengaluru", code: "BLR", state: "Karnataka", locationType: "Aerospace, Technology & Precision Engineering" },
+];
 
 export default function LocationsDirectoryPage() {
   const { savedCount } = useSavedBusinesses();
@@ -35,21 +53,25 @@ export default function LocationsDirectoryPage() {
       if (res.ok) {
         const json = await res.json();
         const list = Array.isArray(json) ? json : json.data || [];
-        const formatted: CityItem[] = list.map((item: any) => ({
-          id: item.id,
-          name: item.name,
-          code: item.code,
-          slug: (item.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          state: item.state?.name || item.stateName || "Gujarat",
-          locationType: item.locationType || "Industrial Hub",
-        }));
-        setLocations(formatted);
-      } else {
-        throw new Error(`Failed to load cities (HTTP ${res.status})`);
+        if (list.length > 0) {
+          const formatted: CityItem[] = list.map((item: any) => ({
+            id: item.id || item.slug,
+            name: item.name,
+            code: item.code,
+            slug: item.slug || (item.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+            state: (typeof item.state === "object" ? item.state?.name : item.state) || item.stateName || "Gujarat",
+            locationType: item.locationType || "Industrial Hub",
+            businessCount: typeof item.businessCount === "number" ? item.businessCount : undefined,
+          }));
+          setLocations(formatted);
+          return;
+        }
       }
+      // If endpoint returns empty list or non-200, use robust curated fallback clusters
+      setLocations(FALLBACK_CLUSTERS);
     } catch (err: any) {
-      console.error("Failed to load locations:", err);
-      setError(err?.message || "Unable to load locations from directory service.");
+      console.warn("Locations API fetch failed, using fallback clusters:", err);
+      setLocations(FALLBACK_CLUSTERS);
     } finally {
       setLoading(false);
     }
@@ -124,15 +146,22 @@ export default function LocationsDirectoryPage() {
                   <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                     <MapPin className="w-6 h-6" />
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <h2 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                       {loc.name}
                     </h2>
-                    {loc.state && (
-                      <span className="text-[11px] font-semibold text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
-                        {loc.state}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1.5 flex-wrap justify-end">
+                      {typeof loc.businessCount === "number" && loc.businessCount > 0 && (
+                        <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+                          {loc.businessCount} {loc.businessCount === 1 ? "Business" : "Businesses"}
+                        </span>
+                      )}
+                      {loc.state && (
+                        <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                          {loc.state}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
                     {loc.locationType}
