@@ -18,6 +18,7 @@ import {
 } from "../../../components/common/ConfirmDialog";
 import { Badge } from "../../../components/ui/Badge";
 import { Select } from "../../../components/ui/Select";
+import { Button } from "../../../components/ui/Button";
 import { UserDetailDrawer } from "../../../components/users/UserDetailDrawer";
 import {
   Users,
@@ -106,7 +107,7 @@ export default function UsersListPage() {
             className="flex items-center gap-3 group/user cursor-pointer select-none"
             title="Click to view user details"
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-600 to-rose-400 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-2xs group-hover/user:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-600 to-brand-400 text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-2xs group-hover/user:scale-105 transition-transform">
               {initial}
             </div>
             <div className="min-w-0">
@@ -332,14 +333,16 @@ export default function UsersListPage() {
           disabled: !activePersona.canCreate,
         }}
         extraActions={
-          <button
+          <Button
+            size="sm"
+            variant="outline"
             onClick={() => refetch()}
-            className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-2xs cursor-pointer"
+            className="h-9 w-9 p-0"
             title="Refresh user directory"
             aria-label="Refresh user directory"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-brand-600" : ""}`} />
-          </button>
+          </Button>
         }
       />
 
@@ -410,15 +413,17 @@ export default function UsersListPage() {
 
             {/* Reset Filters Button */}
             {hasActiveFilters && (
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={resetFilters}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-500 hover:text-red-600 text-xs font-semibold transition-colors shadow-2xs cursor-pointer"
+                className="h-9 px-2.5"
+                leftIcon={<FilterX className="w-3.5 h-3.5" />}
                 title="Clear all filters"
               >
-                <FilterX className="w-3.5 h-3.5" />
                 Reset
-              </button>
+              </Button>
             )}
           </div>
         }
@@ -475,7 +480,7 @@ export default function UsersListPage() {
         onConfirm={async () => {
           if (bulkDeletingIds) {
             for (const id of bulkDeletingIds) {
-              await deleteUser(id, "soft").catch(() => {});
+              await deleteUser(id, "soft").catch(() => { });
             }
             clearSelection("users-table");
             setBulkDeletingIds(null);
@@ -497,7 +502,7 @@ export default function UsersListPage() {
             const activeStatus = statuses.find((s) => s.code === bulkStatusConfirm.targetStatus);
             if (activeStatus) {
               for (const id of bulkStatusConfirm.ids) {
-                await updateUser(id, { statusId: activeStatus.id }).catch(() => {});
+                await updateUser(id, { statusId: activeStatus.id }).catch(() => { });
               }
             }
             clearSelection("users-table");

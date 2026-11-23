@@ -14,6 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useUIStore } from "@/lib/store/ui-store";
+import { Button } from "@/components/ui/Button";
 import axios from "axios";
 
 interface DemoRequestModalProps {
@@ -552,20 +553,16 @@ export function DemoRequestModal({
 
               {/* Submit CTA */}
               <div className="pt-3">
-                <button
+                <Button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="w-full btn-red py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  variant="primary"
+                  size="lg"
+                  isLoading={isSubmitting}
+                  className="w-full py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all"
+                  rightIcon={!isSubmitting ? <ArrowRight className="w-4 h-4" /> : undefined}
                 >
-                  {isSubmitting ? (
-                    <span>Scheduling Walkthrough...</span>
-                  ) : (
-                    <>
-                      <span>Schedule Live Walkthrough</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
+                  Schedule Live Walkthrough
+                </Button>
                 <p className="text-center text-3xs sm:text-2xs text-gray-400 mt-2 flex items-center justify-center gap-1.5">
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   <span>No credit card required · Instant access to live sandbox · NDA protected</span>

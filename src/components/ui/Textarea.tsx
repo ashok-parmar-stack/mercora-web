@@ -1,38 +1,48 @@
-import React, { forwardRef } from "react";
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: string;
   label?: string;
   helperText?: string;
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className = "", error, label, helperText, disabled, id, ...props }, ref) => {
-    const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, error, label, helperText, id, ...props }, ref) => {
+    const textareaId =
+      id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="w-full space-y-1.5">
+      <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="block text-xs font-bold text-slate-700 dark:text-slate-300">
+          <label
+            htmlFor={textareaId}
+            className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] font-rethink"
+          >
             {label}
           </label>
         )}
         <textarea
+          id={textareaId}
+          className={cn(
+            "flex min-h-[80px] w-full rounded-xl border border-[var(--input-border)] bg-[var(--input-background)] px-3.5 py-2.5 text-sm text-[var(--text-primary)] placeholder:text-[var(--input-placeholder)] focus:outline-none focus:border-[var(--border-focus)] focus:ring-2 focus:ring-[var(--border-focus)]/20 disabled:cursor-not-allowed disabled:opacity-50 transition-all font-rethink",
+            error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
+            className
+          )}
           ref={ref}
-          id={inputId}
-          disabled={disabled}
-          className={`w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border transition-all outline-hidden resize-y min-h-[80px] ${
-            error
-              ? "border-rose-400 focus:border-rose-600 bg-rose-50/30 dark:bg-rose-950/20 text-rose-900 dark:text-rose-200"
-              : "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:border-red-500"
-          } ${disabled ? "opacity-50 cursor-not-allowed bg-slate-50 dark:bg-slate-800" : ""} ${className}`}
           {...props}
         />
-        {error && <p className="text-xs text-rose-600 dark:text-rose-400 font-medium">{error}</p>}
-        {helperText && !error && <p className="text-xs text-slate-400">{helperText}</p>}
+        {error && (
+          <span className="text-xs text-red-500 font-medium">{error}</span>
+        )}
+        {!error && helperText && (
+          <span className="text-xs text-[var(--text-muted)]">{helperText}</span>
+        )}
       </div>
     );
   }
 );
-
 Textarea.displayName = "Textarea";
+
+export { Textarea };

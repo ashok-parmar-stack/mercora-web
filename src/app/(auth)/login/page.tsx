@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { loginServerAction } from '@/app/actions/auth-actions';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { LoadingSpinner, LogoLoader } from '@/components/ui/Loading';
+import { Button } from '@/components/ui/Button';
 import { LoginFormAlerts } from './components/LoginFormAlerts';
 import { LoginFormHeader } from './components/LoginFormHeader';
 import { LoginFormFooter } from './components/LoginFormFooter';
@@ -205,24 +206,17 @@ function LoginForm() {
         </div>
 
         <div className="pt-1">
-          <button
+          <Button
             id="login-submit"
             type="submit"
-            disabled={loading}
-            className="btn-red font-rethink w-full justify-center py-2.5 sm:py-3 rounded-xl text-xs tracking-widest disabled:opacity-60 disabled:cursor-not-allowed"
+            variant="primary"
+            size="lg"
+            isLoading={loading}
+            className="w-full font-bold tracking-widest text-xs py-2.5 sm:py-3 rounded-xl font-rethink"
+            rightIcon={!loading ? <ArrowRight className="w-3.5 h-3.5" /> : undefined}
           >
-            {loading ? (
-              <>
-                <LoadingSpinner size="sm" variant="white" />
-                <span>Signing In...</span>
-              </>
-            ) : (
-              <>
-                <span>SIGN IN</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </>
-            )}
-          </button>
+            SIGN IN
+          </Button>
         </div>
       </form>
 

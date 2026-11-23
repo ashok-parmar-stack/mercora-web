@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Filter, RotateCcw, CheckSquare, Square } from "lucide-react";
 import { BusinessFiltersState } from "../../types/business.types";
-import { BUSINESS_TYPES } from "@/lib/constants";
 import { APP_HEADERS } from "@/config/headers.config";
+import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
+import { fetchCategories } from "@/features/categories/category-api";
+import { CategoryItem } from "@/features/categories/types";
+import { Select } from "@/components/ui/Select";
+import { Button } from "@/components/ui/Button";
 
 export interface BusinessFiltersProps {
   filters: BusinessFiltersState;
@@ -17,6 +21,15 @@ export function BusinessFilters({
   onFilterChange,
   onReset,
 }: BusinessFiltersProps) {
+  const { categories: businessCategories } = useBusinessCategories();
+  const [masterCategories, setMasterCategories] = useState<CategoryItem[]>([]);
+
+  useEffect(() => {
+    fetchCategories()
+      .then((cats) => setMasterCategories(cats || []))
+      .catch((err) => console.error("Failed to load master categories for filter:", err));
+  }, []);
+
   const toggleBusinessType = (type: string) => {
     if (filters.businessType === type) {
       onFilterChange({ businessType: "all" });
@@ -33,28 +46,30 @@ export function BusinessFilters({
           <Filter className="w-4 h-4 text-red-600" />
           <span>{APP_HEADERS.directory.filtersHeading || "Filter Results"}</span>
         </div>
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={onReset}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 transition-colors cursor-pointer"
+          className="h-7 px-2 text-xs font-semibold text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400"
+          leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
         >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Reset</span>
-        </button>
+          Reset
+        </Button>
       </div>
 
-      {/* Business Type Filter */}
+      {/* Dynamic Business Category / Type Filter */}
       <div className="space-y-3">
         <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
-          Business Type
+          Business Category
         </label>
         <div className="space-y-1.5">
-          {BUSINESS_TYPES.map((type) => {
-            const isChecked = filters.businessType === type;
+          {businessCategories.map((cat) => {
+            const isChecked = filters.businessType === cat.name || filters.businessType === cat.slug;
             return (
               <label
-                key={type}
-                onClick={() => toggleBusinessType(type)}
+                key={cat.id || cat.slug}
+                onClick={() => toggleBusinessType(cat.name)}
                 className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold cursor-pointer select-none transition-all ${
                   isChecked
                     ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-900/40 shadow-xs"
@@ -66,7 +81,7 @@ export function BusinessFilters({
                 ) : (
                   <Square className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
                 )}
-                <span>{type}</span>
+                <span>{cat.name}</span>
               </label>
             );
           })}
@@ -79,46 +94,37 @@ export function BusinessFilters({
           Location
         </label>
         <div className="space-y-2.5">
-          <select
+          <Select
             value={filters.location}
             onChange={(e) => onFilterChange({ location: e.target.value })}
-            className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 cursor-pointer"
           >
-            <option value="all">Select State (Gujarat)</option>
+            <option value="all">All States</option>
             <option value="Gujarat">Gujarat</option>
             <option value="Maharashtra">Maharashtra</option>
             <option value="Rajasthan">Rajasthan</option>
-          </select>
-          <select
-            className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 cursor-pointer"
-          >
-            <option value="all">Select City</option>
-            <option value="Ahmedabad">Ahmedabad</option>
-            <option value="Surat">Surat</option>
-            <option value="Vadodara">Vadodara</option>
-            <option value="Rajkot">Rajkot</option>
-            <option value="Morbi">Morbi</option>
-          </select>
+            <option value="Delhi">Delhi NCR</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+          </Select>
         </div>
       </div>
 
-      {/* Industry / Category */}
+      {/* Dynamic Master Industry / Category Filter */}
       <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
         <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
-          Industry / Category
+          Master Category
         </label>
-        <select
+        <Select
           value={filters.category}
           onChange={(e) => onFilterChange({ category: e.target.value })}
-          className="w-full text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 cursor-pointer"
         >
-          <option value="all">All Industries</option>
-          <option value="Industrial Machinery">Industrial Machinery</option>
-          <option value="Textiles & Fabrics">Textiles & Fabrics</option>
-          <option value="Pharmaceuticals">Pharmaceuticals</option>
-          <option value="Ceramic & Tiles">Ceramic & Tiles</option>
-          <option value="Chemicals">Chemicals</option>
-        </select>
+          <option value="all">All Master Categories</option>
+          {masterCategories.map((mc) => (
+            <option key={mc.id || mc.slug} value={mc.name}>
+              {mc.name}
+            </option>
+          ))}
+        </Select>
       </div>
 
       {/* Verification Filter */}

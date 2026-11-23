@@ -19,15 +19,6 @@ export const APP_HEADERS = {
     },
     resultsHeading: "Businesses Found",
     filtersHeading: "Filter Results",
-    quickCategories: [
-      { id: "all", label: "All Businesses" },
-      { id: "Manufacturer", label: "Manufacturers" },
-      { id: "Supplier", label: "Suppliers" },
-      { id: "Wholesaler", label: "Wholesalers" },
-      { id: "Distributor", label: "Distributors" },
-      { id: "Exporter", label: "Exporters" },
-      { id: "Service Provider", label: "Service Providers" },
-    ],
   },
 
   businessDetails: {

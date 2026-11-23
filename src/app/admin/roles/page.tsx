@@ -17,6 +17,7 @@ import {
 } from "../../../components/common/ConfirmDialog";
 import { Badge } from "../../../components/ui/Badge";
 import { Select } from "../../../components/ui/Select";
+import { Button } from "../../../components/ui/Button";
 import {
   Shield,
   Plus,
@@ -79,13 +80,12 @@ export default function RolesListPage() {
       render: (role) => (
         <div className="flex items-center gap-3">
           <div
-            className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${
-              role.deletedAt
-                ? "bg-red-100 text-red-700"
-                : role.isSystem
+            className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${role.deletedAt
+              ? "bg-red-100 text-red-700"
+              : role.isSystem
                 ? "bg-purple-100 text-purple-700"
                 : "bg-brand-50 text-brand-600"
-            }`}
+              }`}
           >
             <Shield className="w-4 h-4" />
           </div>
@@ -179,9 +179,8 @@ export default function RolesListPage() {
         <Tooltip content="Configure Permission Matrix">
           <Link
             href={`/admin/roles/${encodeURIComponent(role.code || role.id)}/permissions`}
-            className={`p-1.5 rounded-lg text-gray-500 hover:text-brand-600 hover:bg-gray-100 transition-colors ${
-              !activePersona.canManagePermissions ? "pointer-events-none opacity-40" : ""
-            }`}
+            className={`p-1.5 rounded-lg text-gray-500 hover:text-brand-600 hover:bg-gray-100 transition-colors ${!activePersona.canManagePermissions ? "pointer-events-none opacity-40" : ""
+              }`}
             aria-label="Manage permissions"
           >
             <Key className="w-4 h-4" />
@@ -192,9 +191,8 @@ export default function RolesListPage() {
         <Tooltip content="Edit Role Details">
           <Link
             href={`/admin/roles/${encodeURIComponent(role.code || role.id)}/edit`}
-            className={`p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors ${
-              !activePersona.canEdit ? "pointer-events-none opacity-40" : ""
-            }`}
+            className={`p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors ${!activePersona.canEdit ? "pointer-events-none opacity-40" : ""
+              }`}
             aria-label="Edit role"
           >
             <Pencil className="w-4 h-4" />
@@ -260,14 +258,16 @@ export default function RolesListPage() {
           disabled: !activePersona.canCreate,
         }}
         extraActions={
-          <button
+          <Button
+            size="sm"
+            variant="outline"
             onClick={() => refetch()}
-            className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors"
+            className="h-9 w-9 p-0"
             title="Refresh list"
             aria-label="Refresh"
           >
             <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-          </button>
+          </Button>
         }
       />
 
@@ -342,7 +342,7 @@ export default function RolesListPage() {
         onConfirm={async () => {
           if (bulkDeletingIds) {
             for (const id of bulkDeletingIds) {
-              await deleteRole(id, "soft").catch(() => {});
+              await deleteRole(id, "soft").catch(() => { });
             }
             clearSelection("roles-table");
             setBulkDeletingIds(null);
@@ -364,7 +364,7 @@ export default function RolesListPage() {
             const activeStatus = statuses.find((s) => s.code === bulkStatusConfirm.targetStatus);
             if (activeStatus) {
               for (const id of bulkStatusConfirm.ids) {
-                await updateRole(id, { statusId: activeStatus.id }).catch(() => {});
+                await updateRole(id, { statusId: activeStatus.id }).catch(() => { });
               }
             }
             clearSelection("roles-table");

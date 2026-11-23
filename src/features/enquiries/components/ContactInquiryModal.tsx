@@ -11,6 +11,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/Dialog";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
+import { Button } from "@/components/ui/Button";
 
 export interface ContactInquiryModalProps {
   isOpen: boolean;
@@ -93,79 +96,61 @@ export function ContactInquiryModal({
               </div>
             )}
 
-            <div>
-              <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                Your Full Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Rahul Sharma"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
-              />
-            </div>
+            <Input
+              label="Your Full Name *"
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Rahul Sharma"
+            />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                  Mobile Number *
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 98765 00000"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
-                />
-              </div>
-
-              <div>
-                <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="rahul@company.com"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="font-bold text-slate-700 dark:text-slate-300 block mb-1">
-                Requirement Details *
-              </label>
-              <textarea
+              <Input
+                label="Mobile Number *"
+                type="tel"
                 required
-                rows={4}
-                value={requirement}
-                onChange={(e) => setRequirement(e.target.value)}
-                placeholder={APP_MESSAGES.placeholders.inquiryMessage}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 resize-y"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+91 98765 00000"
+              />
+
+              <Input
+                label="Email Address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="rahul@company.com"
               />
             </div>
 
+            <Textarea
+              label="Requirement Details *"
+              required
+              rows={4}
+              value={requirement}
+              onChange={(e) => setRequirement(e.target.value)}
+              placeholder={APP_MESSAGES.placeholders.inquiryMessage}
+            />
+
             <div className="pt-2 flex items-center justify-end gap-3">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="md"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 type="submit"
-                disabled={isSubmitting}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold transition-all shadow-md shadow-red-600/30 hover:shadow-lg hover:shadow-red-600/40 disabled:opacity-50 cursor-pointer"
+                variant="primary"
+                size="md"
+                isLoading={isSubmitting}
+                leftIcon={<Send className="w-4 h-4" />}
               >
-                <Send className="w-4 h-4" />
-                <span>{isSubmitting ? "Sending..." : "Submit Inquiry"}</span>
-              </button>
+                Submit Inquiry
+              </Button>
             </div>
           </form>
         )}

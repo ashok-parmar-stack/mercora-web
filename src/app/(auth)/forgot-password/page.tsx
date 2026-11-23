@@ -6,6 +6,7 @@ import { CheckCircle2, AlertTriangle, AlertCircle, ArrowLeft, Send } from 'lucid
 import { z } from 'zod';
 import { forgotPasswordServerAction } from '@/app/actions/auth-actions';
 import { LoadingSpinner } from '@/components/ui/Loading';
+import { Button } from '@/components/ui/Button';
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -152,55 +153,46 @@ export default function ForgotPasswordPage() {
 
             {/* Actions */}
             <div className="flex items-center gap-3 pt-1">
-              <Link
-                href="/login"
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 sm:py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer select-none"
-                style={{
-                  color: 'var(--theme-ink-darkest)',
-                  border: '1.5px solid var(--theme-warm-line)',
-                  background: 'var(--theme-canvas)',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--theme-gray-50)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--theme-canvas)'; }}
+              <Button
+                variant="secondary"
+                size="lg"
+                asChild
+                className="flex-1 font-bold uppercase tracking-widest text-xs py-2.5 sm:py-3 rounded-xl"
               >
+                <Link href="/login">
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Cancel</span>
               </Link>
-              <button
-                id="forgot-submit"
-                type="submit"
-                disabled={loading}
-                className="btn-red flex-1 justify-center py-2.5 sm:py-3 rounded-xl text-xs tracking-widest disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
-              >
-                {loading ? (
-                  <>
-                    <LoadingSpinner size="xs" variant="white" />
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-3.5 h-3.5" />
-                    <span>SEND LINK</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+            </Button>
+            <Button
+              id="forgot-submit"
+              type="submit"
+              variant="primary"
+              size="lg"
+              isLoading={loading}
+              className="flex-1 font-bold uppercase tracking-widest text-xs py-2.5 sm:py-3 rounded-xl"
+              rightIcon={!loading ? <Send className="w-3.5 h-3.5" /> : undefined}
+            >
+            SEND LINK
+          </Button>
+        </div>
+    </form >
         </>
-      )}
+      )
+}
 
-      <div className="mt-4 sm:mt-5 pt-3.5 sm:pt-4 text-center" style={{ borderTop: '1px solid var(--theme-warm-line)' }}>
-        <Link
-          href="/login"
-          className="text-xs font-bold transition-colors inline-flex items-center gap-1.5"
-          style={{ color: 'var(--theme-red)' }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--theme-red-hover)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--theme-red)'; }}
-        >
-          <ArrowLeft className="w-3 h-3" />
-          Back to Sign In
-        </Link>
-      </div>
+<div className="mt-4 sm:mt-5 pt-3.5 sm:pt-4 text-center" style={{ borderTop: '1px solid var(--theme-warm-line)' }}>
+  <Link
+    href="/login"
+    className="text-xs font-bold transition-colors inline-flex items-center gap-1.5"
+    style={{ color: 'var(--theme-red)' }}
+    onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--theme-red-hover)'; }}
+    onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--theme-red)'; }}
+  >
+    <ArrowLeft className="w-3 h-3" />
+    Back to Sign In
+  </Link>
+</div>
     </>
   );
 }

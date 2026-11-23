@@ -10,6 +10,7 @@ import { ArrowLeft, Save } from "lucide-react";
 import { PageHeader } from "../../../../components/layout/PageHeader";
 import { Input } from "../../../../components/ui/Input";
 import { Button } from "../../../../components/ui/Button";
+import { Textarea } from "../../../../components/ui/Textarea";
 import { usePermissions } from "../../../../lib/hooks/usePermissions";
 import { commonSchemas } from "../../../../lib/validation/messages";
 
@@ -105,27 +106,21 @@ export default function CreatePermissionPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-gray-700 block">
-            Description (Optional)
-          </label>
-          <textarea
-            rows={3}
-            className="w-full bg-white border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 rounded-lg text-sm text-gray-900 p-3 outline-none transition-all duration-150"
-            placeholder="Scope of this permission module..."
-            {...register("description")}
-          />
-        </div>
+        <Textarea
+          label="Description (Optional)"
+          rows={3}
+          placeholder="Scope of this permission module..."
+          {...register("description")}
+        />
 
         {/* Footer Actions */}
         <div className="border-t border-gray-100 pt-6 flex items-center justify-between gap-3">
-          <Link
-            href="/admin/permissions"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Cancel &amp; Return</span>
-          </Link>
+          <Button variant="secondary" size="md" asChild>
+            <Link href="/admin/permissions">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Cancel &amp; Return</span>
+            </Link>
+          </Button>
 
           <Button
             type="submit"

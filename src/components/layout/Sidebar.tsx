@@ -117,14 +117,14 @@ export const Sidebar: React.FC = () => {
                 title="Mercora Admin Console"
               >
                 <Logo height={24} className="max-w-[135px]" />
-                <span className="px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider bg-red-50 text-red-600 border border-red-200 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900 rounded flex-shrink-0">
+                <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider bg-brand-50 text-brand-600 border border-brand-200/80 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800/60 rounded flex-shrink-0">
                   Admin
                 </span>
               </Link>
               <button
                 type="button"
                 onClick={toggleSidebar}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                 title="Collapse sidebar"
                 aria-label="Collapse sidebar"
                 aria-expanded={true}
@@ -136,11 +136,11 @@ export const Sidebar: React.FC = () => {
           )}
         </div>
 
-        <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto"} py-4 px-2.5 flex flex-col gap-4`}>
+        <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto sidebar-scrollbar"} py-4 px-3 flex flex-col gap-5`}>
           {ADMIN_NAV_SECTIONS.map((section, idx) => (
             <div key={idx} className="flex flex-col gap-1">
               {!isCollapsed && (
-                <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] mb-0.5">
+                <div className="px-3 text-[11px] font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500 mb-1 select-none">
                   {section.label}
                 </div>
               )}
@@ -188,7 +188,7 @@ export const Sidebar: React.FC = () => {
           ))}
         </div>
 
-        <div className="p-2 border-t border-[var(--border)] flex-shrink-0 bg-[var(--surface)] flex flex-col gap-2">
+        <div className="p-2.5 border-t border-[var(--border)] flex-shrink-0 bg-[var(--surface)] flex flex-col gap-2">
           <SidebarUserFooter
             user={user}
             isCollapsed={isCollapsed}

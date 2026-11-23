@@ -6,6 +6,7 @@ import { Eye, EyeOff, AlertCircle, CheckCircle2, AlertTriangle, ArrowRight } fro
 import { z } from 'zod';
 import { registerServerAction } from '@/app/actions/auth-actions';
 import { LoadingSpinner } from '@/components/ui/Loading';
+import { Button } from '@/components/ui/Button';
 
 /* ── Zod Validation Schema ────────────────────────────────────────────── */
 const registerSchema = z
@@ -341,24 +342,17 @@ export default function RegisterPage() {
 
         {/* Submit */}
         <div className="pt-1">
-          <button
+          <Button
             id="register-submit"
             type="submit"
-            disabled={loading}
-            className="btn-red w-full justify-center py-2.5 sm:py-3 rounded-xl text-xs tracking-widest disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+            variant="primary"
+            size="lg"
+            isLoading={loading}
+            className="w-full font-bold tracking-widest text-xs py-2.5 sm:py-3 rounded-xl"
+            rightIcon={!loading ? <ArrowRight className="w-3.5 h-3.5" /> : undefined}
           >
-            {loading ? (
-              <>
-                <LoadingSpinner size="sm" variant="white" />
-                <span>Creating Account...</span>
-              </>
-            ) : (
-              <>
-                <span>CREATE ACCOUNT</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </>
-            )}
-          </button>
+            CREATE ACCOUNT
+          </Button>
         </div>
       </form>
 

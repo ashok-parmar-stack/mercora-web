@@ -5,7 +5,8 @@ export type BusinessType =
   | 'Distributor'
   | 'Exporter'
   | 'Service Provider'
-  | 'MSMEs';
+  | 'MSMEs'
+  | (string & {});
 
 export type VerificationTier = 'Verified' | 'Premium' | 'Standard';
 

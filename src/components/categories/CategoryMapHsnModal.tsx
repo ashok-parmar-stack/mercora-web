@@ -1,6 +1,9 @@
 import React from "react";
 import { Trash2 } from "lucide-react";
 import { Modal } from "../ui/Modal";
+import { Select } from "../ui/Select";
+import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
 import { HsnCode, HsnCodeCategoryMapping, ProductCategory } from "@mercora/shared-types";
 
 interface CategoryMapHsnModalProps {
@@ -47,10 +50,10 @@ export const CategoryMapHsnModal: React.FC<CategoryMapHsnModalProps> = ({
         <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
           <div className="text-xs font-bold text-gray-800">Map New HSN Code</div>
           <div className="flex items-center gap-2">
-            <select
+            <Select
               value={selectedHsnToMap}
               onChange={(e) => setSelectedHsnToMap(e.target.value)}
-              className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none font-mono"
+              className="flex-1 font-mono"
             >
               <option value="">-- Select HSN Code --</option>
               {availableHsns.map((hsn) => (
@@ -58,15 +61,17 @@ export const CategoryMapHsnModal: React.FC<CategoryMapHsnModalProps> = ({
                   {hsn.code} ({hsn.level}) — {hsn.name}
                 </option>
               ))}
-            </select>
-            <button
+            </Select>
+            <Button
               type="button"
+              size="sm"
+              variant="primary"
               onClick={onAddMapping}
               disabled={!selectedHsnToMap}
-              className="px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 shadow-2xs disabled:opacity-50 cursor-pointer"
+              className="bg-emerald-600 hover:bg-emerald-700"
             >
               Map
-            </button>
+            </Button>
           </div>
           <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
             <input
@@ -103,18 +108,20 @@ export const CategoryMapHsnModal: React.FC<CategoryMapHsnModalProps> = ({
                     </code>
                     <span className="truncate text-gray-600">{m.hsnCode?.name}</span>
                     {m.isPrimary && (
-                      <span className="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800">
+                      <Badge variant="success" size="sm">
                         PRIMARY
-                      </span>
+                      </Badge>
                     )}
                   </div>
-                  <button
+                  <Button
                     type="button"
+                    size="sm"
+                    variant="ghost"
                     onClick={() => onRemoveMapping(m.hsnCodeId)}
-                    className="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 cursor-pointer"
+                    className="h-7 w-7 p-0 text-rose-500 hover:text-rose-700 hover:bg-rose-50"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  </Button>
                 </div>
               ))}
             </div>
@@ -122,13 +129,14 @@ export const CategoryMapHsnModal: React.FC<CategoryMapHsnModalProps> = ({
         </div>
 
         <div className="flex justify-end pt-3 border-t">
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
           >
             Done
-          </button>
+          </Button>
         </div>
       </div>
     </Modal>

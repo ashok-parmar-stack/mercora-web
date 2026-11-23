@@ -54,6 +54,22 @@ module.exports = {
           ink: '#282828',
           card: '#1f2126',
         },
+        card: {
+          DEFAULT: 'var(--surface, #ffffff)',
+          foreground: 'var(--text-primary, #0f172a)',
+        },
+        muted: {
+          DEFAULT: 'var(--background-secondary, #f8fafc)',
+          foreground: 'var(--text-muted, #64748b)',
+        },
+        destructive: {
+          DEFAULT: 'var(--error, #dc2626)',
+          foreground: '#ffffff',
+        },
+        secondary: {
+          DEFAULT: 'var(--background-secondary, #f1f5f9)',
+          foreground: 'var(--text-primary, #0f172a)',
+        },
         accent: {
           50: '#ebf5f8',
           100: '#d2e7ed',

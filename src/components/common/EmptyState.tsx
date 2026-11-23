@@ -3,6 +3,7 @@
 import React from "react";
 import { FolderOpen, ArrowRight } from "lucide-react";
 import { APP_MESSAGES } from "@/config/messages.config";
+import { Button } from "@/components/ui/Button";
 
 export interface EmptyStateProps {
   title?: string;
@@ -35,15 +36,17 @@ export function EmptyState({
         {description}
       </p>
       {actionLabel && onAction && (
-        <button
+          <Button
           type="button"
+          variant="primary"
+          size="md"
           onClick={onAction}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium text-sm transition-all shadow-sm hover:shadow"
+          rightIcon={<ArrowRight className="w-4 h-4" />}
         >
-          <span>{actionLabel}</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      )}
-    </div>
+          {actionLabel}
+    </Button>
+  )
+}
+    </div >
   );
 }

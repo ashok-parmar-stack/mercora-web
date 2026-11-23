@@ -11,6 +11,8 @@ import { Status } from "../../lib/admin-types";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { Textarea } from "../ui/Textarea";
 import { useUIStore } from "../../lib/store/ui-store";
 import { commonSchemas, VALIDATION_MESSAGES } from "../../lib/validation/messages";
 
@@ -125,9 +127,9 @@ export const StatusForm: React.FC<StatusFormProps> = ({
               Define domain status types, identifiers, and sort order configuration.
             </p>
           </div>
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200">
+          <Badge variant="brand" size="sm">
             {mode === "create" ? "New Status" : watch("type") || "Standard"}
-          </span>
+          </Badge>
         </div>
 
         <Select
@@ -185,27 +187,21 @@ export const StatusForm: React.FC<StatusFormProps> = ({
           </Select>
         </div>
 
-        <div>
-          <label className="text-xs font-bold uppercase tracking-wider text-gray-700 block mb-1.5">
-            Description / Context (Optional)
-          </label>
-          <textarea
-            rows={3}
-            className="w-full bg-white border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 rounded-lg text-sm text-gray-900 p-3 outline-none transition-all duration-150"
-            placeholder="Explain when this status is assigned..."
-            {...register("description")}
-          />
-        </div>
+        <Textarea
+          label="Description / Context (Optional)"
+          rows={3}
+          placeholder="Explain when this status is assigned..."
+          {...register("description")}
+        />
 
         {/* Footer Actions */}
         <div className="border-t border-gray-100 pt-6 flex items-center justify-between gap-3">
-          <Link
-            href="/admin/statuses"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Cancel &amp; Return</span>
-          </Link>
+          <Button variant="secondary" size="md" asChild>
+            <Link href="/admin/statuses">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Cancel &amp; Return</span>
+            </Link>
+          </Button>
 
           <Button
             type="submit"
@@ -220,11 +216,11 @@ export const StatusForm: React.FC<StatusFormProps> = ({
                 ? "Creating Status..."
                 : "Create Status"
               : submitting
-              ? "Saving Changes..."
-              : "Save Changes"}
+                ? "Saving Changes..."
+                : "Save Changes"}
           </Button>
         </div>
       </div>
-    </form>
+    </form >
   );
 };

@@ -71,7 +71,7 @@ export const Breadcrumb: React.FC = () => {
           href="/admin"
           className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-brand-600 dark:hover:text-brand-400 font-semibold transition-colors flex-shrink-0"
         >
-          <Home className="w-3.5 h-3.5 text-brand-500" />
+          <Home className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
           <span>Admin</span>
         </Link>
 
@@ -146,7 +146,7 @@ export const Breadcrumb: React.FC = () => {
         href="/admin"
         className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-brand-600 dark:hover:text-brand-400 font-semibold transition-colors flex-shrink-0"
       >
-        <Home className="w-3.5 h-3.5 text-brand-500" />
+        <Home className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
         <span>Admin</span>
       </Link>
 

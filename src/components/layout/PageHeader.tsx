@@ -55,26 +55,28 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         {extraActions}
         {actionButton &&
           (actionButton.href ? (
-            <Link href={actionButton.href}>
-              <Button
-                variant={actionButton.variant || "primary"}
-                disabled={actionButton.disabled}
-                leftIcon={actionButton.icon}
-              >
-                {actionButton.label}
-              </Button>
-            </Link>
-          ) : (
-            <Button
-              variant={actionButton.variant || "primary"}
-              onClick={actionButton.onClick}
-              disabled={actionButton.disabled}
-              leftIcon={actionButton.icon}
-            >
-              {actionButton.label}
-            </Button>
-          ))}
-      </div>
-    </div>
+                <Button
+                  variant={actionButton.variant || "primary"}
+                  disabled={actionButton.disabled}
+                  leftIcon={actionButton.icon}
+                  asChild
+                >
+                  <Link href={actionButton.href}>
+                    {actionButton.label}
+              </Link>
+    </Button>
+  ) : (
+    <Button
+      variant={actionButton.variant || "primary"}
+      onClick={actionButton.onClick}
+      disabled={actionButton.disabled}
+      leftIcon={actionButton.icon}
+    >
+      {actionButton.label}
+    </Button>
+  ))
+}
+      </div >
+    </div >
   );
 };

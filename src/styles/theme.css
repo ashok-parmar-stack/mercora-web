@@ -45,6 +45,7 @@
   --sidebar-text-muted:   #94a3b8;
   --sidebar-active-bg:    #fef2f2;
   --sidebar-active-text:  #ee3135;
+  --sidebar-active-border:#fecdd3;
 
   /* Header */
   --header-bg:            #ffffff;
@@ -115,142 +116,13 @@
 
 
 /* ═══════════════════════════════════════════════
-   🌙  DARK MODE — Rich Obsidian Slate & Enterprise Contrast
+   ☀️  EXCLUSIVE RED & WHITE DESIGN SYSTEM
    ═══════════════════════════════════════════════
-   Design Strategy:
-   - Base:       Deep obsidian canvas    (#090d16)
-   - Secondary:  Subtle recessed area    (#0d1322)
-   - Surface:    Elevated card / panel   (#111827)
-   - Raised:     Dropdowns / modals      (#182234)
-   - Hover:      Interactive item hover  (#1e293b)
-   - Active:     Selected row / item     (#26354a)
-   - Brand:      Vibrant signature red   (#ee3135)
+   Other themes removed: The app enforces a unified Red & White theme.
    ═══════════════════════════════════════════════ */
 .dark {
-  /* Backgrounds — 4-tier obsidian depth hierarchy */
-  --background:           #080b11;   /* Deep obsidian slate base */
-  --background-secondary: #0d121c;   /* Recessed panels, sub-headers */
-
-  /* Surfaces — elevated, distinct card hierarchy */
-  --surface:              #121826;   /* Primary card / panel surface */
-  --surface-raised:       #182032;   /* Modals, popovers, dropdowns */
-  --surface-hover:        #1e283d;   /* Row/item interactive hover */
-  --surface-active:       #25324c;   /* Selected / pressed state */
-
-  /* Typography — WCAG AAA contrast hierarchy */
-  --text-primary:         #ffffff;   /* Crisp white for headings & active titles */
-  --text-secondary:       #cbd5e1;   /* Clean readable slate body copy */
-  --text-muted:           #94a3b8;   /* Refined slate for captions & timestamps */
-  --text-disabled:        #526075;   /* Disabled states */
-  --text-inverse:         #080b11;   /* Text on light surfaces */
-
-  /* Borders — refined modern hairline hierarchy */
-  --border:               rgba(255, 255, 255, 0.08);   /* Subtle visible hairline border */
-  --border-hover:         rgba(255, 255, 255, 0.16);   /* Interactive hover border */
-  --border-strong:        rgba(255, 255, 255, 0.24);   /* Strong contrast border */
-  --border-focus:         #ee3135;   /* Brand signature crimson focus */
-
-  /* Brand Primary (Mercora Signature Luminous Crimson) */
-  --primary:              #ee3135;   /* Luminous signature crimson */
-  --primary-hover:        #f84b4f;   /* Glowing crimson hover */
-  --primary-active:       #d92c30;   /* Deep crimson active */
-  --primary-soft:         rgba(238, 49, 53, 0.14); /* Soft crimson tint */
-  --primary-foreground:   #ffffff;   /* Pure white text inside crimson buttons */
-
-  /* Accent — Luminous interactive elements */
-  --accent:               #ee3135;
-  --accent-hover:         #f84b4f;
-  --accent-active:        #d92c30;
-  --accent-soft:          rgba(238, 49, 53, 0.14);
-  --accent-border:        rgba(238, 49, 53, 0.35);
-  --accent-text:          #ff6b6e;
-
-  /* Sidebar — unified deep obsidian panel */
-  --sidebar-bg:           #0a0e17;
-  --sidebar-border:       rgba(255, 255, 255, 0.07);
-  --sidebar-text:         #94a3b8;
-  --sidebar-text-muted:   #64748b;
-  --sidebar-active-bg:    rgba(238, 49, 53, 0.14);  /* Luminous crimson active */
-  --sidebar-active-text:  #ffffff;                   /* Crisp pure white text */
-
-  /* Header — blurred glass overlay */
-  --header-bg:            rgba(10, 14, 23, 0.85);
-  --header-border:        rgba(255, 255, 255, 0.07);
-
-  /* Table — high-legibility data rows */
-  --table-header-bg:      #0d121c;
-  --table-row-hover:      rgba(255, 255, 255, 0.03);
-  --table-border:         rgba(255, 255, 255, 0.07);
-  --table-stripe:         #0a0e17;
-
-  /* Forms & Inputs — focused elegance */
-  --input-background:     #0a0e17;
-  --input-border:         rgba(255, 255, 255, 0.12);
-  --input-border-focus:   #ee3135;
-  --input-placeholder:    #64748b;
-  --input-text:           #ffffff;
-
-  /* Status — Vivid, Accessible, Distinct Semantic Colors */
-  --success:              #10b981;
-  --success-bg:           rgba(16, 185, 129, 0.14);
-  --success-border:       rgba(16, 185, 129, 0.32);
-  --success-text:         #34d399;
-
-  --warning:              #f59e0b;
-  --warning-bg:           rgba(245, 158, 11, 0.14);
-  --warning-border:       rgba(245, 158, 11, 0.32);
-  --warning-text:         #fbbf24;
-
-  --error:                #ef4444;
-  --error-bg:             rgba(239, 68, 68, 0.14);
-  --error-border:         rgba(239, 68, 68, 0.32);
-  --error-text:           #f87171;
-
-  --info:                 #3b82f6;
-  --info-bg:              rgba(59, 130, 246, 0.14);
-  --info-border:          rgba(59, 130, 246, 0.32);
-  --info-text:            #60a5fa;
-
-  /* Effects & Shadows */
-  --overlay:              rgba(0, 0, 0, 0.75);
-  --shadow-sm:            0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md:            0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg:            0 12px 36px rgba(0, 0, 0, 0.6);
-  --shadow-card:          0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.25);
-
-  /* Legacy Bindings */
-  --theme-canvas:         var(--background);
-  --theme-card-bg:        var(--surface);
-  --theme-panel-bg:       var(--background-secondary);
-  --theme-warm-line:      var(--border);
-  --theme-glass-border:   var(--border);
-  --theme-glass-header:   rgba(13, 19, 34, 0.88);
-  --theme-ink-darkest:    var(--text-primary);
-  --theme-ink:            var(--text-secondary);
-
-  /* Gray remapping — High-Contrast AAA */
-  --theme-gray-900:       #ffffff;
-  --theme-gray-800:       #f1f5f9;
-  --theme-gray-700:       #cbd5e1;
-  --theme-gray-600:       #94a3b8;
-  --theme-gray-500:       #94a3b8;
-  --theme-gray-400:       #64748b;
-  --theme-gray-300:       rgba(255, 255, 255, 0.16);
-  --theme-gray-200:       rgba(255, 255, 255, 0.08);
-  --theme-gray-100:       #182032;
-  --theme-gray-50:        #0d121c;
-  --theme-blush:          rgba(238, 49, 53, 0.10);
-
-  /* Landing Page Configurable Design Tokens */
-  --landing-banner-bg:       linear-gradient(135deg, #090d16 0%, #111827 50%, #090d16 100%);
-  --landing-banner-border:   rgba(238, 49, 53, 0.35);
-  --landing-banner-shadow:   0 25px 50px -12px rgba(0, 0, 0, 0.8);
-  --landing-banner-radial:   radial-gradient(circle at 50% 50%, rgba(238, 49, 53, 0.18) 0%, transparent 65%);
-  --landing-card-bg:         var(--surface);
-  --landing-card-border:     var(--border);
-  --landing-inner-surface:   var(--background-secondary);
-  --landing-code-bg:         #070a10;
-  --landing-glow-red:        rgba(238, 49, 53, 0.20);
+  /* Inherit all root Red & White tokens so dark mode is completely removed */
+  color-scheme: light;
 }
 
 /* ── Color scheme & Smooth Scrolling ── */
@@ -265,5 +137,24 @@ html.light {
 }
 
 html.dark {
-  color-scheme: dark;
+  color-scheme: light;
+}
+
+/* ── Minimal Sleek Scrollbar for Sidebar ── */
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.25) transparent;
+}
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.5);
 }

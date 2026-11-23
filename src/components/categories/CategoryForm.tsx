@@ -11,6 +11,8 @@ import { ProductCategory, CreateProductCategoryInput, UpdateProductCategoryInput
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { Textarea } from "../ui/Textarea";
 import { commonSchemas, VALIDATION_MESSAGES } from "../../lib/validation/messages";
 
 const categorySchema = z.object({
@@ -155,147 +157,143 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
               Configure product category identity, URL pathing, taxonomy hierarchy, and status.
             </p>
           </div>
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200">
-            {mode === "create" ? "New Record" : `Level ${initialData?.level || 1}`}
-          </span>
-        </div>
+            <Badge variant="brand" size="sm">
+              {mode === "create" ? "New Record" : `Level ${initialData?.level || 1}`}
+        </Badge>
+      </div>
 
-        {/* Section 1: Basic Information */}
-        <div className="flex flex-col gap-4">
+      {/* Section 1: Basic Information */}
+      <div className="flex flex-col gap-4">
+        <Input
+          label="Category Name *"
+          placeholder="e.g. Vitrified Floor Tiles"
+          error={errors.name?.message}
+          helperText="The primary display name shown to buyers and throughout catalog listings."
+          {...register("name", {
+            onChange: (e) => handleNameChange(e.target.value),
+          })}
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
-            label="Category Name *"
-            placeholder="e.g. Vitrified Floor Tiles"
-            error={errors.name?.message}
-            helperText="The primary display name shown to buyers and throughout catalog listings."
-            {...register("name", {
-              onChange: (e) => handleNameChange(e.target.value),
-            })}
+            label="Category Code (Optional)"
+            placeholder="Auto-generated if left blank"
+            error={errors.code?.message}
+            helperText="Unique identifier for ERP, sync jobs, and backend integrations."
+            className="font-mono uppercase"
+            {...register("code")}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Category Code (Optional)"
-              placeholder="Auto-generated if left blank"
-              error={errors.code?.message}
-              helperText="Unique identifier for ERP, sync jobs, and backend integrations."
-              className="font-mono uppercase"
-              {...register("code")}
-            />
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                  URL Slug (Optional)
-                </label>
-                {mode === "create" && (
-                  <button
-                    type="button"
-                    onClick={() => setAutoSlug(!autoSlug)}
-                    className="text-[11px] font-bold text-brand-600 hover:text-brand-700 cursor-pointer flex items-center gap-1"
-                  >
-                    <Sparkles className="w-3 h-3" />
-                    {autoSlug ? "Manual Edit" : "Auto Sync"}
-                  </button>
-                )}
-              </div>
-              <Input
-                placeholder="vitrified-floor-tiles"
-                leftIcon={<span className="text-xs font-mono text-gray-400">/</span>}
-                error={errors.slug?.message}
-                helperText="SEO-friendly slug for routing and buyer discovery paths."
-                className="font-mono"
-                {...register("slug", {
-                  onChange: () => setAutoSlug(false),
-                })}
-              />
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="text-xs font-bold uppercase tracking-wider text-gray-700">
+                URL Slug (Optional)
+              </label>
+              {mode === "create" && (
+                <button
+                  type="button"
+                  onClick={() => setAutoSlug(!autoSlug)}
+                  className="text-[11px] font-bold text-brand-600 hover:text-brand-700 cursor-pointer flex items-center gap-1"
+                >
+                  <Sparkles className="w-3 h-3" />
+                  {autoSlug ? "Manual Edit" : "Auto Sync"}
+                </button>
+              )}
             </div>
+            <Input
+              placeholder="vitrified-floor-tiles"
+              leftIcon={<span className="text-xs font-mono text-gray-400">/</span>}
+              error={errors.slug?.message}
+              helperText="SEO-friendly slug for routing and buyer discovery paths."
+              className="font-mono"
+              {...register("slug", {
+                onChange: () => setAutoSlug(false),
+              })}
+            />
           </div>
         </div>
+      </div>
 
-        {/* Section 2: Hierarchy & Parent Category */}
-        {mode === "create" && (
-          <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
-            <Select
-              label="Parent Category (Taxonomy Hierarchy)"
-              error={errors.parentId?.message}
-              helperText="Selecting a parent category nests this item under that node and calculates its depth level."
-              {...register("parentId")}
-            >
-              <option value="">[ None - Root Top-Level Category (Level 1) ]</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {"— ".repeat(Math.max(0, (c.level || 1) - 1))} {c.name} (Level {c.level || 1})
-                </option>
-              ))}
-            </Select>
-          </div>
-        )}
-
-        {/* Section 3: Description */}
-        <div className="border-t border-gray-100 pt-4 flex flex-col gap-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-gray-700">
-            Description &amp; Specifications (Optional)
-          </label>
-          <textarea
-            rows={3}
-            placeholder="Detailed description of what products belong in this category..."
-            className="w-full bg-white border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-100 rounded-lg text-sm text-gray-900 p-3 outline-none transition-all duration-150"
-            {...register("description")}
-          />
-        </div>
-
-        {/* Section 4: Display Order & Status */}
-        <div className="border-t border-gray-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            label="Display Sort Order (Optional)"
-            type="number"
-            min={0}
-            placeholder="e.g. 1"
-            error={errors.sortOrder?.message}
-            helperText="Determines sequence in catalog menus (lower numbers show first)."
-            className="font-mono"
-            {...register("sortOrder")}
-          />
-
+      {/* Section 2: Hierarchy & Parent Category */}
+      {mode === "create" && (
+        <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
           <Select
-            label="Status Lifecycle"
-            error={errors.status?.message}
-            helperText="Active categories are accessible to buyers and vendors for product listings."
-            {...register("status")}
+            label="Parent Category (Taxonomy Hierarchy)"
+            error={errors.parentId?.message}
+            helperText="Selecting a parent category nests this item under that node and calculates its depth level."
+            {...register("parentId")}
           >
-            <option value="ACTIVE">ACTIVE — Live in Catalog</option>
-            <option value="INACTIVE">INACTIVE — Hidden from Catalog</option>
+            <option value="">[ None - Root Top-Level Category (Level 1) ]</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {"— ".repeat(Math.max(0, (c.level || 1) - 1))} {c.name} (Level {c.level || 1})
+              </option>
+            ))}
           </Select>
         </div>
+      )}
 
-        {/* Footer Actions */}
-        <div className="border-t border-gray-100 pt-6 flex items-center justify-between gap-3">
-          <Link
-            href={cancelHref}
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer"
-          >
+      {/* Section 3: Description */}
+      <div className="border-t border-gray-100 pt-4">
+        <Textarea
+          label="Description & Specifications (Optional)"
+          rows={3}
+          placeholder="Detailed description of what products belong in this category..."
+          {...register("description")}
+        />
+      </div>
+
+      {/* Section 4: Display Order & Status */}
+      <div className="border-t border-gray-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Input
+          label="Display Sort Order (Optional)"
+          type="number"
+          min={0}
+          placeholder="e.g. 1"
+          error={errors.sortOrder?.message}
+          helperText="Determines sequence in catalog menus (lower numbers show first)."
+          className="font-mono"
+          {...register("sortOrder")}
+        />
+
+        <Select
+          label="Status Lifecycle"
+          error={errors.status?.message}
+          helperText="Active categories are accessible to buyers and vendors for product listings."
+          {...register("status")}
+        >
+          <option value="ACTIVE">ACTIVE — Live in Catalog</option>
+          <option value="INACTIVE">INACTIVE — Hidden from Catalog</option>
+        </Select>
+      </div>
+
+      {/* Footer Actions */}
+      <div className="border-t border-gray-100 pt-6 flex items-center justify-between gap-3">
+        <Button variant="secondary" size="md" asChild>
+          <Link href={cancelHref}>
             <ArrowLeft className="w-4 h-4" />
             <span>Cancel &amp; Return</span>
           </Link>
+        </Button>
 
-          <Button
-            type="submit"
-            variant="primary"
-            size="md"
-            isLoading={submitting}
-            disabled={submitting}
-            leftIcon={<Save className="w-4 h-4" />}
-          >
-            {mode === "create"
-              ? submitting
-                ? "Creating Category..."
-                : "Create Product Category"
-              : submitting
-                ? "Saving Changes..."
-                : "Save Changes"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          variant="primary"
+          size="md"
+          isLoading={submitting}
+          disabled={submitting}
+          leftIcon={<Save className="w-4 h-4" />}
+        >
+          {mode === "create"
+            ? submitting
+              ? "Creating Category..."
+              : "Create Product Category"
+            : submitting
+              ? "Saving Changes..."
+              : "Save Changes"}
+        </Button>
       </div>
-    </form>
+    </div>
+    </form >
   );
 };

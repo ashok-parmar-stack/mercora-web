@@ -447,224 +447,222 @@ export function DataTable<T>({
 
       {/* ── Main Table ───────────────────────────── */}
       <div className="w-full overflow-hidden border border-[var(--border)] rounded-xl bg-[var(--surface)] shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-[var(--text-secondary)] border-collapse min-w-full">
-            {/* ── Header (MUI-Style Clean Design with Vertical Dividers) ── */}
-            <thead className="bg-[var(--background-secondary)] border-b border-[var(--border)] text-xs font-semibold text-[var(--text-secondary)] font-instrument">
-              <tr>
-                {/* Checkbox Column with right divider */}
-                {isSelectionEnabled && (
-                  <th className="w-11 min-w-[44px] px-0 py-0 text-center border-b border-[var(--border)]">
-                    <div className="flex items-center justify-center h-10 px-3 border-r border-[var(--border)]">
-                      <input
-                        type="checkbox"
-                        checked={isAllSelected}
-                        ref={(el) => {
-                          if (el) el.indeterminate = isSomeSelected;
-                        }}
-                        disabled={isLoading || executingActionIdx !== null || allVisibleIds.length === 0}
-                        onChange={() => selectAllRows(tableKey, allVisibleIds)}
-                        className="w-4 h-4 rounded border-[var(--border)] accent-[var(--border-focus)] focus:ring-[var(--border-focus)] focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                        aria-label="Select all visible rows"
-                      />
-                    </div>
-                  </th>
-                )}
+        <Table className="min-w-full">
+          {/* ── Header (MUI-Style Clean Design with Vertical Dividers) ── */}
+          <TableHeader>
+            <TableRow className="hover:bg-transparent">
+              {/* Checkbox Column with right divider */}
+              {isSelectionEnabled && (
+                <TableHead className="w-11 min-w-[44px] px-0 py-0 text-center border-b border-[var(--border)]">
+                  <div className="flex items-center justify-center h-10 px-3 border-r border-[var(--border)]">
+                    <input
+                      type="checkbox"
+                      checked={isAllSelected}
+                      ref={(el) => {
+                        if (el) el.indeterminate = isSomeSelected;
+                      }}
+                      disabled={isLoading || executingActionIdx !== null || allVisibleIds.length === 0}
+                      onChange={() => selectAllRows(tableKey, allVisibleIds)}
+                      className="w-4 h-4 rounded border-[var(--border)] accent-[var(--border-focus)] focus:ring-[var(--border-focus)] focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      aria-label="Select all visible rows"
+                    />
+                  </div>
+                </TableHead>
+              )}
 
-                {/* Data Columns */}
-                {visibleColumns.map((col, idx) => {
-                  const isSortable = col.sortable !== false;
-                  const isActiveSortCol = sortKey === col.key && Boolean(sortDir);
-                  const isLastCol = idx === visibleColumns.length - 1;
-                  return (
-                    <th
-                      key={col.key}
-                      style={{ width: col.width, minWidth: col.minWidth }}
-                      className={`px-0 py-0 select-none whitespace-nowrap text-xs tracking-normal border-b border-[var(--border)] ${col.className || ""}`}
+              {/* Data Columns */}
+              {visibleColumns.map((col, idx) => {
+                const isSortable = col.sortable !== false;
+                const isActiveSortCol = sortKey === col.key && Boolean(sortDir);
+                const isLastCol = idx === visibleColumns.length - 1;
+                return (
+                  <TableHead
+                    key={col.key}
+                    style={{ width: col.width, minWidth: col.minWidth }}
+                    className={`px-0 py-0 select-none whitespace-nowrap text-xs tracking-normal border-b border-[var(--border)] ${col.className || ""}`}
+                  >
+                    <div
+                      className={`flex items-center justify-between h-10 px-4 transition-colors ${isSortable ? "cursor-pointer hover:bg-[var(--surface-hover)]" : ""
+                        } ${isActiveSortCol ? "bg-[var(--surface-hover)]" : ""}`}
+                      onClick={isSortable ? () => handleSort(col.key) : undefined}
                     >
                       <div
-                        className={`flex items-center justify-between h-10 px-4 transition-colors ${isSortable ? "cursor-pointer hover:bg-[var(--surface-hover)]" : ""
-                          } ${isActiveSortCol ? "bg-[var(--surface-hover)]" : ""}`}
-                        onClick={isSortable ? () => handleSort(col.key) : undefined}
-                      >
-                        <div
-                          className={`inline-flex items-center gap-1.5 flex-1 min-w-0 ${col.align === "right"
-                              ? "flex-row-reverse justify-end"
-                              : col.align === "center"
-                                ? "justify-center"
-                                : "justify-start"
-                            } ${isSortable ? "group/sort" : ""}`}
-                        >
-                          <span
-                            className={`truncate transition-colors ${isActiveSortCol
-                                ? "font-bold text-[var(--text-primary)]"
-                                : "font-semibold text-[var(--text-secondary)] group-hover/sort:text-[var(--text-primary)]"
-                              }`}
-                          >
-                            {col.header}
-                          </span>
-
-                          {/* Sort Indicator: default ArrowUpDown visible on all sortable columns */}
-                          {isSortable && (
-                            <span className="flex-shrink-0 inline-flex items-center">
-                              {isActiveSortCol ? (
-                                sortDir === "asc" ? (
-                                  <ArrowUp className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[2.5]" />
-                                ) : (
-                                  <ArrowDown className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[2.5]" />
-                                )
-                              ) : (
-                                <ArrowUpDown className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover/sort:text-[var(--text-secondary)] transition-colors" />
-                              )}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* MUI Column Separator Divider (only between columns, never on the last column) */}
-                        {!isLastCol && (
-                          <div
-                            className="h-4 w-[1px] bg-[var(--border-strong)] flex-shrink-0 ml-3"
-                            aria-hidden="true"
-                          />
-                        )}
-                      </div>
-                    </th>
-                  );
-                })}
-
-                {/* Actions Column */}
-                {renderActions && (
-                  <th className="w-24 min-w-[90px] px-0 py-0 text-right sticky right-0 bg-[var(--background-secondary)] border-b border-[var(--border)] z-10">
-                    <div className="flex items-center justify-end h-10 px-4">
-                      <span className="font-semibold text-[var(--text-secondary)] text-xs tracking-normal">
-                        {actionsHeader}
-                      </span>
-                    </div>
-                  </th>
-                )}
-              </tr>
-            </thead>
-
-            {/* ── Body ── */}
-            <tbody className="divide-y divide-[var(--border)] bg-[var(--surface)]">
-              {isLoading ? (
-                Array.from({ length: 6 }).map((_, idx) => (
-                  <tr key={idx} className="transition-colors">
-                    {isSelectionEnabled && (
-                      <td className="w-11 min-w-[44px] px-3 py-3.5 text-center border-r border-[var(--border)]">
-                        <div className="w-4 h-4 bg-[var(--surface-hover)] rounded mx-auto relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
-                      </td>
-                    )}
-                    {visibleColumns.map((col, cIdx) => (
-                      <td key={col.key} className="px-4 py-3.5 align-middle">
-                        <div
-                          className="h-3.5 bg-[var(--surface-hover)] rounded-md relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent"
-                          style={{ width: cIdx === 0 ? "65%" : cIdx === 1 ? "40%" : "55%" }}
-                        />
-                        {cIdx === 0 && (
-                          <div className="h-2.5 bg-[var(--surface-hover)] rounded w-1/3 mt-2 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
-                        )}
-                      </td>
-                    ))}
-                    {renderActions && (
-                      <td className="w-24 min-w-[90px] px-4 py-3.5 text-right sticky right-0 bg-[var(--surface)] z-10">
-                        <div className="h-7 w-7 rounded-lg bg-[var(--surface-hover)] ml-auto relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
-                      </td>
-                    )}
-                  </tr>
-                ))
-              ) : paginatedData.length === 0 ? (
-                <tr>
-                  <td colSpan={colSpan} className="py-20 text-center text-[var(--text-muted)]">
-                    <div className="flex flex-col items-center justify-center gap-3 max-w-sm mx-auto">
-                      <div className="w-12 h-12 rounded-2xl bg-[var(--surface-hover)] flex items-center justify-center text-[var(--text-muted)]">
-                        <Inbox className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <div className="font-bold text-[var(--text-primary)] text-sm">{emptyTitle}</div>
-                        <p className="text-xs text-[var(--text-secondary)] leading-relaxed mt-0.5">
-                          {emptyDescription}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                paginatedData.map((item, rowIdx) => {
-                  const key = keyExtractor(item);
-                  const isSelected = selectedRowIds.includes(key);
-                  const isDeleted = isItemSoftDeleted ? isItemSoftDeleted(item) : false;
-                  const isEven = rowIdx % 2 === 0;
-
-                  // Solid background color class — uses CSS vars so both themes work automatically
-                  const rowBg = isSelected
-                    ? "bg-[var(--surface-active)]"
-                    : isDeleted
-                      ? "bg-rose-50 dark:bg-rose-950/20"
-                      : isEven
-                        ? "bg-[var(--surface)]"
-                        : "bg-[var(--background-secondary)]";
-
-                  const stickyBg = isSelected
-                    ? "bg-[var(--surface-active)]"
-                    : isDeleted
-                      ? "bg-rose-50 dark:bg-rose-950/20"
-                      : isEven
-                        ? "bg-[var(--surface)]"
-                        : "bg-[var(--background-secondary)]";
-
-                  return (
-                    <tr
-                      key={key}
-                      className={`transition-colors duration-100 group/row ${rowBg} hover:bg-[var(--table-row-hover)]`}
-                    >
-                      {/* Row Checkbox */}
-                      {isSelectionEnabled && (
-                        <td className="w-11 min-w-[44px] px-3 py-3 text-center border-r border-[var(--border)]">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            disabled={isLoading || executingActionIdx !== null}
-                            onChange={() => toggleRowSelection(tableKey, key)}
-                            className="w-4 h-4 rounded border-[var(--border)] accent-[var(--border-focus)] focus:ring-[var(--border-focus)] focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-                            aria-label={`Select row ${key}`}
-                          />
-                        </td>
-                      )}
-
-                      {/* Data Cells */}
-                      {visibleColumns.map((col) => (
-                        <td
-                          key={col.key}
-                          style={{ width: col.width, minWidth: col.minWidth }}
-                          className={`px-4 py-3 align-middle ${col.align === "right"
-                            ? "text-right"
+                        className={`inline-flex items-center gap-1.5 flex-1 min-w-0 ${col.align === "right"
+                            ? "flex-row-reverse justify-end"
                             : col.align === "center"
-                              ? "text-center"
-                              : "text-left"
-                            } ${col.className || ""}`}
+                              ? "justify-center"
+                              : "justify-start"
+                          } ${isSortable ? "group/sort" : ""}`}
+                      >
+                        <span
+                          className={`truncate transition-colors ${isActiveSortCol
+                              ? "font-bold text-[var(--text-primary)]"
+                              : "font-semibold text-[var(--text-secondary)] group-hover/sort:text-[var(--text-primary)]"
+                            }`}
                         >
-                          {col.render ? col.render(item) : (item as any)[col.key] ?? "—"}
-                        </td>
-                      ))}
+                          {col.header}
+                        </span>
 
-                      {/* Action Cells – sticky right column with solid bg */}
-                      {renderActions && (
-                        <td
-                          className={`w-24 min-w-[90px] px-4 py-3 text-right sticky right-0 transition-colors duration-100 z-10 ${stickyBg} group-hover/row:bg-[var(--table-row-hover)]`}
-                        >
-                          <div className="inline-flex items-center justify-end gap-1">
-                            {renderActions(item)}
-                          </div>
-                        </td>
+                        {/* Sort Indicator: default ArrowUpDown visible on all sortable columns */}
+                        {isSortable && (
+                          <span className="flex-shrink-0 inline-flex items-center">
+                            {isActiveSortCol ? (
+                              sortDir === "asc" ? (
+                                <ArrowUp className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[2.5]" />
+                              ) : (
+                                <ArrowDown className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[2.5]" />
+                              )
+                            ) : (
+                              <ArrowUpDown className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover/sort:text-[var(--text-secondary)] transition-colors" />
+                            )}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* MUI Column Separator Divider (only between columns, never on the last column) */}
+                      {!isLastCol && (
+                        <div
+                          className="h-4 w-[1px] bg-[var(--border-strong)] flex-shrink-0 ml-3"
+                          aria-hidden="true"
+                        />
                       )}
-                    </tr>
-                  );
-                })
+                    </div>
+                  </TableHead>
+                );
+              })}
+
+              {/* Actions Column */}
+              {renderActions && (
+                <TableHead className="w-24 min-w-[90px] px-0 py-0 text-right sticky right-0 bg-[var(--background-secondary)] border-b border-[var(--border)] z-10">
+                  <div className="flex items-center justify-end h-10 px-4">
+                    <span className="font-semibold text-[var(--text-secondary)] text-xs tracking-normal">
+                      {actionsHeader}
+                    </span>
+                  </div>
+                </TableHead>
               )}
-            </tbody>
-          </table>
-        </div>
+            </TableRow>
+          </TableHeader>
+
+          {/* ── Body ── */}
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, idx) => (
+                <TableRow key={idx}>
+                  {isSelectionEnabled && (
+                    <TableCell className="w-11 min-w-[44px] px-3 py-3.5 text-center border-r border-[var(--border)]">
+                      <div className="w-4 h-4 bg-[var(--surface-hover)] rounded mx-auto relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                    </TableCell>
+                  )}
+                  {visibleColumns.map((col, cIdx) => (
+                    <TableCell key={col.key} className="px-4 py-3.5 align-middle">
+                      <div
+                        className="h-3.5 bg-[var(--surface-hover)] rounded-md relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent"
+                        style={{ width: cIdx === 0 ? "65%" : cIdx === 1 ? "40%" : "55%" }}
+                      />
+                      {cIdx === 0 && (
+                        <div className="h-2.5 bg-[var(--surface-hover)] rounded w-1/3 mt-2 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                      )}
+                    </TableCell>
+                  ))}
+                  {renderActions && (
+                    <TableCell className="w-24 min-w-[90px] px-4 py-3.5 text-right sticky right-0 bg-[var(--surface)] z-10">
+                      <div className="h-7 w-7 rounded-lg bg-[var(--surface-hover)] ml-auto relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent" />
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))
+            ) : paginatedData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={colSpan} className="py-20 text-center text-[var(--text-muted)]">
+                  <div className="flex flex-col items-center justify-center gap-3 max-w-sm mx-auto">
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--surface-hover)] flex items-center justify-center text-[var(--text-muted)]">
+                      <Inbox className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="font-bold text-[var(--text-primary)] text-sm">{emptyTitle}</div>
+                      <p className="text-xs text-[var(--text-secondary)] leading-relaxed mt-0.5">
+                        {emptyDescription}
+                      </p>
+                    </div>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginatedData.map((item, rowIdx) => {
+                const key = keyExtractor(item);
+                const isSelected = selectedRowIds.includes(key);
+                const isDeleted = isItemSoftDeleted ? isItemSoftDeleted(item) : false;
+                const isEven = rowIdx % 2 === 0;
+
+                // Solid background color class — uses CSS vars so both themes work automatically
+                const rowBg = isSelected
+                  ? "bg-[var(--surface-active)]"
+                  : isDeleted
+                    ? "bg-rose-50 dark:bg-rose-950/20"
+                    : isEven
+                      ? "bg-[var(--surface)]"
+                      : "bg-[var(--background-secondary)]";
+
+                const stickyBg = isSelected
+                  ? "bg-[var(--surface-active)]"
+                  : isDeleted
+                    ? "bg-rose-50 dark:bg-rose-950/20"
+                    : isEven
+                      ? "bg-[var(--surface)]"
+                      : "bg-[var(--background-secondary)]";
+
+                return (
+                  <TableRow
+                    key={key}
+                    className={`transition-colors duration-100 group/row ${rowBg} hover:bg-[var(--table-row-hover)]`}
+                  >
+                    {/* Row Checkbox */}
+                    {isSelectionEnabled && (
+                      <TableCell className="w-11 min-w-[44px] px-3 py-3 text-center border-r border-[var(--border)]">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          disabled={isLoading || executingActionIdx !== null}
+                          onChange={() => toggleRowSelection(tableKey, key)}
+                          className="w-4 h-4 rounded border-[var(--border)] accent-[var(--border-focus)] focus:ring-[var(--border-focus)] focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          aria-label={`Select row ${key}`}
+                        />
+                      </TableCell>
+                    )}
+
+                    {/* Data Cells */}
+                    {visibleColumns.map((col) => (
+                      <TableCell
+                        key={col.key}
+                        style={{ width: col.width, minWidth: col.minWidth }}
+                        className={`px-4 py-3 align-middle ${col.align === "right"
+                          ? "text-right"
+                          : col.align === "center"
+                            ? "text-center"
+                            : "text-left"
+                          } ${col.className || ""}`}
+                      >
+                        {col.render ? col.render(item) : (item as any)[col.key] ?? "—"}
+                      </TableCell>
+                    ))}
+
+                    {/* Action Cells – sticky right column with solid bg */}
+                    {renderActions && (
+                      <TableCell
+                        className={`w-24 min-w-[90px] px-4 py-3 text-right sticky right-0 transition-colors duration-100 z-10 ${stickyBg} group-hover/row:bg-[var(--table-row-hover)]`}
+                      >
+                        <div className="inline-flex items-center justify-end gap-1">
+                          {renderActions(item)}
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
 
         {/* ── Pagination Footer ───────────────────── */}
         {!isLoading && (

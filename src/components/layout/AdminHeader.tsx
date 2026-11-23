@@ -12,6 +12,7 @@ import {
 import { useUIStore } from "@/lib/store/ui-store";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { Badge } from "@/components/ui/Badge";
 
 export function AdminHeader() {
   const isCollapsed = useUIStore((s) => s.isSidebarCollapsed);
@@ -40,7 +41,7 @@ export function AdminHeader() {
             className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
             title="Expand sidebar"
           >
-            <PanelLeft className="w-5 h-5 text-red-600" />
+            <PanelLeft className="w-5 h-5 text-brand-600 dark:text-brand-400" />
           </button>
         ) : (
           <button
@@ -57,7 +58,7 @@ export function AdminHeader() {
         <div className="flex items-center gap-2">
           <div className="h-4 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block" />
           <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 text-xs font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5 text-red-600" />
+            <ShieldCheck className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
             <span>Admin Console</span>
             <span className="text-slate-400 dark:text-slate-500 hidden md:inline">· Control Plane</span>
           </div>
@@ -71,7 +72,7 @@ export function AdminHeader() {
           href="/businesses"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors"
+          className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 transition-colors"
           title="Open Public Business Directory in new tab"
         >
           <span>Live Directory</span>
@@ -79,10 +80,9 @@ export function AdminHeader() {
         </Link>
 
         {/* Telemetry pill */}
-        <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>API Online</span>
-        </div>
+        <Badge variant="success" size="sm" dot className="hidden lg:inline-flex">
+          API Online
+        </Badge>
 
         <ThemeToggle />
 
@@ -94,7 +94,7 @@ export function AdminHeader() {
               className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Admin Profile"
             >
-              <div className="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center text-xs font-bold shadow-xs">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center text-xs font-bold shadow-xs">
                 {user?.name ? user.name.slice(0, 2).toUpperCase() : "SA"}
               </div>
               <div className="hidden md:flex flex-col text-left">

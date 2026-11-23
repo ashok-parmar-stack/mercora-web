@@ -11,6 +11,7 @@ import { User, Role, Status } from "../../lib/admin-types";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
 import { useUIStore } from "../../lib/store/ui-store";
 import { commonSchemas, VALIDATION_MESSAGES } from "../../lib/validation/messages";
 
@@ -134,132 +135,131 @@ export const UserForm: React.FC<UserFormProps> = ({
               Configure user identity, access credentials, and assigned organizational role.
             </p>
           </div>
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200 dark:bg-brand-950/50 dark:text-brand-300 dark:border-brand-800/60">
-            {mode === "create" ? "New Account" : initialUser?.role?.name || "Active Member"}
-          </span>
-        </div>
+            <Badge variant="brand" size="sm">
+              {mode === "create" ? "New Account" : initialUser?.role?.name || "Active Member"}
+        </Badge>
+      </div>
 
-        {/* Section 1: Name Information */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input
-            label="First Name"
-            placeholder="e.g. John"
-            leftIcon={<UserIcon className="w-4 h-4" />}
-            {...register("firstName")}
-            error={errors.firstName?.message}
-          />
+      {/* Section 1: Name Information */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="First Name"
+          placeholder="e.g. John"
+          leftIcon={<UserIcon className="w-4 h-4" />}
+          {...register("firstName")}
+          error={errors.firstName?.message}
+        />
 
-          <Input
-            label="Last Name"
-            placeholder="e.g. Smith"
-            leftIcon={<UserIcon className="w-4 h-4" />}
-            {...register("lastName")}
-            error={errors.lastName?.message}
-          />
-        </div>
+        <Input
+          label="Last Name"
+          placeholder="e.g. Smith"
+          leftIcon={<UserIcon className="w-4 h-4" />}
+          {...register("lastName")}
+          error={errors.lastName?.message}
+        />
+      </div>
 
-        {/* Section 2: Contact & Slug */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input
-            label="Work Email *"
-            type="email"
-            placeholder="john.smith@mercora.com"
-            leftIcon={<Mail className="w-4 h-4" />}
-            {...register("email", {
-              onChange: (e) => {
-                if (mode === "create" && !watch("slug")) {
-                  const username = e.target.value.split("@")[0] || "";
-                  setValue("slug", username.toLowerCase().replace(/[^a-z0-9_-]/g, "-"));
-                }
-              },
-            })}
-            error={errors.email?.message}
-          />
+      {/* Section 2: Contact & Slug */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label="Work Email *"
+          type="email"
+          placeholder="john.smith@mercora.com"
+          leftIcon={<Mail className="w-4 h-4" />}
+          {...register("email", {
+            onChange: (e) => {
+              if (mode === "create" && !watch("slug")) {
+                const username = e.target.value.split("@")[0] || "";
+                setValue("slug", username.toLowerCase().replace(/[^a-z0-9_-]/g, "-"));
+              }
+            },
+          })}
+          error={errors.email?.message}
+        />
 
-          <Input
-            label="URL Slug (Permanent)"
-            placeholder="john-smith"
-            leftIcon={<Globe className="w-4 h-4" />}
-            {...register("slug")}
-            error={errors.slug?.message}
-            helperText="Used for clean permalinks & API path access."
-          />
-        </div>
+        <Input
+          label="URL Slug (Permanent)"
+          placeholder="john-smith"
+          leftIcon={<Globe className="w-4 h-4" />}
+          {...register("slug")}
+          error={errors.slug?.message}
+          helperText="Used for clean permalinks & API path access."
+        />
+      </div>
 
-        {/* Section 3: Credentials & Role */}
-        <div className="border-t border-[var(--border)] pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input
-            label={mode === "create" ? "Initial Password *" : "Reset Password (Optional)"}
-            type="password"
-            placeholder={mode === "create" ? "••••••••" : "Leave blank to keep existing"}
-            leftIcon={<Lock className="w-4 h-4" />}
-            {...register("password")}
-            error={errors.password?.message}
-          />
+      {/* Section 3: Credentials & Role */}
+      <div className="border-t border-[var(--border)] pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Input
+          label={mode === "create" ? "Initial Password *" : "Reset Password (Optional)"}
+          type="password"
+          placeholder={mode === "create" ? "••••••••" : "Leave blank to keep existing"}
+          leftIcon={<Lock className="w-4 h-4" />}
+          {...register("password")}
+          error={errors.password?.message}
+        />
 
-          <Select
-            label="Assigned Role *"
-            value={watch("roleId") || ""}
-            onChange={(e) => setValue("roleId", e.target.value, { shouldValidate: true })}
-            error={errors.roleId?.message}
-          >
-            <option value="" disabled>
-              Select a role...
+        <Select
+          label="Assigned Role *"
+          value={watch("roleId") || ""}
+          onChange={(e) => setValue("roleId", e.target.value, { shouldValidate: true })}
+          error={errors.roleId?.message}
+        >
+          <option value="" disabled>
+            Select a role...
+          </option>
+          {roles.map((r) => (
+            <option key={r.id} value={r.id}>
+              {r.name} ({r.code})
             </option>
-            {roles.map((r) => (
-              <option key={r.id} value={r.id}>
-                {r.name} ({r.code})
+          ))}
+        </Select>
+      </div>
+
+      {/* Section 4: Lifecycle Status */}
+      {statuses.length > 0 && (
+        <div className="border-t border-[var(--border)] pt-4 max-w-sm">
+          <Select
+            label="Account Status"
+            value={watch("statusId") || ""}
+            onChange={(e) => setValue("statusId", e.target.value, { shouldValidate: true })}
+            error={errors.statusId?.message}
+          >
+            {statuses.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} ({s.code})
               </option>
             ))}
           </Select>
         </div>
+      )}
 
-        {/* Section 4: Lifecycle Status */}
-        {statuses.length > 0 && (
-          <div className="border-t border-[var(--border)] pt-4 max-w-sm">
-            <Select
-              label="Account Status"
-              value={watch("statusId") || ""}
-              onChange={(e) => setValue("statusId", e.target.value, { shouldValidate: true })}
-              error={errors.statusId?.message}
-            >
-              {statuses.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name} ({s.code})
-                </option>
-              ))}
-            </Select>
-          </div>
-        )}
-
-        {/* Footer Actions */}
-        <div className="border-t border-[var(--border)] pt-6 flex items-center justify-between gap-3">
-          <Link
-            href="/admin/users"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-[var(--text-secondary)] bg-[var(--surface-hover)] hover:bg-[var(--border)] border border-[var(--border)] rounded-xl transition-colors cursor-pointer"
-          >
+      {/* Footer Actions */}
+      <div className="border-t border-[var(--border)] pt-6 flex items-center justify-between gap-3">
+        <Button variant="secondary" size="md" asChild>
+          <Link href="/admin/users">
             <ArrowLeft className="w-4 h-4" />
             <span>Cancel &amp; Return</span>
           </Link>
+        </Button>
 
-          <Button
-            type="submit"
-            variant="primary"
-            size="md"
-            isLoading={submitting}
-            disabled={submitting}
-            leftIcon={<Save className="w-4 h-4" />}
-          >
-            {mode === "create"
-              ? submitting
-                ? "Creating Account..."
-                : "Create User Account"
-              : submitting
-                ? "Saving Changes..."
-                : "Save User Changes"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          variant="primary"
+          size="md"
+          isLoading={submitting}
+          disabled={submitting}
+          leftIcon={<Save className="w-4 h-4" />}
+        >
+          {mode === "create"
+            ? submitting
+              ? "Creating Account..."
+              : "Create User Account"
+            : submitting
+              ? "Saving Changes..."
+              : "Save User Changes"}
+        </Button>
       </div>
-    </form>
+    </div>
+    </form >
   );
 };

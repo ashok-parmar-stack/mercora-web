@@ -9,6 +9,7 @@ import {
   resendVerificationServerAction,
 } from '@/app/actions/auth-actions';
 import { LoadingSpinner, LogoLoader } from '@/components/ui/Loading';
+import { Button } from '@/components/ui/Button';
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -97,13 +98,16 @@ function VerifyEmailContent() {
               Your email has been confirmed. Redirecting you to login...
             </div>
           </div>
-          <Link
-            href="/login?verified=true"
-            className="w-full inline-flex justify-center items-center py-3 px-4 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all shadow-xs"
-            style={{ backgroundColor: 'var(--theme-red, #ee3135)' }}
+          <Button
+            variant="primary"
+            size="lg"
+            asChild
+            className="w-full font-bold uppercase tracking-wider text-xs py-3 rounded-lg"
           >
-            CONTINUE TO SIGN IN
-          </Link>
+            <Link href="/login?verified=true">
+              CONTINUE TO SIGN IN
+            </Link>
+          </Button>
         </div>
       )}
 
@@ -139,21 +143,15 @@ function VerifyEmailContent() {
                     className="block w-full px-3.5 py-2.5 bg-white border border-[#dcdfe4] rounded-lg text-sm text-[#14161a] placeholder-[#9ca3af] focus:outline-none focus:border-[#ee3135] focus:ring-1 focus:ring-[#ee3135]"
                   />
                 </div>
-                <button
+                <Button
                   type="submit"
-                  disabled={resendLoading}
-                  className="w-full py-2.5 px-4 rounded-lg text-xs font-bold uppercase tracking-wider text-white transition-all shadow-xs disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2"
-                  style={{ backgroundColor: 'var(--theme-red, #ee3135)' }}
+                  variant="primary"
+                  size="lg"
+                  isLoading={resendLoading}
+                  className="w-full font-bold uppercase tracking-wider text-xs py-2.5 rounded-lg"
                 >
-                  {resendLoading ? (
-                    <>
-                      <LoadingSpinner size="xs" variant="white" />
-                      <span>Sending Link...</span>
-                    </>
-                  ) : (
-                    <span>SEND VERIFICATION EMAIL</span>
-                  )}
-                </button>
+                  SEND VERIFICATION EMAIL
+                </Button>
               </form>
             )}
           </div>

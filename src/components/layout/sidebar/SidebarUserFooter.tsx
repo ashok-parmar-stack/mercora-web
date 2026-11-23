@@ -15,10 +15,10 @@ export function SidebarUserFooter({ user, isCollapsed, onLogout }: SidebarUserFo
 
   if (isCollapsed) {
     return (
-      <div className="flex flex-col items-center gap-1.5 py-1">
+      <div className="flex flex-col items-center gap-2 py-1">
         <Link
           href="/admin/profile"
-          className="w-9 h-9 rounded-xl overflow-hidden bg-brand-50 hover:bg-brand-100 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 flex items-center justify-center font-bold text-xs transition-transform hover:scale-105"
+          className="relative w-9 h-9 rounded-xl overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold text-xs shadow-xs transition-transform hover:scale-105"
           title="Admin Profile Settings"
         >
           {user?.avatarUrl ? (
@@ -26,11 +26,12 @@ export function SidebarUserFooter({ user, isCollapsed, onLogout }: SidebarUserFo
           ) : (
             avatarInitials
           )}
+          <div className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900 absolute -bottom-0.5 -right-0.5" />
         </Link>
         <button
           type="button"
           onClick={onLogout}
-          className="w-9 h-9 rounded-xl text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 flex items-center justify-center transition-colors cursor-pointer"
+          className="w-9 h-9 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 flex items-center justify-center transition-colors cursor-pointer"
           title="Sign Out"
           aria-label="Sign Out"
         >
@@ -42,24 +43,27 @@ export function SidebarUserFooter({ user, isCollapsed, onLogout }: SidebarUserFo
 
   return (
     <>
-      <div className="flex items-center justify-between p-2 rounded-xl bg-[var(--surface-hover)] border border-[var(--border)] group">
+      <div className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-50/80 dark:bg-slate-900/60 border border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs transition-all group">
         <Link
           href="/admin/profile"
-          className="flex items-center gap-2.5 min-w-0 flex-1 hover:opacity-85 transition-opacity"
+          className="flex items-center gap-3 min-w-0 flex-1 hover:opacity-90 transition-opacity"
           title="View Profile Settings"
         >
-          <div className="w-8 h-8 rounded-lg overflow-hidden bg-slate-900 text-white font-extrabold flex items-center justify-center text-xs shadow-2xs flex-shrink-0 dark:bg-white dark:text-slate-900">
-            {user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user.name || "User Avatar"} className="w-full h-full object-cover" />
-            ) : (
-              avatarInitials
-            )}
+          <div className="relative flex-shrink-0">
+            <div className="w-9 h-9 rounded-xl overflow-hidden bg-gradient-to-br from-brand-500 to-brand-700 text-white font-bold flex items-center justify-center text-xs shadow-xs">
+              {user?.avatarUrl ? (
+                <img src={user.avatarUrl} alt={user.name || "User Avatar"} className="w-full h-full object-cover" />
+              ) : (
+                avatarInitials
+              )}
+            </div>
+            <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900 absolute -bottom-0.5 -right-0.5" />
           </div>
           <div className="flex flex-col min-w-0">
-            <span className="text-xs font-bold text-[var(--text-primary)] truncate">
+            <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
               {user?.name || "Ashok Parmar"}
             </span>
-            <span className="text-[10px] text-[var(--text-muted)] truncate">
+            <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400 truncate">
               {typeof user?.role === "object" ? user?.role?.name : user?.role || "Super Administrator"}
             </span>
           </div>
@@ -67,7 +71,7 @@ export function SidebarUserFooter({ user, isCollapsed, onLogout }: SidebarUserFo
         <button
           type="button"
           onClick={onLogout}
-          className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors cursor-pointer flex-shrink-0"
+          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-colors cursor-pointer flex-shrink-0"
           title="Sign Out"
           aria-label="Sign Out"
         >
@@ -75,12 +79,12 @@ export function SidebarUserFooter({ user, isCollapsed, onLogout }: SidebarUserFo
         </button>
       </div>
 
-      <div className="flex items-center justify-between px-2 py-0.5 text-[10px] text-[var(--text-muted)]">
+      <div className="flex items-center justify-between px-2.5 pt-0.5 text-[10px] text-slate-400 dark:text-slate-500 font-medium">
         <div className="flex items-center gap-1.5">
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-semibold text-gray-500 dark:text-gray-400">Admin Engine</span>
+          <span>Admin Engine</span>
         </div>
-        <span className="font-mono text-[9px] text-gray-400">v2.4 Online</span>
+        <span className="font-mono text-[9px] text-slate-400">v2.4 Online</span>
       </div>
     </>
   );

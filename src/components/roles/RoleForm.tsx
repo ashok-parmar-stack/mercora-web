@@ -11,6 +11,8 @@ import { Role, Status, Permission } from "../../lib/admin-types";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
+import { Badge } from "../ui/Badge";
+import { Textarea } from "../ui/Textarea";
 import { PermissionMatrix } from "../permissions/PermissionMatrix";
 import { usePermissions } from "../../lib/hooks/usePermissions";
 import { useStatuses } from "../../lib/hooks/useStatuses";
@@ -131,9 +133,9 @@ export const RoleForm: React.FC<RoleFormProps> = ({
               Configure primary role credentials, hierarchy priority weight, and lifecycle status.
             </p>
           </div>
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-700 border border-brand-200">
+          <Badge variant="brand" size="sm">
             {mode === "create" ? "New Role" : isSystemRole ? "System Protected" : "Custom Role"}
-          </span>
+          </Badge>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -200,17 +202,12 @@ export const RoleForm: React.FC<RoleFormProps> = ({
           )}
         </div>
 
-        <div>
-          <label className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] block mb-1.5 font-rethink">
-            Role Description / Scope (Optional)
-          </label>
-          <textarea
-            rows={3}
-            className="w-full bg-[var(--input-background)] border border-[var(--input-border)] focus:border-[var(--border-focus)] focus:ring-2 focus:ring-[var(--border-focus)]/20 rounded-lg text-sm text-[var(--text-primary)] placeholder:text-[var(--input-placeholder)] p-3 outline-none transition-all duration-150 font-rethink"
-            placeholder="Describe what access privileges this role encompasses..."
-            {...register("description")}
-          />
-        </div>
+        <Textarea
+          label="Role Description / Scope (Optional)"
+          rows={3}
+          placeholder="Describe what access privileges this role encompasses..."
+          {...register("description")}
+        />
       </div>
 
       {/* 2. Granular Permissions Matrix Section */}
@@ -222,13 +219,12 @@ export const RoleForm: React.FC<RoleFormProps> = ({
 
       {/* 3. Form Action Buttons */}
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6 shadow-xs flex items-center justify-between gap-3">
-        <Link
-          href="/admin/roles"
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-[var(--text-secondary)] bg-[var(--surface-hover)] hover:bg-[var(--border)] border border-[var(--border)] rounded-xl transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Cancel &amp; Return</span>
-        </Link>
+        <Button variant="secondary" size="md" asChild>
+          <Link href="/admin/roles">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Cancel &amp; Return</span>
+          </Link>
+        </Button>
         <Button
           variant="primary"
           size="md"
@@ -240,6 +236,6 @@ export const RoleForm: React.FC<RoleFormProps> = ({
           {mode === "create" ? "Create Role & Permissions" : "Save Changes"}
         </Button>
       </div>
-    </form>
+    </form >
   );
 };

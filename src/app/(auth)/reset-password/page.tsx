@@ -7,6 +7,7 @@ import { Eye, EyeOff, CheckCircle2, AlertTriangle, AlertCircle, ShieldCheck, Arr
 import { z } from 'zod';
 import { resetPasswordServerAction } from '@/app/actions/auth-actions';
 import { LoadingSpinner, LogoLoader } from '@/components/ui/Loading';
+import { Button } from '@/components/ui/Button';
 
 const resetPasswordSchema = z
   .object({
@@ -254,35 +255,28 @@ function ResetPasswordForm() {
 
             {/* Buttons */}
             <div className="flex items-center gap-3 pt-1">
-              <Link
-                href="/login"
-                className="flex-1 flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer select-none"
-                style={{
-                  color: 'var(--theme-ink-darkest)',
-                  border: '1.5px solid var(--theme-warm-line)',
-                  background: 'var(--theme-canvas)',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--theme-gray-50)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--theme-canvas)'; }}
+              <Button
+                variant="secondary"
+                size="lg"
+                asChild
+                className="flex-1 font-bold uppercase tracking-widest text-xs py-3.5 rounded-xl"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Cancel</span>
-              </Link>
-              <button
+                <Link href="/login">
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>Cancel</span>
+                </Link>
+              </Button>
+              <Button
                 id="reset-submit"
                 type="submit"
-                disabled={loading || !token}
-                className="btn-red flex-1 justify-center py-3.5 rounded-xl text-xs tracking-widest disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
+                variant="primary"
+                size="lg"
+                disabled={!token}
+                isLoading={loading}
+                className="flex-1 font-bold uppercase tracking-widest text-xs py-3.5 rounded-xl"
               >
-                {loading ? (
-                  <>
-                    <LoadingSpinner size="xs" variant="white" />
-                    <span>Updating...</span>
-                  </>
-                ) : (
-                  <span>RESET PASSWORD</span>
-                )}
-              </button>
+                RESET PASSWORD
+              </Button>
             </div>
           </form>
         </>

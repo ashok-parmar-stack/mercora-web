@@ -20,6 +20,7 @@ import { ContactInquiryModal } from "@/features/enquiries/components/ContactInqu
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
 import { SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 import {
   RadixSelect as Select,
   RadixSelectContent as SelectContent,
@@ -87,25 +88,31 @@ export default function BusinessesDiscoveryPage() {
 
           <div className="flex items-center gap-3">
             {/* Mobile Filter Toggle */}
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={() => setShowMobileFilter(!showMobileFilter)}
-              className="lg:hidden inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl"
+              className="lg:hidden"
+              leftIcon={<SlidersHorizontal className="w-4 h-4 text-slate-500" />}
             >
-              <SlidersHorizontal className="w-4 h-4 text-slate-500" />
-              <span>Filters</span>
-            </button>
+              Filters
+            </Button>
 
             {/* Sort Selector */}
-            <select
+            <Select
               value={filters.sortBy}
-              onChange={(e) => setFilters((prev) => ({ ...prev, sortBy: e.target.value as any }))}
-              className="text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 font-semibold cursor-pointer shadow-xs"
+              onValueChange={(val) => setFilters((prev) => ({ ...prev, sortBy: val as any }))}
             >
-              <option value="relevance">Sort: Relevance</option>
-              <option value="rating">Sort: Highest Rated</option>
-              <option value="established">Sort: Established Year</option>
-            </select>
+              <SelectTrigger className="w-[180px] h-9 text-xs font-semibold bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="relevance">Sort: Relevance</SelectItem>
+                <SelectItem value="rating">Sort: Highest Rated</SelectItem>
+                <SelectItem value="established">Sort: Established Year</SelectItem>
+              </SelectContent>
+            </Select>
 
             {/* Card / Table Toggle */}
             <BusinessViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
@@ -152,7 +159,7 @@ export default function BusinessesDiscoveryPage() {
                     business={business}
                     isSaved={isSaved(business.id)}
                     onToggleSave={() => toggleSave(business.id)}
-                    onSelect={() => {}}
+                    onSelect={() => { }}
                   />
                 ))}
               </div>

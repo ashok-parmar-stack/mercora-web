@@ -9,6 +9,7 @@ import { MobileNavigation } from "./MobileNavigation";
 import { APP_HEADERS } from "@/config/headers.config";
 import { ThemeToggle } from "../theme/ThemeToggle";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { Button } from "@/components/ui/Button";
 
 export interface HeaderProps {
   savedCount?: number;
@@ -79,18 +80,16 @@ export function Header({ savedCount = 0 }: HeaderProps) {
               </div>
             ) : (
               <>
-                <Link
-                  href="/login"
-                  className="px-3.5 py-1.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                >
-                  {APP_HEADERS.navigation.auth.login}
-                </Link>
-                <Link
-                  href="/register"
-                  className="px-4 py-1.5 rounded-xl text-sm font-semibold text-white bg-red-600 hover:bg-red-700 transition-all shadow-sm hover:shadow"
-                >
-                  {APP_HEADERS.navigation.auth.register}
-                </Link>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/login">
+                    {APP_HEADERS.navigation.auth.login}
+                  </Link>
+                </Button>
+                <Button variant="primary" size="sm" asChild>
+                  <Link href="/register">
+                    {APP_HEADERS.navigation.auth.register}
+                  </Link>
+                </Button>
               </>
             )}
           </div>

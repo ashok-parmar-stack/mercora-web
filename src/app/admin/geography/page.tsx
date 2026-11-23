@@ -32,6 +32,16 @@ import {
 import { CountrySelect } from '../../../components/geography/CountrySelect';
 import { LocationCascader } from '../../../components/geography/LocationCascader';
 import { Country, GeographicDashboardMetrics } from '@mercora/shared-types';
+import { Button } from '../../../components/ui/Button';
+import { Badge } from '../../../components/ui/Badge';
+import {
+  Table,
+  TableHeader,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '../../../components/ui/Table';
 
 import {
   fetchGeographicDashboardMetrics,
@@ -495,71 +505,71 @@ export default function GeographicDashboardPage() {
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               Pipeline Ready
             </span>
-            <button
-              type="button"
+            <Button
+              size="sm"
+              variant="outline"
               onClick={handleSyncAllPipelines}
               disabled={syncingAll}
-              className="px-3 py-1 text-xs font-bold text-gray-700 hover:bg-gray-100 rounded-lg border border-gray-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+              leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${syncingAll ? 'animate-spin' : ''}`} />}
               title="Trigger sync on all 4 government pipelines"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${syncingAll ? 'animate-spin' : ''}`} />
               Sync All
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Datasets Table */}
-        <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-2xs bg-white">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-[#fafafa] border-b border-gray-200 text-xs font-semibold text-gray-700 font-instrument sticky top-0 z-10 select-none">
-              <tr>
-                <th className="px-0 py-0 border-b border-gray-200">
+        <div className="rounded-xl border border-gray-200 shadow-2xs bg-white overflow-hidden">
+          <Table>
+            <TableHeader className="bg-[#fafafa] border-b border-gray-200 text-xs font-semibold text-gray-700 font-instrument select-none">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="px-0 py-0 border-b border-gray-200">
                   <div className="flex items-center justify-between h-10 px-4">
                     <span>Dataset Name</span>
                     <span className="h-4 w-[1px] bg-gray-300 flex-shrink-0 ml-3" aria-hidden="true" />
                   </div>
-                </th>
-                <th className="px-0 py-0 border-b border-gray-200">
+                </TableHead>
+                <TableHead className="px-0 py-0 border-b border-gray-200">
                   <div className="flex items-center justify-between h-10 px-4">
                     <span>Source</span>
                     <span className="h-4 w-[1px] bg-gray-300 flex-shrink-0 ml-3" aria-hidden="true" />
                   </div>
-                </th>
-                <th className="px-0 py-0 border-b border-gray-200">
+                </TableHead>
+                <TableHead className="px-0 py-0 border-b border-gray-200">
                   <div className="flex items-center justify-between h-10 px-4">
                     <span>Frequency</span>
                     <span className="h-4 w-[1px] bg-gray-300 flex-shrink-0 ml-3" aria-hidden="true" />
                   </div>
-                </th>
-                <th className="px-0 py-0 border-b border-gray-200 text-right">
+                </TableHead>
+                <TableHead className="px-0 py-0 border-b border-gray-200 text-right">
                   <div className="flex items-center justify-between h-10 px-4">
                     <span className="flex-1 text-right">Records</span>
                     <span className="h-4 w-[1px] bg-gray-300 flex-shrink-0 ml-3" aria-hidden="true" />
                   </div>
-                </th>
-                <th className="px-0 py-0 border-b border-gray-200 text-center">
+                </TableHead>
+                <TableHead className="px-0 py-0 border-b border-gray-200 text-center">
                   <div className="flex items-center justify-between h-10 px-4">
                     <span className="flex-1 text-center">Pipeline Status</span>
                     <span className="h-4 w-[1px] bg-gray-300 flex-shrink-0 ml-3" aria-hidden="true" />
                   </div>
-                </th>
-                <th className="px-0 py-0 border-b border-gray-200 text-right">
+                </TableHead>
+                <TableHead className="px-0 py-0 border-b border-gray-200 text-right">
                   <div className="flex items-center justify-end h-10 px-4 border-l border-gray-200">
                     <span className="font-semibold text-gray-700">Action</span>
                   </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-gray-100">
               {datasets.map((item) => {
                 const isSyncing = syncingDatasetId === item.id || (syncingAll && item.status === 'Syncing');
                 return (
-                  <tr
+                  <TableRow
                     key={item.id}
                     className="hover:bg-gray-50/80 transition-colors group cursor-pointer"
                     onClick={() => setViewingDataset(item)}
                   >
-                    <td className="py-3.5 px-4">
+                    <TableCell className="py-3.5 px-4">
                       <div className="flex flex-col">
                         <span className="font-bold text-gray-900 group-hover:text-brand-600 transition-colors">
                           {item.dataset}
@@ -568,9 +578,9 @@ export default function GeographicDashboardPage() {
                           {item.lastSync}
                         </span>
                       </div>
-                    </td>
+                    </TableCell>
 
-                    <td className="py-3.5 px-4">
+                    <TableCell className="py-3.5 px-4">
                       <span
                         className={`inline-block px-2.5 py-0.5 rounded-md text-[11px] font-mono font-bold border ${item.source === 'LGD'
                           ? 'bg-blue-50 text-blue-700 border-blue-200'
@@ -579,17 +589,17 @@ export default function GeographicDashboardPage() {
                       >
                         {item.source}
                       </span>
-                    </td>
+                    </TableCell>
 
-                    <td className="py-3.5 px-4 text-gray-600 font-medium">
+                    <TableCell className="py-3.5 px-4 text-gray-600 font-medium">
                       {item.frequency}
-                    </td>
+                    </TableCell>
 
-                    <td className="py-3.5 px-4 text-right font-mono font-bold text-gray-900">
+                    <TableCell className="py-3.5 px-4 text-right font-mono font-bold text-gray-900">
                       {item.records.toLocaleString('en-US')}
-                    </td>
+                    </TableCell>
 
-                    <td className="py-3.5 px-4 text-center">
+                    <TableCell className="py-3.5 px-4 text-center">
                       {isSyncing ? (
                         <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
                           <RefreshCw className="w-3 h-3 animate-spin" />
@@ -601,34 +611,38 @@ export default function GeographicDashboardPage() {
                           Synchronized
                         </span>
                       )}
-                    </td>
+                    </TableCell>
 
-                    <td className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
+                    <TableCell className="py-3.5 px-4 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1.5">
-                        <button
+                        <Button
                           type="button"
+                          size="sm"
+                          variant="outline"
                           disabled={isSyncing}
                           onClick={() => handleSyncDataset(item.id)}
-                          className="px-2.5 py-1 text-[11px] font-bold text-brand-600 hover:bg-brand-50 rounded-lg transition-colors cursor-pointer border border-brand-200 disabled:opacity-50"
+                          className="h-7 px-2.5 text-[11px]"
                           title="Trigger instant sync check"
                         >
                           {isSyncing ? 'Running...' : 'Sync'}
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                           type="button"
+                          size="sm"
+                          variant="ghost"
                           onClick={() => setViewingDataset(item)}
-                          className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer"
+                          className="h-7 w-7 p-0"
                           title="View dataset schema & endpoint specifications"
                         >
                           <Info className="w-3.5 h-3.5" />
-                        </button>
+                        </Button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Sync Strategy Highlight Callout */}

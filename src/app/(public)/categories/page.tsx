@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/Header";
 import { EmptyState } from "@/components/common/EmptyState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { ErrorState } from "@/components/common/ErrorState";
+import { Input } from "@/components/ui/Input";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { fetchCategories } from "@/features/categories/category-api";
 import { CategoryItem } from "@/features/categories/types";
@@ -61,15 +62,14 @@ export default function CategoriesDirectoryPage() {
             </p>
           </div>
 
-          <div className="relative w-full md:w-72">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
+          <div className="w-full md:w-72">
+            <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search industries..."
               aria-label="Search industries"
-              className="w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500"
+              leftIcon={<Search className="w-4 h-4" />}
             />
           </div>
         </div>

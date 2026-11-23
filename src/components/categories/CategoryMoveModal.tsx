@@ -1,6 +1,8 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
 import { Modal } from "../ui/Modal";
+import { Select } from "../ui/Select";
+import { Button } from "../ui/Button";
 import { ProductCategory } from "@mercora/shared-types";
 
 interface CategoryMoveModalProps {
@@ -48,10 +50,9 @@ export const CategoryMoveModal: React.FC<CategoryMoveModalProps> = ({
           <label className="block text-xs font-semibold text-gray-700 mb-1">
             Select Target Parent Category
           </label>
-          <select
+          <Select
             value={targetParentId}
             onChange={(e) => setTargetParentId(e.target.value)}
-            className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 bg-white focus:ring-2 focus:ring-brand-500 focus:outline-none"
           >
             <option value="">[ None - Move to Root Level ]</option>
             {categories
@@ -61,24 +62,26 @@ export const CategoryMoveModal: React.FC<CategoryMoveModalProps> = ({
                   {"— ".repeat((c.level || 1) - 1)} {c.name} (L{c.level || 1})
                 </option>
               ))}
-          </select>
+          </Select>
         </div>
 
         <div className="flex justify-end gap-2 pt-3 border-t">
-          <button
+          <Button
             type="button"
+            variant="secondary"
+            size="sm"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer"
           >
             Cancel
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
-            disabled={isSubmitting}
-            className="px-4 py-2 text-xs font-bold text-white bg-purple-600 rounded-lg hover:bg-purple-700 shadow-2xs cursor-pointer disabled:opacity-50"
+            variant="primary"
+            size="sm"
+            isLoading={isSubmitting}
           >
-            {isSubmitting ? "Moving..." : "Reparent Category"}
-          </button>
+            Reparent Category
+          </Button>
         </div>
       </form>
     </Modal>
