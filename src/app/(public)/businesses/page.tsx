@@ -9,9 +9,13 @@ import { BusinessCard } from "@/features/businesses/components/listing/BusinessC
 import { BusinessTable } from "@/features/businesses/components/listing/BusinessTable";
 import { BusinessViewToggle } from "@/features/businesses/components/listing/BusinessViewToggle";
 import { BusinessCardSkeleton } from "@/features/businesses/components/listing/BusinessCardSkeleton";
-import { Pagination } from "@/components/common/Pagination";
-import { EmptyState } from "@/components/common/EmptyState";
-import { ErrorState } from "@/components/common/ErrorState";
+import {
+  Button,
+  Select,
+  Pagination,
+  EmptyState,
+  ErrorState,
+} from "@/components/common";
 import { useBusinesses } from "@/features/businesses/hooks/use-businesses";
 import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
 import { Business } from "@/features/businesses/types/business.types";
@@ -21,15 +25,6 @@ import { AddBusinessModal } from "@/features/businesses/components/AddBusinessMo
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
 import { SlidersHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Select } from "@/components/common";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/Sheet";
 
 export default function BusinessesDiscoveryPage() {
   const {
@@ -78,12 +73,12 @@ export default function BusinessesDiscoveryPage() {
         />
 
         {/* Results Header Toolbar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
           <div>
-            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+            <h2 className="text-xl font-extrabold text-text-primary tracking-tight flex items-center gap-2">
               <span>{totalCount.toLocaleString()} {APP_HEADERS.directory.resultsHeading}</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-text-muted mt-0.5">
               Verified suppliers and certified manufacturers across India.
             </p>
           </div>
@@ -96,7 +91,7 @@ export default function BusinessesDiscoveryPage() {
               size="sm"
               onClick={() => setShowMobileFilter(!showMobileFilter)}
               className="lg:hidden"
-              leftIcon={<SlidersHorizontal className="w-4 h-4 text-slate-500" />}
+              leftIcon={<SlidersHorizontal className="w-4 h-4 text-primary" />}
             >
               Filters
             </Button>
@@ -159,7 +154,7 @@ export default function BusinessesDiscoveryPage() {
                     business={business}
                     isSaved={isSaved(business.id)}
                     onToggleSave={() => toggleSave(business.id)}
-                    onSelect={() => { }}
+                    onSelect={() => {}}
                   />
                 ))}
               </div>

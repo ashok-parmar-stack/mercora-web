@@ -82,11 +82,11 @@ export function BusinessCard({
       tabIndex={0}
       onClick={handleCardClick}
       onKeyDown={handleKeyDown}
-      className="group relative flex flex-col bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 hover:border-red-500/50 dark:hover:border-red-500/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500/50"
+      className="group relative flex flex-col bg-surface rounded-2xl border border-border hover:border-primary/50 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
     >
       {/* Business Image Banner */}
       <div
-        className="relative h-44 min-h-[11rem] shrink-0 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden"
+        className="relative h-44 min-h-[11rem] shrink-0 w-full bg-background-secondary overflow-hidden"
         style={{ minHeight: "11rem", height: "11rem" }}
       >
         <Image
@@ -97,7 +97,7 @@ export function BusinessCard({
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           onError={() => setImgSrc(FALLBACK_IMAGE)}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80" />
 
         {/* Top Badges */}
         <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
@@ -109,18 +109,18 @@ export function BusinessCard({
           type="button"
           onClick={handleSaveClick}
           aria-label={saved ? "Remove from bookmarks" : "Save business"}
-          className={`absolute top-3 left-3 p-2 rounded-xl backdrop-blur-md transition-all z-30 pointer-events-auto cursor-pointer shadow-sm ${
+          className={`absolute top-3 left-3 p-2 rounded-xl backdrop-blur-md transition-all z-30 pointer-events-auto cursor-pointer shadow-xs border ${
             saved
-              ? "bg-red-600 text-white shadow-md ring-2 ring-white/40"
-              : "bg-white/90 dark:bg-slate-900/90 text-slate-700 dark:text-slate-200 hover:text-red-600"
+              ? "bg-primary text-white border-primary shadow-sm ring-2 ring-white/40"
+              : "bg-surface/90 text-text-secondary hover:text-primary border-border"
           }`}
         >
           <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
         </button>
 
         {/* Location pill over image */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[11px] font-semibold border border-white/10 shadow-sm">
-          <MapPin className="w-3 h-3 text-red-400" />
+        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[11px] font-semibold border border-white/10 shadow-xs">
+          <MapPin className="w-3 h-3 text-accent" />
           <span>
             {business.city}, {business.state}
           </span>
@@ -131,78 +131,78 @@ export function BusinessCard({
       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
           {/* Business Type & Category */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-            <span className="text-red-600 dark:text-red-400 font-bold uppercase tracking-wider text-[11px]">
+          <div className="flex items-center gap-2 text-xs font-semibold text-text-muted mb-1">
+            <span className="text-primary font-bold uppercase tracking-wider text-[11px]">
               {business.businessType}
             </span>
-            <span className="text-slate-300 dark:text-slate-600">·</span>
-            <span className="truncate text-slate-600 dark:text-slate-300 font-medium">{business.category}</span>
+            <span className="text-border">·</span>
+            <span className="truncate text-text-secondary font-medium">{business.category}</span>
           </div>
 
           {/* Business Name */}
-          <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-red-600 transition-colors line-clamp-1">
+          <h3 className="text-base font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-1">
             {business.name}
           </h3>
 
           {/* Rating */}
           <div className="flex items-center gap-1.5 mt-1.5">
-            <div className="flex items-center text-amber-500">
+            <div className="flex items-center text-status-warning">
               <Star className="w-3.5 h-3.5 fill-current" />
             </div>
-            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <span className="text-xs font-bold text-text-primary">
               {business.rating}
             </span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-text-muted">
               ({business.reviewCount} Reviews)
             </span>
           </div>
 
           {/* Short Description */}
-          <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+          <p className="mt-2 text-xs text-text-secondary line-clamp-2 leading-relaxed font-normal">
             {business.description}
           </p>
         </div>
 
         {/* Contact Icons Bar */}
-        <div className="flex items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-slate-400">
+        <div className="flex items-center gap-2 pt-2 border-t border-border text-text-muted">
           <span
             title={`Call ${business.phone || "N/A"}`}
-            className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300"
+            className="p-1.5 rounded-lg bg-surface-hover text-text-secondary hover:text-primary transition-colors"
           >
             <Phone className="w-3.5 h-3.5" />
           </span>
           <span
             title={`Email ${business.email || "N/A"}`}
-            className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300"
+            className="p-1.5 rounded-lg bg-surface-hover text-text-secondary hover:text-primary transition-colors"
           >
             <Mail className="w-3.5 h-3.5" />
           </span>
           <span
             title={`Visit ${business.website || "N/A"}`}
-            className="p-1.5 rounded-lg bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300"
+            className="p-1.5 rounded-lg bg-surface-hover text-text-secondary hover:text-primary transition-colors"
           >
             <Globe className="w-3.5 h-3.5" />
           </span>
           <span
             title={`${productCount} Products`}
-            className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 ml-auto"
+            className="flex items-center gap-1 text-[11px] font-semibold text-text-muted ml-auto"
           >
-            <Package className="w-3.5 h-3.5 text-slate-400" />
+            <Package className="w-3.5 h-3.5 text-text-muted" />
             <span>{productCount} Products</span>
           </span>
         </div>
 
         {/* Footer Meta & Action */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs text-slate-400">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+        <div className="pt-3 border-t border-border flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs text-text-muted">
+            <Calendar className="w-3.5 h-3.5 text-text-muted" />
             <span>Est. {business.establishedYear}</span>
           </div>
 
           <Link
             href={`/businesses/${business.slug}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 group-hover:bg-red-600 group-hover:text-white dark:group-hover:bg-red-600 dark:group-hover:text-white text-xs font-bold transition-all shadow-xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary-soft text-primary group-hover:bg-primary group-hover:text-white text-xs font-bold transition-all shadow-2xs"
           >
             <span>View Details</span>
             <ArrowRight className="w-3 h-3" />

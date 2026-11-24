@@ -4,10 +4,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Layers, ArrowRight, Building2, Search } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import { EmptyState } from "@/components/common/EmptyState";
-import { LoadingState } from "@/components/common/LoadingState";
-import { ErrorState } from "@/components/common/ErrorState";
-import { Input } from "@/components/ui/Input";
+import { Footer } from "@/components/layout/Footer";
+import { EmptyState, LoadingState, ErrorState, Input } from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { fetchCategories } from "@/features/categories/category-api";
 import { CategoryItem } from "@/features/categories/types";
@@ -44,20 +42,20 @@ export default function CategoriesDirectoryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans transition-colors">
       <Header savedCount={savedCount} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 mb-1">
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-1">
               <Layers className="w-4 h-4" />
               <span>Industry Sectors</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">
               {PAGE_METADATA.categories.title}
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
+            <p className="text-sm text-text-secondary mt-1 max-w-2xl font-normal">
               {PAGE_METADATA.categories.description}
             </p>
           </div>
@@ -69,7 +67,7 @@ export default function CategoriesDirectoryPage() {
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search industries..."
               aria-label="Search industries"
-              leftIcon={<Search className="w-4 h-4" />}
+              leftIcon={<Search className="w-4 h-4 text-text-muted" />}
             />
           </div>
         </div>
@@ -95,20 +93,20 @@ export default function CategoriesDirectoryPage() {
               <Link
                 key={cat.id || cat.slug}
                 href={`/categories/${cat.slug}`}
-                className="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-red-500/60 dark:hover:border-red-500/60 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-xl bg-primary-soft text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                     <Building2 className="w-6 h-6" />
                   </div>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                  <h2 className="text-lg font-bold text-text-primary group-hover:text-primary transition-colors">
                     {cat.name}
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-xs text-text-muted mt-1 font-normal">
                     {cat.count ? `${cat.count}+ verified suppliers` : "Verified suppliers & manufacturers"}
                   </p>
                 </div>
-                <div className="mt-6 flex items-center gap-1 text-xs font-semibold text-red-600 dark:text-red-400">
+                <div className="mt-6 flex items-center gap-1 text-xs font-semibold text-primary">
                   <span>Explore category</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -117,6 +115,8 @@ export default function CategoriesDirectoryPage() {
           </div>
         )}
       </main>
+
+      <Footer />
     </div>
   );
 }

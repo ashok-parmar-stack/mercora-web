@@ -7,8 +7,7 @@ import { APP_HEADERS } from "@/config/headers.config";
 import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
 import { fetchCategories } from "@/features/categories/category-api";
 import { CategoryItem } from "@/features/categories/types";
-import { Select } from "@/components/ui/Select";
-import { Button } from "@/components/ui/Button";
+import { Select, Button } from "@/components/common";
 
 export interface BusinessFiltersProps {
   filters: BusinessFiltersState;
@@ -39,11 +38,11 @@ export function BusinessFilters({
   };
 
   return (
-    <aside className="w-full lg:w-72 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 p-5 shadow-sm space-y-6">
+    <aside className="w-full lg:w-72 bg-surface rounded-2xl border border-border p-5 shadow-xs space-y-6">
       {/* Title & Reset */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-        <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white text-base">
-          <Filter className="w-4 h-4 text-red-600" />
+      <div className="flex items-center justify-between pb-3 border-b border-border">
+        <div className="flex items-center gap-2 font-bold text-text-primary text-base">
+          <Filter className="w-4 h-4 text-primary" />
           <span>{APP_HEADERS.directory.filtersHeading || "Filter Results"}</span>
         </div>
         <Button
@@ -51,7 +50,7 @@ export function BusinessFilters({
           variant="ghost"
           size="sm"
           onClick={onReset}
-          className="h-7 px-2 text-xs font-semibold text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400"
+          className="h-7 px-2 text-xs font-semibold text-text-muted hover:text-primary"
           leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
         >
           Reset
@@ -60,7 +59,7 @@ export function BusinessFilters({
 
       {/* Dynamic Business Category / Type Filter */}
       <div className="space-y-3">
-        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider block">
           Business Category
         </label>
         <div className="space-y-1.5">
@@ -72,14 +71,14 @@ export function BusinessFilters({
                 onClick={() => toggleBusinessType(cat.name)}
                 className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold cursor-pointer select-none transition-all ${
                   isChecked
-                    ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-900/40 shadow-xs"
-                    : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white border border-transparent"
+                    ? "bg-primary-soft text-primary border border-primary/20 shadow-2xs"
+                    : "text-text-secondary hover:bg-surface-hover hover:text-text-primary border border-transparent"
                 }`}
               >
                 {isChecked ? (
-                  <CheckSquare className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+                  <CheckSquare className="w-4 h-4 text-primary flex-shrink-0" />
                 ) : (
-                  <Square className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+                  <Square className="w-4 h-4 text-border flex-shrink-0" />
                 )}
                 <span>{cat.name}</span>
               </label>
@@ -89,8 +88,8 @@ export function BusinessFilters({
       </div>
 
       {/* Location Filter */}
-      <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
+      <div className="space-y-3 pt-3 border-t border-border">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider block">
           Location
         </label>
         <div className="space-y-2.5">
@@ -110,8 +109,8 @@ export function BusinessFilters({
       </div>
 
       {/* Dynamic Master Industry / Category Filter */}
-      <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
+      <div className="space-y-3 pt-3 border-t border-border">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider block">
           Master Category
         </label>
         <Select
@@ -128,8 +127,8 @@ export function BusinessFilters({
       </div>
 
       {/* Verification Filter */}
-      <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
-        <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider block">
+      <div className="space-y-3 pt-3 border-t border-border">
+        <label className="text-xs font-bold text-text-secondary uppercase tracking-wider block">
           Verification
         </label>
         <div className="space-y-2">
@@ -137,28 +136,28 @@ export function BusinessFilters({
             onClick={() => onFilterChange({ verifiedOnly: !filters.verifiedOnly })}
             className={`flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-semibold cursor-pointer select-none transition-all ${
               filters.verifiedOnly
-                ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 border border-red-200/80 dark:border-red-900/40 shadow-xs"
-                : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:text-slate-900 dark:hover:text-white border border-transparent"
+                ? "bg-primary-soft text-primary border border-primary/20 shadow-2xs"
+                : "text-text-secondary hover:bg-surface-hover hover:text-text-primary border border-transparent"
             }`}
           >
             {filters.verifiedOnly ? (
-              <CheckSquare className="w-4 h-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+              <CheckSquare className="w-4 h-4 text-primary flex-shrink-0" />
             ) : (
-              <Square className="w-4 h-4 text-slate-300 dark:text-slate-600 flex-shrink-0" />
+              <Square className="w-4 h-4 text-border flex-shrink-0" />
             )}
             <span>Verified Businesses Only</span>
           </label>
         </div>
       </div>
 
-      {/* Action button */}
-      <button
+      <Button
         type="button"
-        onClick={() => {}}
-        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold text-xs transition-all shadow-sm hover:shadow-md cursor-pointer"
+        variant="primary"
+        size="md"
+        className="w-full font-bold shadow-xs"
       >
         Apply Filters
-      </button>
+      </Button>
     </aside>
   );
 }

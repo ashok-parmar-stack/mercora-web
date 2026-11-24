@@ -11,15 +11,15 @@ export interface BusinessViewToggleProps {
 
 export function BusinessViewToggle({ viewMode, onViewModeChange }: BusinessViewToggleProps) {
   return (
-    <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/90 dark:border-slate-700 shadow-2xs">
+    <div className="flex items-center p-1 bg-surface rounded-xl border border-border shadow-2xs">
       <button
         type="button"
         onClick={() => onViewModeChange("card")}
         aria-label="Card view"
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
           viewMode === "card"
-            ? "bg-red-600 text-white shadow-xs"
-            : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+            ? "bg-primary text-white shadow-xs"
+            : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
         }`}
       >
         <LayoutGrid className="w-3.5 h-3.5" />
@@ -32,8 +32,8 @@ export function BusinessViewToggle({ viewMode, onViewModeChange }: BusinessViewT
         aria-label="Table view"
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
           viewMode === "table"
-            ? "bg-red-600 text-white shadow-xs"
-            : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+            ? "bg-primary text-white shadow-xs"
+            : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
         }`}
       >
         <TableIcon className="w-3.5 h-3.5" />

@@ -13,7 +13,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/Table";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/common";
 
 export interface BusinessTableProps {
   businesses: Business[];
@@ -47,10 +47,10 @@ export function BusinessTable({ businesses, onSelect }: BusinessTableProps) {
   };
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/90 dark:border-slate-800 shadow-xs overflow-hidden">
+    <div className="w-full bg-surface rounded-2xl border border-border shadow-xs overflow-hidden">
       {/* Table Toolbar */}
-      <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-        <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+      <div className="p-4 border-b border-border flex items-center justify-between">
+        <span className="text-xs font-semibold text-text-muted">
           Structured Directory Comparison
         </span>
         <Button
@@ -67,7 +67,7 @@ export function BusinessTable({ businesses, onSelect }: BusinessTableProps) {
       {/* Table */}
       <Table>
         <TableHeader>
-          <TableRow className="bg-slate-50/75 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+          <TableRow className="bg-background-secondary border-b border-border text-text-secondary font-bold uppercase tracking-wider text-[11px]">
             <TableHead className="py-3 px-4">Business</TableHead>
             <TableHead className="py-3 px-4">Category</TableHead>
             <TableHead className="py-3 px-4">Type</TableHead>
@@ -78,17 +78,17 @@ export function BusinessTable({ businesses, onSelect }: BusinessTableProps) {
             <TableHead className="py-3 px-4 text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="divide-y divide-slate-100 dark:divide-slate-800">
+        <TableBody className="divide-y divide-border">
           {businesses.map((business) => (
             <TableRow
               key={business.id}
               onClick={() => onSelect && onSelect(business)}
-              className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group"
+              className="hover:bg-surface-hover transition-colors cursor-pointer group"
             >
               {/* Business Logo & Name */}
               <TableCell className="py-3 px-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-red-50 dark:bg-red-950/40 text-red-600 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-primary-soft text-primary flex items-center justify-center font-bold text-xs flex-shrink-0">
                     {business.logoUrl ? (
                       <img src={business.logoUrl} alt="" className="w-full h-full object-cover rounded-lg" />
                     ) : (
@@ -96,31 +96,31 @@ export function BusinessTable({ businesses, onSelect }: BusinessTableProps) {
                     )}
                   </div>
                   <div>
-                    <div className="font-bold text-slate-900 dark:text-white group-hover:text-red-600 transition-colors">
+                    <div className="font-bold text-text-primary group-hover:text-primary transition-colors">
                       {business.name}
                     </div>
-                    <div className="text-[11px] text-slate-400 truncate max-w-xs">
+                    <div className="text-[11px] text-text-muted truncate max-w-xs">
                       {business.city}, {business.state}
                     </div>
                   </div>
                 </div>
               </TableCell>
 
-              <TableCell className="py-3 px-4 text-slate-600 dark:text-slate-300 font-medium">
+              <TableCell className="py-3 px-4 text-text-secondary font-medium">
                 {business.category}
               </TableCell>
 
               <TableCell className="py-3 px-4">
-                <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-surface-hover text-text-secondary border border-border">
                   {business.businessType}
                 </span>
               </TableCell>
 
-              <TableCell className="py-3 px-4 text-slate-600 dark:text-slate-300">
+              <TableCell className="py-3 px-4 text-text-secondary">
                 {business.city}, {business.state}
               </TableCell>
 
-              <TableCell className="py-3 px-4 text-center font-bold text-slate-800 dark:text-slate-200">
+              <TableCell className="py-3 px-4 text-center font-bold text-text-primary">
                 {business.products?.length || 0}
               </TableCell>
 
@@ -128,7 +128,7 @@ export function BusinessTable({ businesses, onSelect }: BusinessTableProps) {
                 <BusinessBadge isVerified={business.isVerified} tier={business.tier} size="sm" />
               </TableCell>
 
-              <TableCell className="py-3 px-4 text-center text-slate-500 dark:text-slate-400">
+              <TableCell className="py-3 px-4 text-center text-text-muted">
                 {business.establishedYear}
               </TableCell>
 

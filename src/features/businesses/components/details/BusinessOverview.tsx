@@ -21,30 +21,30 @@ export function BusinessOverview({ business }: BusinessOverviewProps) {
   return (
     <div className="space-y-6">
       {/* Overview Text */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-xs">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
+      <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8 shadow-xs">
+        <h2 className="text-lg font-bold text-text-primary mb-3">
           {APP_HEADERS.businessDetails.sections.overview}
         </h2>
-        <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+        <p className="text-sm text-text-secondary leading-relaxed font-normal">
           {business.fullOverview || business.description}
         </p>
       </div>
 
       {/* Specifications Grid */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 shadow-xs">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-5">
+      <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8 shadow-xs">
+        <h2 className="text-lg font-bold text-text-primary mb-5">
           {APP_HEADERS.businessDetails.sections.businessDetails}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {specs.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800"
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-hover/60 border border-border"
             >
-              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <span className="text-xs font-semibold text-text-secondary">
                 {item.label}
               </span>
-              <span className="text-xs font-bold text-slate-900 dark:text-white font-mono">
+              <span className="text-xs font-bold text-text-primary font-mono">
                 {item.value}
               </span>
             </div>

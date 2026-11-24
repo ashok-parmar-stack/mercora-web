@@ -6,7 +6,7 @@ import { Heart, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BusinessCard } from "@/features/businesses/components/listing/BusinessCard";
-import { EmptyState } from "@/components/common/EmptyState";
+import { EmptyState } from "@/components/common";
 import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
 import { fetchBusinesses } from "@/features/businesses/api/business-api";
 import { Business } from "@/features/businesses/types/business.types";
@@ -27,20 +27,20 @@ export default function CustomerSavedBusinessesPage() {
   const savedList = allBusinesses.filter((b) => savedIds.includes(b.id));
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans transition-colors">
       <Header savedCount={savedIds.length} />
 
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div className="bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <Heart className="w-5 h-5 text-red-600 fill-red-600" />
-            <h1 className="text-base font-bold text-slate-900 dark:text-white">
+            <Heart className="w-5 h-5 text-primary fill-primary" />
+            <h1 className="text-base font-bold text-text-primary">
               Saved Businesses ({savedList.length})
             </h1>
           </div>
           <Link
             href="/businesses"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-600 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Directory</span>
@@ -50,7 +50,7 @@ export default function CustomerSavedBusinessesPage() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
-          <div className="py-20 text-center text-xs text-slate-400 font-medium">
+          <div className="py-20 text-center text-xs text-text-muted font-medium">
             {MESSAGES.common.loading}
           </div>
         ) : savedList.length === 0 ? (
