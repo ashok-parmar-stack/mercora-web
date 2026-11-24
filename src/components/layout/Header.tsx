@@ -82,20 +82,17 @@ export function Header({ savedCount = 0 }: HeaderProps) {
           <div className="hidden sm:flex items-center gap-2">
             {isAuth ? (
               <div className="flex items-center gap-2.5">
-                {/* Direct quick action to Admin Console */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 px-3 rounded-xl border-border bg-surface text-text-primary hover:bg-surface-hover hover:text-primary hover:border-primary/40 text-xs font-semibold shadow-2xs transition-all gap-1.5"
-                  asChild
+                {/* Clean, subtle Admin Console shortcut */}
+                <Link
+                  href="/admin"
+                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold text-text-secondary hover:text-primary hover:bg-surface-hover border border-border transition-colors shadow-2xs select-none"
+                  title="Open Admin Console"
                 >
-                  <Link href="/admin">
-                    <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                    <span>Admin Console</span>
-                  </Link>
-                </Button>
+                  <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                  <span>Admin Console</span>
+                </Link>
 
-                {/* Proper User Profile Dropdown Menu (No bare logout button) */}
+                {/* Proper User Profile Dropdown Menu */}
                 <DropdownMenu
                   align="right"
                   trigger={

@@ -6,8 +6,7 @@ import { useParams } from "next/navigation";
 import { Home, ArrowLeft, MapPin } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { BusinessCard } from "@/features/businesses/components/listing/BusinessCard";
-import { EmptyState } from "@/components/common/EmptyState";
-import { LoadingState } from "@/components/common/LoadingState";
+import { EmptyState, LoadingState } from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { fetchBusinesses } from "@/features/businesses/api/business-api";
 import { Business } from "@/features/businesses/types/business.types";
@@ -40,45 +39,45 @@ export default function LocationDetailPage() {
   }, [decodedLocation]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
       <Header savedCount={savedCount} />
 
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div className="bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-          <nav className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 font-medium">
-            <Link href="/" className="flex items-center gap-1 hover:text-red-600 transition-colors">
+          <nav className="flex items-center gap-2 text-xs text-text-secondary font-medium">
+            <Link href="/" className="flex items-center gap-1 hover:text-primary transition-colors">
               <Home className="w-3.5 h-3.5" />
             </Link>
             <span>/</span>
-            <Link href="/locations" className="hover:text-slate-800 dark:hover:text-slate-200">
+            <Link href="/locations" className="hover:text-text-primary transition-colors">
               Locations
             </Link>
             <span>/</span>
-            <span className="text-slate-900 dark:text-white font-bold capitalize">
+            <span className="text-text-primary font-bold capitalize">
               {decodedLocation}
             </span>
           </nav>
 
           <Link
             href="/locations"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-red-600 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            All Locations
+            <span>All Locations</span>
           </Link>
         </div>
       </div>
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
             <MapPin className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white capitalize">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary capitalize">
               Businesses in {decodedLocation}
             </h1>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-sm text-text-secondary mt-0.5">
               Verified trade partners, manufacturers, and industrial suppliers operating in this hub.
             </p>
           </div>

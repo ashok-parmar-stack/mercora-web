@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { MessageSquare, ArrowLeft, Building2 } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import { EmptyState } from "@/components/common/EmptyState";
+import { EmptyState, Badge, Button } from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { APP_MESSAGES } from "@/config/messages";
 import { PAGE_METADATA } from "@/config/page-metadata";
@@ -15,7 +15,7 @@ interface StoredEnquiry {
   date: string;
   product: string;
   status: string;
-  statusColor: string;
+  statusColor?: string;
 }
 
 export default function CustomerEnquiriesPage() {
@@ -34,23 +34,23 @@ export default function CustomerEnquiriesPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
       <Header savedCount={savedCount} />
 
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div className="bg-surface border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-blue-600" />
-            <h1 className="text-base font-bold text-slate-900 dark:text-white">
+            <MessageSquare className="w-5 h-5 text-primary" />
+            <h1 className="text-base font-bold text-text-primary">
               {PAGE_METADATA.enquiries.title}
             </h1>
           </div>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-red-600 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-primary transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Dashboard
+            <span>Dashboard</span>
           </Link>
         </div>
       </div>
@@ -66,46 +66,47 @@ export default function CustomerEnquiriesPage() {
             }}
           />
         ) : (
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
-              <span className="text-xs font-bold uppercase text-slate-500 tracking-wider">
+          <div className="bg-surface rounded-2xl border border-border overflow-hidden shadow-xs">
+            <div className="p-4 border-b border-border bg-surface-hover/40">
+              <span className="text-xs font-bold uppercase text-text-muted tracking-wider">
                 Submitted Inquiries ({enquiries.length})
               </span>
             </div>
 
-            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            <div className="divide-y divide-border">
               {enquiries.map((enq) => (
                 <div
                   key={enq.id}
                   className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                 >
                   <div className="flex items-center gap-3.5">
-                    <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+                    <div className="w-10 h-10 rounded-xl bg-surface-hover flex items-center justify-center text-text-secondary">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <h2 className="font-bold text-slate-900 dark:text-white text-sm">
+                      <h2 className="font-bold text-text-primary text-sm">
                         {enq.businessName}
                       </h2>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      <p className="text-xs text-text-secondary mt-0.5">
                         {enq.product}
                       </p>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-text-muted">
                         Submitted: {enq.date}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${enq.statusColor}`}>
+                    <Badge variant="brand" size="sm">
                       {enq.status}
-                    </span>
-                    <Link
-                      href={`/businesses/${enq.businessName.toLowerCase().replace(/\s+/g, "-")}`}
-                      className="px-3 py-1.5 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg border border-red-500/30 transition-colors"
-                    >
-                      View Supplier
-                    </Link>
+                    </Badge>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link
+                        href={`/businesses/${enq.businessName.toLowerCase().replace(/\s+/g, "-")}`}
+                      >
+                        View Supplier
+                      </Link>
+                    </Button>
                   </div>
                 </div>
               ))}

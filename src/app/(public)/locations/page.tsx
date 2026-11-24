@@ -4,10 +4,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { MapPin, ArrowRight, Search } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import { EmptyState } from "@/components/common/EmptyState";
-import { LoadingState } from "@/components/common/LoadingState";
-import { ErrorState } from "@/components/common/ErrorState";
-import { Input } from "@/components/ui/Input";
+import {
+  EmptyState,
+  LoadingState,
+  ErrorState,
+  Input,
+  Badge,
+} from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { PAGE_METADATA } from "@/config/page-metadata";
 
@@ -67,7 +70,6 @@ export default function LocationsDirectoryPage() {
           return;
         }
       }
-      // If endpoint returns empty list or non-200, use robust curated fallback clusters
       setLocations(FALLBACK_CLUSTERS);
     } catch (err: any) {
       console.warn("Locations API fetch failed, using fallback clusters:", err);
@@ -89,20 +91,20 @@ export default function LocationsDirectoryPage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
       <Header savedCount={savedCount} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400 mb-1">
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary mb-1">
               <MapPin className="w-4 h-4" />
               <span>Pan-India Regional Clusters</span>
             </div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">
               {PAGE_METADATA.locations.title}
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
+            <p className="text-sm text-text-secondary mt-1 max-w-2xl">
               {PAGE_METADATA.locations.description}
             </p>
           </div>
@@ -140,34 +142,34 @@ export default function LocationsDirectoryPage() {
               <Link
                 key={loc.id || loc.slug}
                 href={`/locations/${loc.slug}`}
-                className="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-red-500/60 dark:hover:border-red-500/60 shadow-sm hover:shadow-md transition-all flex flex-col justify-between"
+                className="group p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                    <h2 className="text-lg font-bold text-text-primary group-hover:text-primary transition-colors">
                       {loc.name}
                     </h2>
                     <div className="flex items-center gap-1.5 flex-wrap justify-end">
                       {typeof loc.businessCount === "number" && loc.businessCount > 0 && (
-                        <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800">
+                        <Badge variant="success" size="sm">
                           {loc.businessCount} {loc.businessCount === 1 ? "Business" : "Businesses"}
-                        </span>
+                        </Badge>
                       )}
                       {loc.state && (
-                        <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                        <Badge variant="secondary" size="sm">
                           {loc.state}
-                        </span>
+                        </Badge>
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 font-medium">
+                  <p className="text-xs text-text-secondary mt-2 font-medium">
                     {loc.locationType}
                   </p>
                 </div>
-                <div className="mt-6 flex items-center gap-1 text-xs font-semibold text-red-600 dark:text-red-400">
+                <div className="mt-6 flex items-center gap-1 text-xs font-semibold text-primary">
                   <span>Explore industrial cluster</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                 </div>

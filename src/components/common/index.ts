@@ -58,4 +58,6 @@ export * from "./DataTable";
 export * from "./Skeleton";
 export * from "./EmptyState";
 export * from "./Loading";
+export * from "./LoadingState";
+export * from "./ErrorState";
 export * from "./Toast";
