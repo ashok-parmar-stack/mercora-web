@@ -291,7 +291,7 @@ export function DemoRequestModal({
                 variant="primary"
                 size="md"
                 onClick={onClose}
-                className="px-8 py-2.5 font-bold text-sm bg-brand-wine hover:bg-brand-darkWine text-white shadow-sm"
+                className="px-8 py-2.5 font-bold text-sm shadow-sm"
               >
                 Done &amp; Return to Platform
               </Button>
@@ -485,7 +485,7 @@ export function DemoRequestModal({
                   variant="primary"
                   size="lg"
                   isLoading={isSubmitting}
-                  className="w-full py-3 rounded-xl font-bold text-sm bg-brand-wine hover:bg-brand-darkWine text-white shadow-md hover:shadow-lg transition-all"
+                  className="w-full py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all"
                   rightIcon={!isSubmitting ? <ArrowRight className="w-4 h-4" /> : undefined}
                 >
                   Schedule Live Walkthrough

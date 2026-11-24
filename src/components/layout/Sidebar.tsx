@@ -109,8 +109,23 @@ export const Sidebar: React.FC = () => {
             : "translate-x-0 w-64"
           }`}
       >
+        {/* ── BORDER TOGGLE BUTTON (Centered on the sidebar border) ── */}
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="hidden lg:flex absolute -right-3 top-5 z-50 w-6 h-6 items-center justify-center rounded-full bg-surface text-foreground hover:bg-surface-hover hover:text-primary border border-border shadow-xs hover:scale-105 active:scale-95 transition-all duration-150 cursor-pointer"
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+          ) : (
+            <ChevronLeft className="w-3.5 h-3.5 stroke-[2.5]" />
+          )}
+        </button>
+
         <div
-          className={`h-16 flex items-center border-b border-[var(--sidebar-border,var(--border))] flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-4 ${
+          className={`h-16 flex items-center border-b border-white/10 flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-4 ${
             isCollapsed ? "justify-center" : "justify-between"
           }`}
         >
@@ -135,15 +150,6 @@ export const Sidebar: React.FC = () => {
               >
                 <Logo height={24} dark={true} className="max-w-[140px]" />
               </Link>
-              <button
-                type="button"
-                onClick={toggleSidebar}
-                className="hidden lg:flex w-7 h-7 items-center justify-center rounded-lg text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Collapse sidebar"
-                aria-label="Collapse sidebar"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
             </div>
           )}
         </div>

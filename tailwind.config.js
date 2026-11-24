@@ -94,8 +94,23 @@ module.exports = {
           inverse: 'var(--text-inverse)',
         },
 
-        // Brand Palette (Burgundy Spectrum)
+        // Brand Palette (Official Canva Specification Tokens)
         brand: {
+          wine: 'var(--primary, #7F1D3F)',
+          darkWine: 'var(--primary-hover, #641631)',
+          plum: 'var(--sidebar-bg, #2B1220)',
+          berry: 'var(--secondary-brand, #A63D5A)',
+          rose: 'var(--accent, #C08497)',
+          blush: 'var(--accent-soft, #F2D9DF)',
+          ivory: 'var(--background, #FFF7F5)',
+          paleRose: 'var(--background-secondary, #F9EDEF)',
+          charcoal: 'var(--foreground, #3F2932)',
+          dusty: 'var(--text-secondary, #765C67)',
+          gray: 'var(--border, #E5D4DA)',
+          emerald: 'var(--success, #16846A)',
+          amber: 'var(--warning, #B7791F)',
+          blue: 'var(--info, #356AE6)',
+          deepRed: 'var(--destructive, #B42318)',
           50: '#fdf2f4',
           100: '#fce7eb',
           200: '#f9d2d9',

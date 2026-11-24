@@ -71,7 +71,7 @@
 
   /* Navigation & Dark Sections — Deep Plum (#2B1220) */
   --sidebar-bg:              #2B1220;
-  --sidebar-border:          rgba(229, 212, 218, 0.12);
+  --sidebar-border:          #E5D4DA;
   --sidebar-text:            #E5D4DA;
   --sidebar-text-muted:      rgba(229, 212, 218, 0.55);
   --sidebar-hover-bg:        rgba(255, 255, 255, 0.08);

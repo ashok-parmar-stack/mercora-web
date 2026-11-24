@@ -64,7 +64,7 @@ export function HeroSection() {
             <Button
               variant="primary"
               size="lg"
-              className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs shadow-md bg-brand-wine hover:bg-brand-darkWine text-white transition-all hover:scale-[1.01]"
+              className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs shadow-md transition-all hover:scale-[1.01]"
               asChild
             >
               <Link href={isAuth ? "/admin" : "/register"}>
@@ -77,7 +77,7 @@ export function HeroSection() {
               variant="outline"
               size="lg"
               onClick={() => setIsDemoModalOpen(true)}
-              className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs shadow-2xs border-brand-plum text-brand-plum bg-surface hover:bg-brand-blush/40 dark:border-white/30 dark:text-white dark:hover:bg-white/10 transition-all hover:scale-[1.01]"
+              className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs shadow-2xs bg-surface border-border text-foreground hover:bg-surface-hover transition-all hover:scale-[1.01]"
             >
               <span className="font-bold">BOOK A DEMO</span>
             </Button>

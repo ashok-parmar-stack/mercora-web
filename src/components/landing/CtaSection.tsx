@@ -53,7 +53,7 @@ export default function CtaSection() {
               <Button
                 variant="primary"
                 size="lg"
-                className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs bg-brand-wine hover:bg-brand-darkWine text-white shadow-md border border-brand-rose/30 transition-all hover:scale-[1.01]"
+                className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs shadow-md transition-all hover:scale-[1.01]"
                 asChild
               >
                 <Link href={isAuth ? "/admin" : "/register"}>

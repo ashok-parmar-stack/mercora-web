@@ -147,7 +147,7 @@ export function SimpleFeaturesSection() {
                   <Button
                     variant="link"
                     size="sm"
-                    className="p-0 text-brand-wine hover:text-brand-darkWine font-semibold text-xs inline-flex items-center gap-1.5 transition-colors"
+                    className="p-0 text-primary hover:text-primary-hover font-semibold text-xs inline-flex items-center gap-1.5 transition-colors"
                     asChild
                   >
                     <Link href={item.linkHref}>

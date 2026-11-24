@@ -58,13 +58,13 @@ export function AdminHeader() {
 
   return (
     <header className="sticky top-0 z-40 h-16 w-full border-b border-[var(--header-border)] bg-[var(--header-bg)] backdrop-blur-md transition-colors flex items-center justify-between px-4 sm:px-6 shadow-2xs">
-      {/* Left: Sidebar Toggle */}
+      {/* Left: Mobile Sidebar Toggle (Hidden on desktop; desktop uses border toggle) */}
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={toggleSidebar}
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="h-9 w-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer shadow-2xs"
+          className="lg:hidden h-9 w-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer shadow-2xs"
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? (

@@ -94,7 +94,7 @@ export function MobileNavigation({
               <Link
                 href="/admin"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-brand-wine text-white text-sm font-semibold hover:bg-brand-darkWine shadow-sm transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary-hover shadow-sm transition-colors"
               >
                 <ShieldCheck className="w-4 h-4" />
                 <span>Admin Console</span>
@@ -124,7 +124,7 @@ export function MobileNavigation({
               <Link
                 href="/register"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-brand-wine text-white text-sm font-semibold hover:bg-brand-darkWine shadow-sm transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary-hover shadow-sm transition-colors"
               >
                 <UserPlus className="w-4 h-4" />
                 <span>{APP_HEADERS.navigation.auth.register}</span>
