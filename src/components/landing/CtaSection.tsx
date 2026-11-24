@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, CheckCircle2, LayoutDashboard } from "lucide-react";
+import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { DemoRequestModal } from "./DemoRequestModal";
 
 interface CtaSectionProps {}
 
 export default function CtaSection({}: CtaSectionProps) {
   const [mounted, setMounted] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
@@ -63,45 +65,23 @@ export default function CtaSection({}: CtaSectionProps) {
               Eliminate address ambiguity, catalog chaos, and credential leakage. Experience Mercora Deal OS in action right now.
             </p>
 
-            {/* CTAs */}
+            {/* CTAs - Matching Exact START FREE & BOOK A DEMO design */}
             <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
               <Link
-                href="/admin"
-                className="btn-red flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-sm shadow-lg transition-all"
+                href="/register"
+                className="btn-primary-bold px-8 py-4 shadow-xl"
                 style={{ textDecoration: "none" }}
               >
-                <span>Launch Admin Console</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>START FREE</span>
               </Link>
 
-              {isAuth ? (
-                <Link
-                  href="/dashboard"
-                  className="px-6 py-3.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
-                  style={{
-                    textDecoration: "none",
-                    background: "rgba(255, 255, 255, 0.08)",
-                    color: "#ffffff",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                  }}
-                >
-                  <LayoutDashboard className="w-4 h-4 text-red-400" />
-                  <span>Customer Dashboard</span>
-                </Link>
-              ) : (
-                <Link
-                  href="/login"
-                  className="px-6 py-3.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
-                  style={{
-                    textDecoration: "none",
-                    background: "rgba(255, 255, 255, 0.08)",
-                    color: "#ffffff",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                  }}
-                >
-                  <span>Sign In to Organization</span>
-                </Link>
-              )}
+              <button
+                type="button"
+                onClick={() => setIsDemoModalOpen(true)}
+                className="btn-black px-8 py-4 shadow-xl border border-slate-700"
+              >
+                <span>BOOK A DEMO</span>
+              </button>
             </div>
 
             {/* Proof Points */}
@@ -128,6 +108,11 @@ export default function CtaSection({}: CtaSectionProps) {
           </div>
         </div>
       </div>
+
+      <DemoRequestModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+      />
     </section>
   );
 }

@@ -339,30 +339,30 @@ export function DataTable<T>({
             <button
               type="button"
               onClick={() => setIsColPickerOpen((v) => !v)}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${isColPickerOpen
-                ? "bg-brand-50 border-brand-300 text-brand-700 dark:bg-white/10 dark:text-white dark:border-white/20 ring-2 ring-brand-100 dark:ring-white/10"
-                : "bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:border-[var(--border-hover)]"
+              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg border transition-all cursor-pointer ${isColPickerOpen
+                ? "bg-primary/10 border-primary/30 text-primary dark:bg-primary/20 dark:text-brand-burgundy-light ring-1 ring-primary/20"
+                : "bg-surface border-border text-text-secondary hover:bg-surface-hover hover:border-border-focus/40"
                 }`}
               title="Toggle column visibility"
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
               <span>Columns</span>
               {hiddenCols.size > 0 && (
-                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-brand-500 dark:bg-white dark:text-black text-white text-[10px] font-bold leading-none">
+                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold leading-none">
                   {hiddenCols.size}
                 </span>
               )}
             </button>
 
             {isColPickerOpen && (
-              <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-1.5 w-60 max-w-[calc(100vw-32px)] bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-xl p-2 z-50 animate-in fade-in-50 zoom-in-95 duration-100 ring-1 ring-black/5 dark:ring-white/10">
-                <div className="flex items-center justify-between px-2 py-1.5 border-b border-[var(--border)] mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Visible Columns</span>
+              <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-1.5 w-60 max-w-[calc(100vw-32px)] bg-surface border border-border rounded-xl shadow-xl p-2 z-50 animate-in fade-in-50 zoom-in-95 duration-100 ring-1 ring-black/5 dark:ring-white/10">
+                <div className="flex items-center justify-between px-2 py-1.5 border-b border-border mb-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider text-text-muted">Visible Columns</span>
                   {hiddenCols.size > 0 && (
                     <button
                       type="button"
                       onClick={() => setHiddenCols(new Set())}
-                      className="text-[10px] font-bold text-brand-600 dark:text-white hover:text-brand-700 dark:hover:text-white/80 transition-colors"
+                      className="text-[10px] font-semibold text-primary hover:underline transition-colors"
                     >
                       Show all
                     </button>
@@ -375,13 +375,13 @@ export function DataTable<T>({
                       key={col.key}
                       type="button"
                       onClick={() => toggleColumnVisibility(col.key)}
-                      className={`w-full flex items-center justify-between px-2 py-2 rounded-lg text-xs font-medium transition-colors ${isHidden ? "text-[var(--text-muted)] hover:bg-[var(--surface-hover)]" : "text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]"
+                      className={`w-full flex items-center justify-between px-2 py-2 rounded-lg text-xs font-medium transition-colors ${isHidden ? "text-text-muted hover:bg-surface-hover" : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
                         }`}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         {/* mini colored dot for active column */}
                         <span
-                          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors ${!isHidden ? "bg-brand-500 dark:bg-white" : "bg-gray-300 dark:bg-[var(--border)]"
+                          className={`w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors ${!isHidden ? "bg-primary" : "bg-border"
                             }`}
                         />
                         <span className={`truncate ${isHidden ? "line-through opacity-50" : ""}`}>
@@ -390,11 +390,11 @@ export function DataTable<T>({
                       </div>
                       {/* Toggle pill */}
                       <div
-                        className={`relative inline-flex h-4 w-7 flex-shrink-0 rounded-full transition-colors duration-200 ${!isHidden ? "bg-brand-500 dark:bg-white" : "bg-gray-200 dark:bg-[var(--border)]"
+                        className={`relative inline-flex h-4 w-7 flex-shrink-0 rounded-full transition-colors duration-200 ${!isHidden ? "bg-primary" : "bg-surface-hover border border-border"
                           }`}
                       >
                         <span
-                          className={`inline-block h-3 w-3 rounded-full bg-white dark:bg-black shadow transform transition-transform duration-200 mt-0.5 ${!isHidden ? "translate-x-3.5" : "translate-x-0.5"
+                          className={`inline-block h-3 w-3 rounded-full bg-white shadow transform transition-transform duration-200 mt-0.5 ${!isHidden ? "translate-x-3.5" : "translate-x-0.5"
                             }`}
                         />
                       </div>
@@ -409,12 +409,12 @@ export function DataTable<T>({
 
       {/* ── Bulk Actions Bar ─────────────────────── */}
       {isSelectionEnabled && selectedRowIds.length > 0 && (
-        <div className="bg-[var(--surface)] border border-brand-200 dark:border-white/20 rounded-xl px-4 py-2.5 shadow-xs flex items-center justify-between gap-3 animate-in fade-in duration-150">
+        <div className="bg-surface border border-border rounded-xl px-4 py-2.5 shadow-xs flex items-center justify-between gap-3 animate-in fade-in duration-150">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md text-xs font-extrabold bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-white border border-brand-200 dark:border-white/20">
+            <span className="inline-flex items-center justify-center px-2.5 py-0.5 rounded-md text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
               {selectedRowIds.length}
             </span>
-            <span className="text-xs font-bold text-[var(--text-primary)]">
+            <span className="text-xs font-medium text-text-primary">
               {selectedRowIds.length === 1 ? "record selected" : "records selected"}
             </span>
           </div>
@@ -436,9 +436,9 @@ export function DataTable<T>({
               type="button"
               onClick={() => clearSelection(tableKey)}
               disabled={executingActionIdx !== null}
-              className="flex items-center gap-1 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-2.5 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] transition-colors disabled:opacity-40 cursor-pointer"
+              className="flex items-center gap-1 text-xs font-medium text-text-secondary hover:text-text-primary px-2.5 py-1.5 rounded-lg border border-border bg-surface hover:bg-surface-hover transition-colors disabled:opacity-40 cursor-pointer"
             >
-              <X className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+              <X className="w-3.5 h-3.5 text-text-muted" />
               Clear
             </button>
           </div>
@@ -693,17 +693,17 @@ export function DataTable<T>({
                 <button
                   type="button"
                   onClick={() => setIsPageSizeOpen(!isPageSizeOpen)}
-                  className="bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border-hover)] rounded-lg px-2.5 py-1.5 text-xs text-[var(--text-primary)] font-bold flex items-center gap-1.5 shadow-2xs focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-[var(--border-focus)] transition-all cursor-pointer"
+                  className="bg-surface border border-border hover:border-border-focus/40 rounded-lg px-2.5 py-1.5 text-xs text-text-primary font-medium flex items-center gap-1.5 shadow-xs focus:outline-none focus:ring-1 focus:ring-[var(--border-focus)] transition-all cursor-pointer"
                 >
                   <span>{pageSize} / page</span>
                   <ChevronDown
-                    className={`w-3 h-3 text-[var(--text-muted)] transition-transform duration-150 ${isPageSizeOpen ? "rotate-180 text-brand-500 dark:text-white" : ""
+                    className={`w-3 h-3 text-text-muted transition-transform duration-150 ${isPageSizeOpen ? "rotate-180 text-primary" : ""
                       }`}
                   />
                 </button>
 
                 {isPageSizeOpen && (
-                  <div className="absolute bottom-full left-0 mb-1.5 w-36 bg-[var(--surface)] border border-[var(--border)] rounded-xl shadow-lg p-1.5 z-30 animate-in fade-in-50 zoom-in-95 duration-100 ring-1 ring-black/5 dark:ring-white/10">
+                  <div className="absolute bottom-full left-0 mb-1.5 w-36 bg-surface border border-border rounded-xl shadow-lg p-1.5 z-30 animate-in fade-in-50 zoom-in-95 duration-100 ring-1 ring-black/5 dark:ring-white/10">
                     {[10, 25, 50, 100].map((size) => {
                       const isActive = pageSize === size;
                       return (
@@ -714,13 +714,13 @@ export function DataTable<T>({
                             handlePageSizeChange(size);
                             setIsPageSizeOpen(false);
                           }}
-                          className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors text-left cursor-pointer ${isActive
-                            ? "bg-brand-50 text-brand-600 dark:bg-white/10 dark:text-white font-bold"
-                            : "text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]"
+                          className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors text-left cursor-pointer ${isActive
+                            ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-brand-burgundy-light font-semibold"
+                            : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
                             }`}
                         >
                           <span>{size} per page</span>
-                          {isActive && <Check className="w-3.5 h-3.5 text-brand-600 dark:text-white flex-shrink-0" />}
+                          {isActive && <Check className="w-3.5 h-3.5 text-primary flex-shrink-0" />}
                         </button>
                       );
                     })}
@@ -733,7 +733,7 @@ export function DataTable<T>({
                 <button
                   onClick={() => handlePageChange(1)}
                   disabled={safeCurrentPage === 1}
-                  className="px-2 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] disabled:opacity-30 disabled:cursor-not-allowed text-xs font-bold text-[var(--text-secondary)] transition-colors cursor-pointer"
+                  className="px-2 py-1.5 rounded-lg border border-border bg-surface hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed text-xs font-medium text-text-secondary transition-colors cursor-pointer"
                   aria-label="First page"
                 >
                   «
@@ -741,7 +741,7 @@ export function DataTable<T>({
                 <button
                   onClick={() => handlePageChange(Math.max(1, safeCurrentPage - 1))}
                   disabled={safeCurrentPage === 1}
-                  className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] disabled:opacity-30 disabled:cursor-not-allowed text-[var(--text-secondary)] transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg border border-border bg-surface hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed text-text-secondary transition-colors cursor-pointer"
                   aria-label="Previous page"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
@@ -768,7 +768,7 @@ export function DataTable<T>({
                         // Stable key: use the page number that comes AFTER this ellipsis
                         const nextPage = arr[idx + 1];
                         return (
-                          <span key={`ellipsis-before-${nextPage}`} className="w-7 text-center text-[var(--text-muted)] text-xs">
+                          <span key={`ellipsis-before-${nextPage}`} className="w-7 text-center text-text-muted text-xs">
                             …
                           </span>
                         );
@@ -777,9 +777,9 @@ export function DataTable<T>({
                         <button
                           key={p}
                           onClick={() => handlePageChange(p as number)}
-                          className={`w-7 h-7 rounded-lg text-xs font-bold transition-colors cursor-pointer ${safeCurrentPage === p
-                            ? "bg-brand-600 text-white dark:bg-white dark:text-black shadow-xs"
-                            : "bg-[var(--surface)] border border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--surface-hover)] hover:text-[var(--text-primary)]"
+                          className={`w-7 h-7 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${safeCurrentPage === p
+                            ? "bg-primary text-white shadow-xs"
+                            : "bg-surface border border-border text-text-secondary hover:bg-surface-hover hover:text-text-primary"
                             }`}
                           aria-current={safeCurrentPage === p ? "page" : undefined}
                         >
@@ -792,7 +792,7 @@ export function DataTable<T>({
                 <button
                   onClick={() => handlePageChange(Math.min(totalPages, safeCurrentPage + 1))}
                   disabled={safeCurrentPage === totalPages}
-                  className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] disabled:opacity-30 disabled:cursor-not-allowed text-[var(--text-secondary)] transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg border border-border bg-surface hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed text-text-secondary transition-colors cursor-pointer"
                   aria-label="Next page"
                 >
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -800,7 +800,7 @@ export function DataTable<T>({
                 <button
                   onClick={() => handlePageChange(totalPages)}
                   disabled={safeCurrentPage === totalPages}
-                  className="px-2 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-hover)] disabled:opacity-30 disabled:cursor-not-allowed text-xs font-bold text-[var(--text-secondary)] transition-colors cursor-pointer"
+                  className="px-2 py-1.5 rounded-lg border border-border bg-surface hover:bg-surface-hover disabled:opacity-30 disabled:cursor-not-allowed text-xs font-medium text-text-secondary transition-colors cursor-pointer"
                   aria-label="Last page"
                 >
                   »

@@ -1,6 +1,10 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Linear-Inspired High-Craft Card Component
+ * Crisp hairline borders, micro-elevation shadow-xs, and consistent semantic spacing.
+ */
 const Card = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -8,7 +12,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-2xl border border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] shadow-xs transition-shadow",
+      "rounded-xl border border-border bg-card text-card-foreground shadow-xs transition-colors",
       className
     )}
     {...props}
@@ -22,7 +26,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
+    className={cn("flex flex-col space-y-1.5 p-5 sm:p-6 pb-3", className)}
     {...props}
   />
 ));
@@ -35,7 +39,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-lg font-bold text-[var(--text-primary)] tracking-tight leading-none",
+      "text-sm sm:text-base font-semibold text-text-primary tracking-tight leading-snug",
       className
     )}
     {...props}
@@ -50,7 +54,7 @@ const CardDescription = React.forwardRef<
   <p
     ref={ref}
     className={cn(
-      "text-xs text-[var(--text-secondary)] leading-relaxed",
+      "text-xs text-text-secondary leading-relaxed",
       className
     )}
     {...props}
@@ -64,7 +68,7 @@ const CardContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("p-6 pt-0 text-[var(--text-primary)]", className)}
+    className={cn("p-5 sm:p-6 pt-0", className)}
     {...props}
   />
 ));
@@ -76,10 +80,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "flex items-center p-6 pt-0 border-t border-[var(--border)]",
-      className
-    )}
+    className={cn("flex items-center p-5 sm:p-6 pt-0", className)}
     {...props}
   />
 ));

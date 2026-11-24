@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UploadCloud, RefreshCw, Trash2, Loader2, AlertCircle, HardDrive } from "lucide-react";
+import { UploadCloud, RefreshCw, Trash2, Loader2, AlertCircle, HardDrive, Zap } from "lucide-react";
 import { DropzoneRootProps, DropzoneInputProps } from "react-dropzone";
 
 export interface StandardDropzoneProps {
@@ -12,6 +12,16 @@ export interface StandardDropzoneProps {
   disabled?: boolean;
   isUploading: boolean;
   previewUrl: string;
+  uploadMeta?: {
+    size?: number;
+    originalSize?: number;
+    savedPercentage?: number;
+    width?: number;
+    height?: number;
+    format?: string;
+    bucket?: string;
+    driver?: string;
+  } | null;
   errorMessage: string | null;
   maxSizeMB: number;
   showBucketBadge?: boolean;
@@ -24,6 +34,13 @@ export interface StandardDropzoneProps {
   onRemove: (e: React.MouseEvent) => void;
 }
 
+function formatBytes(bytes?: number): string {
+  if (!bytes) return "0 B";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export function StandardDropzone({
   label,
   description,
@@ -32,6 +49,7 @@ export function StandardDropzone({
   disabled,
   isUploading,
   previewUrl,
+  uploadMeta,
   errorMessage,
   maxSizeMB,
   showBucketBadge,
@@ -43,6 +61,11 @@ export function StandardDropzone({
   openFileDialog,
   onRemove,
 }: StandardDropzoneProps) {
+  const [hasImgError, setHasImgError] = React.useState(false);
+
+  React.useEffect(() => {
+    setHasImgError(false);
+  }, [previewUrl]);
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {(label || description) && (
@@ -74,13 +97,32 @@ export function StandardDropzone({
 
         {previewUrl ? (
           <div className="relative w-full flex flex-col items-center justify-center gap-3">
-            <div className="relative max-h-48 max-w-full rounded-xl overflow-hidden border border-[var(--border)] shadow-xs bg-black/10">
-              <img
-                src={previewUrl}
-                alt="Uploaded media preview"
-                className="max-h-48 w-auto object-contain rounded-xl"
-              />
+            <div className="relative max-h-48 max-w-full rounded-xl overflow-hidden border border-[var(--border)] shadow-xs bg-black/10 flex items-center justify-center">
+              {!hasImgError ? (
+                <img
+                  src={previewUrl}
+                  alt="Uploaded media preview"
+                  className="max-h-48 w-auto object-contain rounded-xl"
+                  onError={() => setHasImgError(true)}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center p-6 text-center">
+                  <HardDrive className="w-8 h-8 text-brand-500 mb-2" />
+                  <p className="text-xs font-semibold text-[var(--text-primary)]">Image in Bucket</p>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-0.5">Stored successfully in storage</p>
+                </div>
+              )}
             </div>
+
+            {uploadMeta?.savedPercentage && uploadMeta.savedPercentage > 0 ? (
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[11px] font-semibold font-mono animate-in fade-in duration-300">
+                <Zap className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
+                <span>
+                  ⚡ Optimized: {formatBytes(uploadMeta.originalSize)} → {formatBytes(uploadMeta.size)} ({uploadMeta.savedPercentage}% saved, {uploadMeta.format?.toUpperCase() || 'WEBP'})
+                  {uploadMeta.width && uploadMeta.height ? ` • ${uploadMeta.width}×${uploadMeta.height}px` : ''}
+                </span>
+              </div>
+            ) : null}
 
             <div className="flex items-center gap-2 z-10" onClick={(e) => e.stopPropagation()}>
               <button

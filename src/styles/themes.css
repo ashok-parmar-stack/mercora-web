@@ -1,0 +1,162 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * MERCORA CENTRALIZED DESIGN SYSTEM CSS VARIABLES
+ * ────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* Canvas & Viewport */
+  --background:              #F8F9FB;
+  --background-secondary:    #F0F1F5;
+  --foreground:              #17191F;
+
+  /* Surfaces */
+  --surface:                 #FFFFFF;
+  --surface-raised:          #FFFFFF;
+  --surface-hover:           #F4F5F8;
+  --surface-active:          #EAECEF;
+
+  /* shadcn-compatible Semantic Mappings */
+  --card:                    #FFFFFF;
+  --card-foreground:         #17191F;
+  --popover:                 #FFFFFF;
+  --popover-foreground:      #17191F;
+
+  /* Typography */
+  --text-primary:            #17191F;
+  --text-secondary:          #737784;
+  --text-muted:              #737784;
+  --text-disabled:           #A0A5B1;
+  --text-inverse:            #FFFFFF;
+
+  /* Borders & Focus */
+  --border:                  #E5E7ED;
+  --border-hover:            #D4D7E1;
+  --border-strong:           #B0B4C3;
+  --border-focus:            #5B5BD6;
+
+  /* Primary Brand Accent */
+  --primary:                 #5B5BD6;
+  --primary-hover:           #4B4BC7;
+  --primary-active:          #3E3EB5;
+  --primary-soft:            #EDEEFF;
+  --primary-foreground:      #FFFFFF;
+
+  /* Secondary & Auxiliary */
+  --secondary:               #F0F1F5;
+  --secondary-foreground:    #17191F;
+  --muted:                   #F1F2F6;
+  --muted-foreground:        #737784;
+  --accent:                  #EDEEFF;
+  --accent-foreground:       #5B5BD6;
+  --destructive:             #DC4545;
+  --destructive-foreground:  #FFFFFF;
+  --success:                 #16865B;
+  --success-foreground:      #FFFFFF;
+  --warning:                 #C58A24;
+  --warning-foreground:      #FFFFFF;
+  --ring:                    #5B5BD6;
+  --radius:                  8px;
+
+  /* CTAs & Sidebar */
+  --cta-start-bg:            #5B5BD6;
+  --cta-start-text:          #FFFFFF;
+  --cta-demo-bg:             #17191F;
+  --cta-demo-text:           #FFFFFF;
+  --sidebar-bg:              #FFFFFF;
+  --sidebar-border:          #E5E7ED;
+  --sidebar-text:            #737784;
+  --sidebar-active-bg:       #EDEEFF;
+  --sidebar-active-text:     #5B5BD6;
+  --header-bg:               rgba(255, 255, 255, 0.92);
+  --header-border:           #E5E7ED;
+
+  /* Legacy Bindings */
+  --theme-red:               var(--primary);
+  --theme-canvas:            var(--background);
+  --theme-card-bg:           var(--surface);
+  --theme-panel-bg:          var(--background-secondary);
+  --theme-glass-border:      var(--border);
+  --theme-ink-darkest:       var(--text-primary);
+  --theme-ink:               var(--text-secondary);
+  --badge-bg:                var(--primary-soft);
+  --badge-border:            #D8DAFD;
+  --badge-text:              #5B5BD6;
+}
+
+.dark {
+  /* Canvas & Viewport */
+  --background:              #111318;
+  --background-secondary:    #161920;
+  --foreground:              #F4F5F7;
+
+  /* Surfaces */
+  --surface:                 #191C23;
+  --surface-raised:          #20242D;
+  --surface-hover:           #262A35;
+  --surface-active:          #2D323E;
+
+  /* shadcn-compatible Semantic Mappings */
+  --card:                    #191C23;
+  --card-foreground:         #F4F5F7;
+  --popover:                 #20242D;
+  --popover-foreground:      #F4F5F7;
+
+  /* Typography */
+  --text-primary:            #F4F5F7;
+  --text-secondary:          #A0A5B1;
+  --text-muted:              #A0A5B1;
+  --text-disabled:           #5A5E6B;
+  --text-inverse:            #111318;
+
+  /* Borders & Focus */
+  --border:                  #2C303A;
+  --border-hover:            #3A3F4C;
+  --border-strong:           #4A5060;
+  --border-focus:            #8585F5;
+
+  /* Primary Brand Accent */
+  --primary:                 #8585F5;
+  --primary-hover:           #9898F8;
+  --primary-active:          #7272EB;
+  --primary-soft:            #292B3A;
+  --primary-foreground:      #FFFFFF;
+
+  /* Secondary & Auxiliary */
+  --secondary:               #242832;
+  --secondary-foreground:    #F4F5F7;
+  --muted:                   #20242D;
+  --muted-foreground:        #A0A5B1;
+  --accent:                  #292B3A;
+  --accent-foreground:       #8585F5;
+  --destructive:             #F06A6A;
+  --destructive-foreground:  #FFFFFF;
+  --success:                 #42BD89;
+  --success-foreground:      #FFFFFF;
+  --warning:                 #E8B451;
+  --warning-foreground:      #111318;
+  --ring:                    #8585F5;
+
+  /* CTAs & Sidebar */
+  --cta-start-bg:            #8585F5;
+  --cta-start-text:          #FFFFFF;
+  --cta-demo-bg:             #20242D;
+  --cta-demo-text:           #F4F5F7;
+  --sidebar-bg:              #14171E;
+  --sidebar-border:          #2C303A;
+  --sidebar-text:            #A0A5B1;
+  --sidebar-active-bg:       #292B3A;
+  --sidebar-active-text:     #8585F5;
+  --header-bg:               rgba(20, 23, 30, 0.88);
+  --header-border:           #2C303A;
+
+  /* Legacy Bindings */
+  --theme-red:               var(--primary);
+  --theme-canvas:            var(--background);
+  --theme-card-bg:           var(--surface);
+  --theme-panel-bg:          var(--background-secondary);
+  --theme-glass-border:      var(--border);
+  --theme-ink-darkest:       var(--text-primary);
+  --theme-ink:               var(--text-secondary);
+  --badge-bg:                #292B3A;
+  --badge-border:            #3E4256;
+  --badge-text:              #8585F5;
+}

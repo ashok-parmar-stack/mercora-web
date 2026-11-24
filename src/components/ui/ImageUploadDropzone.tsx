@@ -5,6 +5,17 @@ import { useDropzone, Accept, FileRejection } from "react-dropzone";
 import { AvatarDropzone } from "./dropzone/AvatarDropzone";
 import { StandardDropzone } from "./dropzone/StandardDropzone";
 
+export interface UploadMetaInfo {
+  size?: number;
+  originalSize?: number;
+  savedPercentage?: number;
+  width?: number;
+  height?: number;
+  format?: string;
+  bucket?: string;
+  driver?: string;
+}
+
 export interface ImageUploadDropzoneProps {
   value?: string;
   onChange?: (url: string, uploadMeta?: any) => void;
@@ -44,6 +55,7 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
 }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string>(value);
+  const [uploadMeta, setUploadMeta] = useState<UploadMetaInfo | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [storageInfo, setStorageInfo] = useState<{
     driver: string;
@@ -95,6 +107,9 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
 
       const uploadedUrl = result.data?.url || localPreview;
       setPreviewUrl(uploadedUrl);
+      if (result.data) {
+        setUploadMeta(result.data);
+      }
       onChange?.(uploadedUrl, result.data);
     } catch (err: any) {
       console.error("[Dropzone Upload Error]", err);
@@ -145,6 +160,7 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
     setPreviewUrl("");
+    setUploadMeta(null);
     setErrorMessage(null);
     onRemove?.();
   };
@@ -156,6 +172,7 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
     disabled,
     isUploading,
     previewUrl,
+    uploadMeta,
     errorMessage,
     maxSizeMB,
     showBucketBadge,

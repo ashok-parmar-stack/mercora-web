@@ -2,11 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/Logo";
 import { ArrowRight, Menu, X, User, LogOut } from "lucide-react";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { APP_HEADERS } from "@/config/headers.config";
 
 export function LandingNavbar() {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -20,16 +23,13 @@ export function LandingNavbar() {
   }, []);
 
   const isAuth = mounted && isAuthenticated;
-  const navLinks = [
-    { label: "B2B Directory", href: "/businesses" },
-    { label: "Geography", href: "#geography" },
-    { label: "Customs & HSN", href: "#taxonomy" },
-    { label: "Security & RBAC", href: "#security" },
-  ];
+  const navLinks = isAuth
+    ? [...APP_HEADERS.navigation.links, { label: "Dashboard", href: "/dashboard" }]
+    : APP_HEADERS.navigation.links;
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-200 border-b border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md ${
+      className={`sticky top-0 z-50 transition-all duration-200 border-b border-border bg-surface/95 backdrop-blur-md ${
         scrolled ? "shadow-xs" : ""
       }`}
     >
@@ -41,16 +41,27 @@ export function LandingNavbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {navLinks.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className="text-xs lg:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors whitespace-nowrap"
-              >
-                {item.label}
-              </a>
-            ))}
+          <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+            {navLinks.map((item) => {
+              const isActive =
+                item.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(item.href);
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`px-3 py-1.5 rounded-lg text-xs lg:text-sm font-medium transition-colors whitespace-nowrap ${
+                    isActive
+                      ? "text-primary bg-primary/10 dark:bg-primary/20 font-semibold"
+                      : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Action Controls */}
@@ -59,9 +70,9 @@ export function LandingNavbar() {
               <div className="flex items-center gap-2">
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-text-primary hover:bg-surface-hover transition-colors"
                 >
-                  <User className="w-3.5 h-3.5 text-red-600" />
+                  <User className="w-3.5 h-3.5 text-primary" />
                   <span className="max-w-[120px] truncate">{user?.name || "Dashboard"}</span>
                 </Link>
                 <button
@@ -69,13 +80,13 @@ export function LandingNavbar() {
                   onClick={() => logout()}
                   title="Sign Out"
                   aria-label="Sign Out"
-                  className="p-1.5 rounded-xl text-slate-500 hover:text-red-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-text-muted hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
                 <Link
                   href="/admin"
-                  className="btn-red inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-primary hover:bg-primary-hover text-white transition-colors shadow-xs whitespace-nowrap"
                 >
                   <span>Console</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -85,13 +96,13 @@ export function LandingNavbar() {
               <>
                 <Link
                   href="/login"
-                  className="text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-red-600 transition-colors px-2.5 py-1.5 uppercase tracking-wider"
+                  className="text-xs font-semibold text-text-primary hover:text-primary transition-colors px-2.5 py-1.5 uppercase tracking-wider"
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/admin"
-                  className="btn-red inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm hover:shadow"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-primary hover:bg-primary-hover text-white transition-colors shadow-xs whitespace-nowrap"
                 >
                   <span>Console</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -102,7 +113,7 @@ export function LandingNavbar() {
             {/* Mobile Menu Hamburger */}
             <button
               type="button"
-              className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
+              className="md:hidden p-2 rounded-lg text-text-secondary hover:bg-surface-hover border border-border"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle mobile menu"
             >
@@ -114,17 +125,28 @@ export function LandingNavbar() {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3">
-          {navLinks.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-sm font-semibold text-slate-700 dark:text-slate-200 py-1.5"
-            >
-              {item.label}
-            </a>
-          ))}
+        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-2">
+          {navLinks.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/"
+                : pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block text-sm font-semibold py-2 px-3 rounded-xl transition-colors ${
+                  isActive
+                    ? "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 font-bold"
+                    : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
 
           <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
             {isAuth ? (

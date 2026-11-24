@@ -113,3 +113,24 @@ export async function submitEnquiry(enquiry: EnquirySubmission): Promise<{ succe
     throw new Error(err?.message || "Unable to submit inquiry at this time. Please try again.");
   }
 }
+
+export async function createBusiness(data: Partial<Business> | any): Promise<{ success: boolean; data: Business }> {
+  try {
+    const res = await fetch(getApiEndpoint("businesses"), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      const json = await res.json();
+      return { success: true, data: json };
+    }
+
+    const errJson = await res.json().catch(() => null);
+    throw new Error(errJson?.message || `Failed to create business (HTTP ${res.status})`);
+  } catch (err: any) {
+    console.error("createBusiness error:", err);
+    throw err;
+  }
+}

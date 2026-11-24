@@ -1,4 +1,5 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 export type BadgeVariant =
   | "success"
@@ -25,6 +26,10 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   dot?: boolean;
 }
 
+/**
+ * Linear-Inspired Status Badge
+ * Micro typography, hairline borders, alpha tint backgrounds, and optional status pulse dot.
+ */
 export const Badge: React.FC<BadgeProps> = ({
   children,
   variant = "neutral",
@@ -33,11 +38,11 @@ export const Badge: React.FC<BadgeProps> = ({
   className = "",
   ...props
 }) => {
-  const baseStyles = "inline-flex items-center font-bold uppercase tracking-wider rounded-full";
+  const baseStyles = "inline-flex items-center font-medium tracking-tight rounded-md select-none transition-colors border";
 
   const sizeStyles = {
-    sm: "text-[10px] px-2 py-0.5 gap-1",
-    md: "text-xs px-2.5 py-1 gap-1.5",
+    sm: "text-[10px] px-1.5 py-0.5 gap-1 leading-none",
+    md: "text-[11px] px-2 py-0.5 gap-1.5 leading-tight",
   };
 
   const normalizedVariant =
@@ -56,32 +61,45 @@ export const Badge: React.FC<BadgeProps> = ({
                 : variant;
 
   const variantStyles = {
-    success: "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60",
-    danger: "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60",
-    warning: "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60",
-    info: "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300 dark:border-blue-800/60",
-    neutral: "bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800/60 dark:text-slate-300 dark:border-slate-700/60",
-    purple: "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/60",
-    brand: "bg-brand-50 text-brand-700 border border-brand-200 dark:bg-brand-950/40 dark:text-brand-300 dark:border-brand-800/60",
+    success: "bg-status-success-bg text-status-success border-status-success-border",
+    danger: "bg-status-error-bg text-status-error border-status-error-border",
+    warning: "bg-status-warning-bg text-status-warning border-status-warning-border",
+    info: "bg-status-info-bg text-status-info border-status-info-border",
+    neutral: "bg-secondary text-text-secondary border-border",
+    purple: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
+    brand: "bg-primary-soft text-primary border-primary/20",
   };
 
   const dotColors = {
-    success: "bg-emerald-500",
-    danger: "bg-rose-500",
-    warning: "bg-amber-500",
-    info: "bg-blue-500",
-    neutral: "bg-slate-400",
+    success: "bg-status-success",
+    danger: "bg-status-error",
+    warning: "bg-status-warning",
+    info: "bg-status-info",
+    neutral: "bg-text-muted",
     purple: "bg-purple-500",
-    brand: "bg-brand-600",
+    brand: "bg-primary",
   };
 
   return (
     <span
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[normalizedVariant]} ${className}`}
+      className={cn(
+        baseStyles,
+        sizeStyles[size],
+        variantStyles[normalizedVariant as keyof typeof variantStyles] || variantStyles.neutral,
+        className
+      )}
       {...props}
     >
-      {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotColors[normalizedVariant]}`} />}
-      {children}
+      {dot && (
+        <span
+          className={cn(
+            "w-1.5 h-1.5 rounded-full shrink-0",
+            dotColors[normalizedVariant as keyof typeof dotColors] || dotColors.neutral
+          )}
+          aria-hidden="true"
+        />
+      )}
+      <span>{children}</span>
     </span>
   );
 };

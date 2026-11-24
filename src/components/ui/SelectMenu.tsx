@@ -47,9 +47,9 @@ export function SelectMenu({
             aria-selected={isSelected}
             disabled={opt.disabled}
             onClick={() => onSelect(opt)}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-colors text-left cursor-pointer ${
+            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-colors text-left cursor-pointer ${
               isSelected
-                ? "bg-[var(--accent-soft,rgba(59,130,246,0.12))] text-[var(--accent-text,#3b82f6)] dark:bg-white/10 dark:text-white font-bold"
+                ? "bg-[var(--primary)]/10 text-[var(--text-primary)] font-semibold dark:bg-[var(--primary)]/20"
                 : opt.disabled
                 ? "text-[var(--text-muted)] opacity-50 cursor-not-allowed"
                 : isFocused
@@ -58,7 +58,7 @@ export function SelectMenu({
             }`}
           >
             <span className="truncate">{opt.label}</span>
-            {isSelected && <Check className="w-3.5 h-3.5 text-[var(--border-focus)] flex-shrink-0" />}
+            {isSelected && <Check className="w-3.5 h-3.5 text-[var(--primary)] flex-shrink-0" />}
           </button>
         );
       })}

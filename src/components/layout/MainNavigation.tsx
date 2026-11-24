@@ -34,8 +34,8 @@ export function MainNavigation() {
             href={link.href}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               isActive
-                ? "text-red-600 dark:text-red-400 bg-red-50/80 dark:bg-red-950/40 font-semibold"
-                : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? "text-primary bg-primary/10 dark:bg-primary/20 font-semibold"
+                : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
             }`}
           >
             {link.label}

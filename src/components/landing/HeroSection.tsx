@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, LayoutDashboard } from "lucide-react";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { DemoRequestModal } from "./DemoRequestModal";
 
 export function HeroSection() {
   const [mounted, setMounted] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
@@ -87,45 +88,23 @@ export function HeroSection() {
             , Flipkart-grade product taxonomy, GST HSN customs tariff classification, and dual-layer RBAC/UBAC governance.
           </p>
 
-          {/* CTAs */}
+          {/* CTAs - Matching Exact START FREE & BOOK A DEMO design */}
           <div className="flex flex-wrap items-center gap-3.5 mb-10 w-full sm:w-auto">
             <Link
-              href="/admin"
-              className="btn-red flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all"
+              href="/register"
+              className="btn-primary-bold px-7 py-3.5 sm:px-8 sm:py-4 shadow-md"
               style={{ textDecoration: "none" }}
             >
-              <span>Launch Admin Console</span>
-              <ArrowRight className="w-4 h-4 ml-0.5" />
+              <span>START FREE</span>
             </Link>
 
-            {isAuth ? (
-              <Link
-                href="/dashboard"
-                className="btn-outline flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm transition-all"
-                style={{
-                  textDecoration: "none",
-                  border: "1px solid var(--theme-glass-border)",
-                  background: "var(--theme-card-bg)",
-                  color: "var(--theme-ink-darkest)",
-                }}
-              >
-                <LayoutDashboard className="w-4 h-4 text-red-600" />
-                <span>Go to Customer Hub</span>
-              </Link>
-            ) : (
-              <Link
-                href="/login"
-                className="btn-outline flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-sm transition-all"
-                style={{
-                  textDecoration: "none",
-                  border: "1px solid var(--theme-glass-border)",
-                  background: "var(--theme-card-bg)",
-                  color: "var(--theme-ink-darkest)",
-                }}
-              >
-                <span>Sign In to Organization</span>
-              </Link>
-            )}
+            <button
+              type="button"
+              onClick={() => setIsDemoModalOpen(true)}
+              className="btn-black px-7 py-3.5 sm:px-8 sm:py-4 shadow-md"
+            >
+              <span>BOOK A DEMO</span>
+            </button>
           </div>
 
           {/* Micro Proof Stats */}
@@ -162,6 +141,12 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+
+      {/* Book a Demo Modal */}
+      <DemoRequestModal
+        isOpen={isDemoModalOpen}
+        onClose={() => setIsDemoModalOpen(false)}
+      />
     </section>
   );
 }

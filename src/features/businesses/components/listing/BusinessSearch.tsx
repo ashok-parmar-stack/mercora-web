@@ -10,11 +10,9 @@ import {
   Layers,
   Wrench,
   Shield,
-  LucideIcon,
 } from "lucide-react";
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
-import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
 import { Button } from "@/components/ui/Button";
 
 export interface BusinessSearchProps {
@@ -26,14 +24,14 @@ export interface BusinessSearchProps {
   totalFound?: number;
 }
 
-const ICON_MAP: Record<string, LucideIcon> = {
-  Factory,
-  Layers,
-  Shield,
-  Building2,
-  Truck,
-  Wrench,
-};
+const BUSINESS_TYPE_PILLS = [
+  { name: "Distributor", icon: Truck },
+  { name: "Exporter", icon: Shield },
+  { name: "Manufacturer", icon: Factory },
+  { name: "Seller / Supplier", icon: Layers },
+  { name: "Service Provider", icon: Wrench },
+  { name: "Wholesaler", icon: Building2 },
+];
 
 export function BusinessSearch({
   query,
@@ -42,8 +40,6 @@ export function BusinessSearch({
   onCategoryChange,
   onSubmit,
 }: BusinessSearchProps) {
-  const { categories: businessCategories } = useBusinessCategories();
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSubmit) onSubmit();
@@ -105,36 +101,52 @@ export function BusinessSearch({
           </Button>
         </form>
 
-        {/* Dynamic Business Category Chips */}
+        {/* Business Type Filter Pills (exact match with UI design) */}
         <div className="pt-3 flex flex-wrap items-center justify-center gap-2">
-          {/* All chip */}
+          {/* All Businesses */}
           <button
             type="button"
             onClick={() => onCategoryChange("all")}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${!selectedCategory || selectedCategory === "all"
-              ? "bg-red-600 text-white shadow-md shadow-red-600/25 border-red-600 scale-[1.02]"
-              : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-700/80 border-slate-200/90 dark:border-slate-700/80 shadow-xs"
-              }`}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+              !selectedCategory || selectedCategory === "all"
+                ? "bg-red-600 text-white shadow-md shadow-red-600/30 border-red-600 scale-[1.02]"
+                : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800 border-slate-200/90 dark:border-slate-800 shadow-2xs"
+            }`}
           >
-            <Building2 className={`w-3.5 h-3.5 ${!selectedCategory || selectedCategory === "all" ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
+            <Building2
+              className={`w-3.5 h-3.5 ${
+                !selectedCategory || selectedCategory === "all"
+                  ? "text-white"
+                  : "text-slate-500 dark:text-slate-400"
+              }`}
+            />
             <span>All Businesses</span>
           </button>
 
-          {/* Dynamic chips from backend */}
-          {businessCategories.map((chip) => {
-            const Icon = (chip.icon && ICON_MAP[chip.icon]) || Building2;
-            const isSelected = selectedCategory === chip.name || selectedCategory === chip.slug;
+          {/* Business Type Pills */}
+          {BUSINESS_TYPE_PILLS.map((chip) => {
+            const Icon = chip.icon;
+            const isSelected =
+              selectedCategory?.toLowerCase() === chip.name.toLowerCase() ||
+              selectedCategory?.toLowerCase().replace(/\s+/g, "") ===
+                chip.name.toLowerCase().replace(/\s+/g, "");
+
             return (
               <button
-                key={chip.id || chip.slug}
+                key={chip.name}
                 type="button"
                 onClick={() => onCategoryChange(chip.name)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer border ${isSelected
-                  ? "bg-red-600 text-white shadow-md shadow-red-600/25 border-red-600 scale-[1.02]"
-                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-700/80 border-slate-200/90 dark:border-slate-700/80 shadow-xs"
-                  }`}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
+                  isSelected
+                    ? "bg-red-600 text-white shadow-md shadow-red-600/30 border-red-600 scale-[1.02]"
+                    : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50/60 dark:hover:bg-slate-800 border-slate-200/90 dark:border-slate-800 shadow-2xs"
+                }`}
               >
-                <Icon className={`w-3.5 h-3.5 ${isSelected ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
+                <Icon
+                  className={`w-3.5 h-3.5 ${
+                    isSelected ? "text-white" : "text-slate-500 dark:text-slate-400"
+                  }`}
+                />
                 <span>{chip.name}</span>
               </button>
             );

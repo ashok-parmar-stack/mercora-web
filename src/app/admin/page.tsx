@@ -157,24 +157,24 @@ export default function AdminDashboardPage() {
             <Link
               key={idx}
               href={stat.href}
-              className="bg-white border border-gray-200 hover:border-gray-300 rounded-xl p-5 shadow-xs transition-all hover:shadow-sm group flex flex-col justify-between gap-4"
+              className="bg-card border border-border hover:border-border-focus/40 rounded-xl p-5 shadow-xs transition-all hover:shadow-sm group flex flex-col justify-between gap-4"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">
                   {stat.label}
                 </span>
-                <div className={`p-2 rounded-lg border ${stat.color}`}>
+                <div className="p-2 rounded-lg border border-primary/20 bg-primary/10 text-primary">
                   <Icon className="w-4 h-4" />
                 </div>
               </div>
 
               <div>
-                <div className="text-2xl font-black text-gray-900 tracking-tight">
+                <div className="text-2xl font-bold text-text-primary tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-[11px] text-gray-500 font-medium mt-0.5 flex items-center justify-between">
+                <div className="text-[11px] text-text-muted font-medium mt-0.5 flex items-center justify-between">
                   <span>{stat.subtext}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-brand-600 transition-colors" />
+                  <ArrowUpRight className="w-3.5 h-3.5 text-text-muted group-hover:text-primary transition-colors" />
                 </div>
               </div>
             </Link>
@@ -182,22 +182,22 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      {/* Active Persona Banner (Light Theme) */}
-      <div className="bg-white border border-gray-200 text-gray-900 rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* Active Persona Banner */}
+      <div className="bg-card border border-border text-text-primary rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-brand-50 border border-brand-200 text-brand-600 flex items-center justify-center font-extrabold flex-shrink-0 shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center font-bold flex-shrink-0 shadow-xs">
             <Activity className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-extrabold text-sm text-gray-900">
+              <h3 className="font-semibold text-sm text-text-primary">
                 Active Simulation Persona: {activePersona.roleName}
               </h3>
               <Badge variant="purple" size="sm">
                 Code: {activePersona.roleCode}
               </Badge>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-text-muted mt-0.5">
               Permissions: {activePersona.canCreate ? "Create ✓" : "Create ✗"} |{" "}
               {activePersona.canEdit ? "Edit ✓" : "Edit ✗"} |{" "}
               {activePersona.canDelete ? "Delete ✓" : "Delete ✗"}
@@ -221,10 +221,10 @@ export default function AdminDashboardPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Quick Access Actions */}
-        <div className="lg:col-span-2 bg-white border border-gray-200 rounded-xl p-6 shadow-xs flex flex-col gap-4">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="font-extrabold text-sm text-gray-900">Quick Configuration Actions</h3>
-            <p className="text-xs text-gray-500 mt-0.5">
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-xs flex flex-col gap-4">
+          <div className="border-b border-border pb-3">
+            <h3 className="font-semibold text-sm text-text-primary">Quick Configuration Actions</h3>
+            <p className="text-xs text-text-muted mt-0.5">
               Jump directly to dedicated management workflows.
             </p>
           </div>
@@ -236,19 +236,19 @@ export default function AdminDashboardPage() {
                 <Link
                   key={idx}
                   href={link.href}
-                  className="p-4 rounded-xl border border-gray-200 hover:border-brand-300 hover:bg-brand-50/20 transition-all flex flex-col gap-2 group"
+                  className="p-4 rounded-xl border border-border hover:border-border-focus/40 hover:bg-surface-hover/50 transition-all flex flex-col gap-2 group"
                 >
                   <div className="flex items-center justify-between">
-                    <div className="p-2 rounded-lg bg-gray-100 group-hover:bg-brand-50 group-hover:text-brand-600 text-gray-700 transition-colors">
+                    <div className="p-2 rounded-lg bg-surface-hover group-hover:bg-primary/10 group-hover:text-primary text-text-secondary transition-colors">
                       <Icon className="w-4 h-4" />
                     </div>
-                    <Plus className="w-4 h-4 text-gray-400 group-hover:text-brand-600 transition-colors" />
+                    <Plus className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors" />
                   </div>
                   <div>
-                    <h4 className="font-extrabold text-xs text-gray-900 group-hover:text-brand-600 transition-colors">
+                    <h4 className="font-semibold text-xs text-text-primary group-hover:text-primary transition-colors">
                       {link.title}
                     </h4>
-                    <p className="text-[11px] text-gray-500 mt-0.5 leading-snug">
+                    <p className="text-[11px] text-text-muted mt-0.5 leading-snug">
                       {link.desc}
                     </p>
                   </div>
@@ -259,13 +259,13 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Recent Activity Timeline */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs flex flex-col gap-4">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="font-extrabold text-sm text-gray-900 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-400" />
+        <div className="bg-card border border-border rounded-xl p-6 shadow-xs flex flex-col gap-4">
+          <div className="border-b border-border pb-3">
+            <h3 className="font-semibold text-sm text-text-primary flex items-center gap-2">
+              <Clock className="w-4 h-4 text-text-muted" />
               Recent Security Audit
             </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-text-muted mt-0.5">
               Chronological log of administrative actions.
             </p>
           </div>
@@ -274,20 +274,20 @@ export default function AdminDashboardPage() {
             {recentEvents.map((evt, idx) => (
               <div
                 key={idx}
-                className="p-3 rounded-lg border border-gray-100 bg-gray-50/60 flex flex-col gap-1 text-xs"
+                className="p-3 rounded-lg border border-border bg-surface-hover/30 flex flex-col gap-1 text-xs"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-gray-900 text-[11px]">
+                  <span className="font-semibold text-text-primary text-[11px]">
                     {evt.action}
                   </span>
                   <Badge variant="blue" size="sm">
                     {evt.type}
                   </Badge>
                 </div>
-                <div className="text-[11px] text-gray-600">
-                  Target: <strong className="text-gray-900">{evt.target}</strong>
+                <div className="text-[11px] text-text-secondary">
+                  Target: <strong className="text-text-primary font-medium">{evt.target}</strong>
                 </div>
-                <div className="flex items-center justify-between text-[10px] text-gray-400 mt-1">
+                <div className="flex items-center justify-between text-[10px] text-text-muted mt-1">
                   <span>Actor: {evt.actor}</span>
                   <span>{evt.time}</span>
                 </div>
@@ -297,7 +297,7 @@ export default function AdminDashboardPage() {
 
           <Link
             href="/admin/audit-logs"
-            className="text-xs font-bold text-brand-600 hover:text-brand-700 text-center pt-2"
+            className="text-xs font-semibold text-primary hover:underline text-center pt-2"
           >
             View Full Audit Trail →
           </Link>

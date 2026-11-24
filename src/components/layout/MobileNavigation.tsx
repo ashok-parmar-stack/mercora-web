@@ -30,14 +30,14 @@ export function MobileNavigation({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden bg-slate-900/60 backdrop-blur-sm transition-opacity">
-      <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-white dark:bg-slate-900 shadow-2xl p-6 flex flex-col justify-between">
+    <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-xs transition-opacity">
+      <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-surface-raised border-l border-border shadow-2xl p-6 flex flex-col justify-between">
         <div>
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
-            <span className="font-bold text-slate-900 dark:text-white">Menu</span>
+          <div className="flex items-center justify-between pb-4 border-b border-border">
+            <span className="font-semibold text-text-primary">Menu</span>
             <button
               onClick={onClose}
-              className="p-2 text-slate-500 hover:text-slate-800 dark:hover:text-white rounded-lg"
+              className="p-2 text-text-muted hover:text-text-primary rounded-lg"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
@@ -56,10 +56,10 @@ export function MobileNavigation({
                   key={link.href}
                   href={link.href}
                   onClick={onClose}
-                  className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/40 font-semibold"
-                      : "text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      ? "text-primary bg-primary/10 dark:bg-primary/20 font-semibold"
+                      : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
                   }`}
                 >
                   {link.label}
@@ -70,14 +70,14 @@ export function MobileNavigation({
             <Link
               href="/saved-businesses"
               onClick={onClose}
-              className="flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 mt-2 border-t border-slate-100 dark:border-slate-800 pt-3"
+              className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover mt-2 border-t border-border pt-3"
             >
               <span className="flex items-center gap-2">
-                <Heart className="w-4 h-4 text-red-500" />
+                <Heart className="w-4 h-4 text-primary" />
                 <span>Saved Businesses</span>
               </span>
               {savedCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-600 dark:bg-red-950/50 dark:text-red-400">
+                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
                   {savedCount}
                 </span>
               )}
@@ -85,7 +85,7 @@ export function MobileNavigation({
           </nav>
         </div>
 
-        <div className="flex flex-col gap-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="flex flex-col gap-2 pt-4 border-t border-border">
           {isAuth ? (
             <>
               <div className="px-1 text-xs text-slate-500 truncate">

@@ -79,6 +79,11 @@ export default function AdminProfilePage() {
   // Active Tab
   const [activeTab, setActiveTab] = useState<"profile" | "appearance" | "security" | "sessions">("profile");
   const { theme, setTheme } = useTheme();
+  const [avatarError, setAvatarError] = useState(false);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [avatarUrl]);
 
   useEffect(() => {
     if (user?.name) setName(user.name);
@@ -290,12 +295,13 @@ export default function AdminProfilePage() {
         onClick={() => setIsAvatarModalOpen(true)}
         title="Click to open image upload dropzone"
       >
-        {avatarUrl ? (
+        {avatarUrl && !avatarError ? (
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 rounded-2xl overflow-hidden shadow-sm border border-slate-700/30 bg-slate-900">
             <img
               src={avatarUrl}
               alt={name}
               className="w-full h-full object-cover"
+              onError={() => setAvatarError(true)}
             />
           </div>
         ) : (

@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mercora Deal OS • Unique Color Systems Demo</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .pill-btn { transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1); }
+    .cta-btn { transition: all 150ms ease; }
+    .cta-btn:hover { transform: translateY(-1.5px); }
+    .plate-card { transition: all 200ms ease; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 p-4 sm:p-6 min-h-screen">
+
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Header & Theme Switcher -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-bold text-amber-400 tracking-wider uppercase">Avant-Garde & High-End B2B Design</span>
+          <h1 class="text-xl sm:text-2xl font-bold font-display text-white mt-0.5">Mercora Truly Unique Color Combinations</h1>
+          <p class="text-xs text-slate-400 mt-1">Distinctive, one-of-a-kind color palettes designed to give Mercora an unmistakable, unforgettable market identity.</p>
+        </div>
+        <div id="activeThemeBadge" class="self-start sm:self-center px-4 py-2 rounded-full text-xs font-bold border border-rose-400/30 bg-rose-400/10 text-rose-300">
+          Selected: <span id="badgeThemeName" class="font-extrabold text-white">🍷 Combination 1: Apple Burgundy & Space Titanium</span>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="flex flex-wrap items-center gap-2 pt-4 pb-2 text-xs font-bold">
+        <span class="text-slate-400">Filter Palettes:</span>
+        <button onclick="filterCategory('burgundy')" id="btnFilterBurgundy" class="px-3 py-1.5 rounded-lg bg-rose-500 text-white font-bold cursor-pointer">🍷 Burgundy Suite (5)</button>
+        <button onclick="filterCategory('top-sites')" id="btnFilterTopSites" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer">🏆 Top Website References (3)</button>
+        <button onclick="filterCategory('all')" id="btnFilterAll" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer">All Palettes (10)</button>
+        <button onclick="filterCategory('brand')" id="btnFilterBrand" class="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer">★ Duxre Brand</button>
+      </div>
+
+      <!-- Plates Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-3" id="paletteGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- Live Preview Stage (Dynamic Canvas) -->
+    <div id="previewCanvas" class="rounded-3xl shadow-2xl overflow-hidden border transition-all duration-300">
+
+      <!-- Navigation Bar -->
+      <header id="stageHeader" class="px-6 sm:px-10 py-4 flex items-center justify-between border-b transition-colors">
+        <div class="flex items-center gap-3">
+          <div id="navLogoIcon" class="w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-sm shadow-xs transition-colors">
+            M
+          </div>
+          <div id="navLogoText" class="text-xl font-extrabold font-display tracking-tight">
+            MERCO<span id="navLogoAccent">RA</span>
+          </div>
+        </div>
+
+        <nav id="navLinks" class="hidden md:flex items-center gap-8 text-sm font-semibold">
+          <a href="#" class="font-bold underline decoration-2 underline-offset-8">Directory</a>
+          <a href="#" class="opacity-75 hover:opacity-100 transition-opacity">Deals & RFQs</a>
+          <a href="#" class="opacity-75 hover:opacity-100 transition-opacity">KYC Compliance</a>
+          <a href="#" class="opacity-75 hover:opacity-100 transition-opacity">Suppliers</a>
+        </nav>
+
+        <div class="flex items-center gap-3">
+          <span id="signInLink" class="text-xs font-bold opacity-80 hover:opacity-100 cursor-pointer hidden sm:inline-block">Sign In</span>
+          <button id="navCta" class="cta-btn text-xs font-extrabold tracking-wider uppercase px-5 py-2.5 rounded-[2px] shadow-sm">
+            START FREE
+          </button>
+        </div>
+      </header>
+
+      <!-- Hero Section -->
+      <section class="px-6 sm:px-12 py-16 text-center max-w-4xl mx-auto space-y-6">
+        
+        <!-- Tag Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wide border shadow-2xs" id="heroBadge">
+          <span>✦ THE MODERN B2B DEAL OPERATING SYSTEM</span>
+        </div>
+
+        <!-- Headline -->
+        <h2 id="heroHeadline" class="text-3xl sm:text-5xl font-extrabold font-display tracking-tight leading-[1.12]">
+          The Operating System for Modern B2B Deals
+        </h2>
+
+        <!-- Subtitle -->
+        <p id="heroSubtitle" class="text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+          Connect verified manufacturers, distributors, and exporters with transparent compliance, verified KYC documents, and direct RFQs.
+        </p>
+
+        <!-- Search Bar Container -->
+        <div id="searchBarContainer" class="max-w-2xl mx-auto rounded-2xl border shadow-lg p-2 flex items-center gap-2 transition-colors">
+          <div class="pl-3 opacity-60">🔍</div>
+          <input type="text" id="searchInput" readOnly value="Search 10,000+ verified businesses by product, GSTIN, or district..." class="w-full text-xs sm:text-sm bg-transparent outline-none font-medium">
+          <button id="heroSearchBtn" class="px-6 py-3 rounded-xl text-xs font-bold shadow-sm flex-shrink-0 transition-opacity hover:opacity-90">
+            Search Deals
+          </button>
+        </div>
+
+        <!-- Category Capsule Pills (Screenshot 3 Reference) -->
+        <div class="pt-2">
+          <div id="pillSectionLabel" class="text-[11px] font-bold uppercase tracking-wider mb-2.5 opacity-60">
+            Category Capsule Pills (Screenshot 3 Reference)
+          </div>
+          <div id="pillsOuter" class="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 rounded-full border">
+            <!-- Pills rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Rectangular Action Buttons (Screenshot 4 Reference) -->
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button id="mainStartBtn" class="cta-btn w-full sm:w-auto px-10 py-4 rounded-[2px] font-extrabold text-sm tracking-wider uppercase shadow-md">
+            START FREE
+          </button>
+          <button id="mainDemoBtn" class="cta-btn w-full sm:w-auto px-10 py-4 rounded-[2px] font-extrabold text-sm tracking-wider uppercase shadow-md border">
+            BOOK A DEMO
+          </button>
+        </div>
+
+        <!-- Stats Strip -->
+        <div id="statsStrip" class="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 border-t text-left">
+          <div class="stat-card p-3.5 rounded-xl border">
+            <div id="statVal1" class="text-xl font-extrabold font-display">10,400+</div>
+            <div id="statLbl1" class="text-[11px] font-medium opacity-70">Verified B2B Suppliers</div>
+          </div>
+          <div class="stat-card p-3.5 rounded-xl border">
+            <div id="statVal2" class="text-xl font-extrabold font-display">$420M+</div>
+            <div id="statLbl2" class="text-[11px] font-medium opacity-70">Deal Volume Settled</div>
+          </div>
+          <div class="stat-card p-3.5 rounded-xl border">
+            <div id="statVal3" class="text-xl font-extrabold font-display">100% KYC</div>
+            <div id="statLbl3" class="text-[11px] font-medium opacity-70">Aadhaar & GST Verified</div>
+          </div>
+          <div class="stat-card p-3.5 rounded-xl border">
+            <div id="statVal4" class="text-xl font-extrabold font-display">&lt; 24 hrs</div>
+            <div id="statLbl4" class="text-[11px] font-medium opacity-70">Average RFQ Turnaround</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Modals Showcase Row -->
+      <section id="modalsSection" class="border-t p-8 sm:p-12 space-y-8 transition-colors">
+        <div class="text-center">
+          <h3 id="modalsHeading" class="text-xl font-bold font-display">Workflow Modals in this Unique Theme</h3>
+          <p id="modalsSubheading" class="text-xs opacity-70 mt-1">Live preview of KYC Review Modal and Storage Dropzone seamlessly matched to the unique tokens.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          
+          <!-- KYC Modal -->
+          <div id="kycModalCard" class="rounded-2xl shadow-xl border overflow-hidden transition-colors">
+            <div id="kycModalHeader" class="px-6 py-4 flex items-center justify-between font-bold text-sm">
+              <span>KYC Details</span>
+              <span class="cursor-pointer">✕</span>
+            </div>
+            <div id="kycModalBody" class="p-6 space-y-4">
+              
+              <!-- Personal Info Card -->
+              <div id="kycSubcard1" class="rounded-xl p-4 border space-y-3">
+                <div id="kycSub1" class="text-xs font-bold">Personal Information</div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span id="kycFieldLbl1" class="text-[10px] opacity-60 block">Name</span>
+                    <span id="kycVal1" class="font-bold">TestDD VendorWi</span>
+                  </div>
+                  <div>
+                    <span id="kycFieldLbl2" class="text-[10px] opacity-60 block">Email</span>
+                    <span id="kycVal2" class="font-medium truncate block">daviswilliamsus+ddwi@gmail.com</span>
+                  </div>
+                  <div>
+                    <span id="kycFieldLbl3" class="text-[10px] opacity-60 block">Phone</span>
+                    <span id="kycVal3" class="font-semibold">+91 7048992154</span>
+                  </div>
+                  <div>
+                    <span id="kycFieldLbl4" class="text-[10px] opacity-60 block">KYC Status</span>
+                    <span class="inline-block px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-[10px] font-bold border border-emerald-500/30">
+                      ACCEPTED
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Documents Card -->
+              <div id="kycSubcard2" class="rounded-xl p-4 border space-y-3">
+                <div id="kycSub2" class="text-xs font-bold">KYC Documents</div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span id="kycDocLbl1" class="text-[10px] opacity-60 block">Aadhaar Number</span>
+                    <span id="kycDocVal1" class="font-medium">-</span>
+                  </div>
+                  <div>
+                    <span id="kycDocLbl2" class="text-[10px] opacity-60 block">PAN Number</span>
+                    <span id="kycDocVal2" class="font-medium">-</span>
+                  </div>
+                  <div>
+                    <span id="kycDocLbl3" class="text-[10px] opacity-60 block">GST Number</span>
+                    <span id="kycDocVal3" class="font-bold font-mono">27ABCDE1234F2Z5</span>
+                  </div>
+                  <div>
+                    <span id="kycDocLbl4" class="text-[10px] opacity-60 block">Verified At</span>
+                    <span id="kycDocVal4" class="font-semibold">10-01-2026</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal Footer -->
+              <div class="flex justify-end pt-2">
+                <button id="kycCloseBtn" class="px-6 py-2.5 rounded-lg text-xs font-bold shadow-xs cursor-pointer">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Dropzone -->
+          <div id="dropzoneCard" class="rounded-2xl shadow-xl border p-6 space-y-4 transition-colors">
+            <div id="dropzoneHeader" class="flex items-center justify-between pb-3 border-b">
+              <div>
+                <h4 id="dropzoneTitle" class="text-sm font-bold">Upload Profile Picture</h4>
+                <p id="dropzoneSub" class="text-[11px] opacity-70">Drag and drop or select an image file.</p>
+              </div>
+              <span class="opacity-60 hover:opacity-100 cursor-pointer">✕</span>
+            </div>
+
+            <div id="dropzoneInnerBox" class="border-2 border-dashed rounded-2xl p-6 text-center space-y-3 transition-colors">
+              <div id="dropzoneBoxTitle" class="text-xs font-bold">Avatar Image Dropzone</div>
+              <div class="flex items-center justify-center">
+                <div id="dropzoneAvatarCircle" class="w-16 h-16 rounded-full flex items-center justify-center font-bold text-lg shadow-sm">
+                  AP
+                </div>
+              </div>
+
+              <div class="flex items-center justify-center gap-2">
+                <span id="btnReplaceImg" class="px-3 py-1.5 rounded-lg border text-xs font-bold shadow-2xs cursor-pointer">
+                  🔄 Replace Image
+                </span>
+                <span id="btnRemoveImg" class="px-3 py-1.5 rounded-lg border text-xs font-bold shadow-2xs cursor-pointer">
+                  🗑️ Remove
+                </span>
+              </div>
+
+              <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold font-mono">
+                <span>⚡ Optimized: 3.4 MB → 120 KB (96% saved, WEBP)</span>
+              </div>
+
+              <div id="dropzoneBucketTag" class="text-[10px] font-medium opacity-70">
+                🗄️ Bucket: <span class="font-mono font-bold">uploads (Neon S3)</span>
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+              <button id="dropzoneDoneBtn" class="px-8 py-3 rounded-lg text-xs font-bold shadow-xs transition-transform hover:-translate-y-0.5 cursor-pointer">
+                DONE
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Token Inspector Box -->
+      <footer id="tokenFooter" class="p-5 sm:p-6 border-t flex flex-col sm:flex-row items-center justify-between gap-4 transition-colors">
+        <div>
+          <span class="text-xs font-bold opacity-60 uppercase tracking-wider block">Unique System Tokens</span>
+          <div class="text-xs font-mono mt-1.5 flex flex-wrap gap-x-5 gap-y-1.5" id="tokenList">
+            <!-- Token hex codes inserted here -->
+          </div>
+        </div>
+        <button id="copyCssBtn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold border border-slate-700 transition-colors flex-shrink-0 cursor-pointer">
+          📋 Copy Unique CSS Tokens
+        </button>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <script>
+    const PALETTES = [
+      {
+        id: "burgundy-apple-titanium",
+        name: "🍷 1. Apple Burgundy & Titanium",
+        category: "burgundy",
+        tag: "Minimalist Pro Hardware • Apple Inks",
+        pageBg: "#F5F5F7",
+        cardBg: "#FFFFFF",
+        subCardBg: "#FBFBFD",
+        border: "#D2D2D7",
+        textPrimary: "#1D1D1F",
+        textSecondary: "#6E6E73",
+        brand: "#54121D",
+        brandText: "#FFFFFF",
+        ctaStart: "#800020",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#1D1D1F",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#1D1D1F",
+        activePill: "#54121D",
+        activePillText: "#FFFFFF",
+        accent: "#D70015",
+        badgeBg: "#FDF2F4",
+        badgeBorder: "#F8D7DC",
+        badgeText: "#8A182E",
+        kycHeader: "#54121D",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#8A182E",
+        kycCloseBtn: "#54121D",
+        dropzoneInner: "#F5F5F7"
+      },
+      {
+        id: "burgundy-champagne-gold",
+        name: "🍷 2. Burgundy & Champagne Gold",
+        category: "burgundy",
+        tag: "Ultra-Luxury Escrow • Private Wealth",
+        pageBg: "#FAF8F6",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F6F1EC",
+        border: "#E5DCD3",
+        textPrimary: "#2A0A10",
+        textSecondary: "#5E4B50",
+        brand: "#4A0E17",
+        brandText: "#FFFFFF",
+        ctaStart: "#D4AF37",
+        ctaStartText: "#2A0A10",
+        ctaDemo: "#4A0E17",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#4A0E17",
+        activePill: "#4A0E17",
+        activePillText: "#D4AF37",
+        accent: "#D4AF37",
+        badgeBg: "#FEF9C3",
+        badgeBorder: "#FDE047",
+        badgeText: "#854D0E",
+        kycHeader: "#4A0E17",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#B45309",
+        kycCloseBtn: "#4A0E17",
+        dropzoneInner: "#F6F1EC"
+      },
+      {
+        id: "burgundy-coral-flame",
+        name: "🍷 3. Velvet Burgundy & Coral Rose",
+        category: "burgundy",
+        tag: "High-Conversion Marketplace Energy",
+        pageBg: "#FAF6F7",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F4ECED",
+        border: "#E5D2D5",
+        textPrimary: "#1A060A",
+        textSecondary: "#594246",
+        brand: "#580F1E",
+        brandText: "#FFFFFF",
+        ctaStart: "#E11D48",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#1A060A",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#1A060A",
+        activePill: "#580F1E",
+        activePillText: "#FFE4E8",
+        accent: "#E11D48",
+        badgeBg: "#FFE4E6",
+        badgeBorder: "#FECDD3",
+        badgeText: "#BE123C",
+        kycHeader: "#580F1E",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#E11D48",
+        kycCloseBtn: "#580F1E",
+        dropzoneInner: "#F4ECED"
+      },
+      {
+        id: "burgundy-emerald-trust",
+        name: "🍷 4. Burgundy & Sage Emerald",
+        category: "burgundy",
+        tag: "Verified Escrow • Institutional Trust",
+        pageBg: "#F7F8F9",
+        cardBg: "#FFFFFF",
+        subCardBg: "#EEF2F0",
+        border: "#D5DFDC",
+        textPrimary: "#1A0B0E",
+        textSecondary: "#485451",
+        brand: "#4D0E18",
+        brandText: "#FFFFFF",
+        ctaStart: "#059669",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#4D0E18",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#4D0E18",
+        activePill: "#4D0E18",
+        activePillText: "#A7F3D0",
+        accent: "#059669",
+        badgeBg: "#ECFDF5",
+        badgeBorder: "#A7F3D0",
+        badgeText: "#047857",
+        kycHeader: "#4D0E18",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#059669",
+        kycCloseBtn: "#4D0E18",
+        dropzoneInner: "#EEF2F0"
+      },
+      {
+        id: "burgundy-midnight-noir",
+        name: "🍷 5. Midnight Burgundy Noir",
+        category: "burgundy",
+        tag: "Executive Dark Console Mode",
+        pageBg: "#0E0507",
+        cardBg: "#1A0C10",
+        subCardBg: "#261218",
+        border: "#3D1D26",
+        textPrimary: "#FDF2F4",
+        textSecondary: "#B39DA2",
+        brand: "#8B1E3F",
+        brandText: "#FFFFFF",
+        ctaStart: "#D70015",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#261218",
+        ctaDemoText: "#FDF2F4",
+        ctaDemoBorder: "#4D232F",
+        activePill: "#8B1E3F",
+        activePillText: "#FFFFFF",
+        accent: "#FF4D6D",
+        badgeBg: "rgba(215, 0, 21, 0.15)",
+        badgeBorder: "rgba(215, 0, 21, 0.35)",
+        badgeText: "#FF4D6D",
+        kycHeader: "#1A0C10",
+        kycHeaderText: "#FDF2F4",
+        kycSub: "#FF4D6D",
+        kycCloseBtn: "#8B1E3F",
+        dropzoneInner: "#0E0507"
+      },
+      {
+        id: "ref-flexport",
+        name: "🏆 Flexport (Global B2B Trade)",
+        category: "top-sites",
+        referenceUrl: "flexport.com",
+        tag: "Reference: Flexport.com (B2B Global Trade OS)",
+        pageBg: "#F8F9FA",
+        cardBg: "#FFFFFF",
+        subCardBg: "#EEF1F4",
+        border: "#D9DFE5",
+        textPrimary: "#002B49",
+        textSecondary: "#475A6B",
+        brand: "#002B49",
+        brandText: "#FFFFFF",
+        ctaStart: "#FF6D00",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#002B49",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#002B49",
+        activePill: "#002B49",
+        activePillText: "#FF6D00",
+        accent: "#0084FF",
+        badgeBg: "#FFF3E0",
+        badgeBorder: "#FFE0B2",
+        badgeText: "#E65100",
+        kycHeader: "#002B49",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#FF6D00",
+        kycCloseBtn: "#FF6D00",
+        dropzoneInner: "#F8F9FA"
+      },
+      {
+        id: "ref-stripe",
+        name: "🏆 Stripe (Global FinTech OS)",
+        category: "top-sites",
+        referenceUrl: "stripe.com",
+        tag: "Reference: Stripe.com (World #1 Payments)",
+        pageBg: "#F6F9FC",
+        cardBg: "#FFFFFF",
+        subCardBg: "#EEF2F6",
+        border: "#E3E8EE",
+        textPrimary: "#0A2540",
+        textSecondary: "#425466",
+        brand: "#635BFF",
+        brandText: "#FFFFFF",
+        ctaStart: "#635BFF",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#0A2540",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#0A2540",
+        activePill: "#635BFF",
+        activePillText: "#FFFFFF",
+        accent: "#00D4B2",
+        badgeBg: "#F0F3FF",
+        badgeBorder: "#D8E2FF",
+        badgeText: "#635BFF",
+        kycHeader: "#0A2540",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#635BFF",
+        kycCloseBtn: "#635BFF",
+        dropzoneInner: "#F6F9FC"
+      },
+      {
+        id: "ref-ramp",
+        name: "🏆 Ramp (Enterprise Finance)",
+        category: "top-sites",
+        referenceUrl: "ramp.com",
+        tag: "Reference: Ramp.com (Modern Spend OS)",
+        pageBg: "#FAFAF7",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F0EFE9",
+        border: "#E2DFD6",
+        textPrimary: "#121516",
+        textSecondary: "#4D5154",
+        brand: "#132B27",
+        brandText: "#C8FF00",
+        ctaStart: "#C8FF00",
+        ctaStartText: "#132B27",
+        ctaDemo: "#132B27",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#132B27",
+        activePill: "#132B27",
+        activePillText: "#C8FF00",
+        accent: "#00875A",
+        badgeBg: "#F4FADC",
+        badgeBorder: "#D9F36A",
+        badgeText: "#455A05",
+        kycHeader: "#132B27",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#2C5E53",
+        kycCloseBtn: "#132B27",
+        dropzoneInner: "#FAFAF7"
+      },
+      {
+        id: "ref-linear",
+        name: "🏆 Linear (High-Craft Product UI)",
+        category: "top-sites",
+        referenceUrl: "linear.app",
+        tag: "Reference: Linear.app (Apex Silicon Valley)",
+        pageBg: "#FFFFFF",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F7F8F9",
+        border: "#E1E4E8",
+        textPrimary: "#0F1012",
+        textSecondary: "#575C66",
+        brand: "#5E6AD2",
+        brandText: "#FFFFFF",
+        ctaStart: "#5E6AD2",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#0F1012",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#0F1012",
+        activePill: "#5E6AD2",
+        activePillText: "#FFFFFF",
+        accent: "#27C383",
+        badgeBg: "#F0F2FD",
+        badgeBorder: "#D4D8F8",
+        badgeText: "#5E6AD2",
+        kycHeader: "#0F1012",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#5E6AD2",
+        kycCloseBtn: "#5E6AD2",
+        dropzoneInner: "#F7F8F9"
+      },
+      {
+        id: "ref-brex",
+        name: "🏆 Brex (Corporate Commerce)",
+        category: "top-sites",
+        referenceUrl: "brex.com",
+        tag: "Reference: Brex.com (Corporate Treasury)",
+        pageBg: "#FAF9F7",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F3EFE9",
+        border: "#E4DDD3",
+        textPrimary: "#141517",
+        textSecondary: "#505256",
+        brand: "#FF5E00",
+        brandText: "#FFFFFF",
+        ctaStart: "#FF5E00",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#141517",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#141517",
+        activePill: "#141517",
+        activePillText: "#FF5E00",
+        accent: "#00B074",
+        badgeBg: "#FFF0E6",
+        badgeBorder: "#FFD1B3",
+        badgeText: "#D44600",
+        kycHeader: "#141517",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#FF5E00",
+        kycCloseBtn: "#FF5E00",
+        dropzoneInner: "#FAF9F7"
+      },
+      {
+        id: "ref-shopify",
+        name: "🏆 Shopify (Merchant Commerce)",
+        category: "top-sites",
+        referenceUrl: "shopify.com",
+        tag: "Reference: Shopify.com (World #1 Merchant)",
+        pageBg: "#F6F6F7",
+        cardBg: "#FFFFFF",
+        subCardBg: "#EDEEEF",
+        border: "#D2D5D8",
+        textPrimary: "#1A1A1A",
+        textSecondary: "#4A4A4A",
+        brand: "#008060",
+        brandText: "#FFFFFF",
+        ctaStart: "#008060",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#1A1A1A",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#1A1A1A",
+        activePill: "#008060",
+        activePillText: "#FFFFFF",
+        accent: "#5C6AC4",
+        badgeBg: "#E3F1DF",
+        badgeBorder: "#B7E0B0",
+        badgeText: "#004C3F",
+        kycHeader: "#1A1A1A",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#008060",
+        kycCloseBtn: "#008060",
+        dropzoneInner: "#F6F6F7"
+      },
+      {
+        id: "royal-baingani",
+        name: "🍆 Royal Baingani & Saffron Gold",
+        category: "baingani",
+        tag: "Imperial Aubergine & Saffron Gold (शाही बैंगनी)",
+        pageBg: "#FAF8FD",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F5F0FA",
+        border: "#E5D8F0",
+        textPrimary: "#240638",
+        textSecondary: "#583F6B",
+        brand: "#3B0764",
+        brandText: "#FDE68A",
+        ctaStart: "#F59E0B",
+        ctaStartText: "#240638",
+        ctaDemo: "#3B0764",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#3B0764",
+        activePill: "#3B0764",
+        activePillText: "#FDE68A",
+        accent: "#F59E0B",
+        badgeBg: "#FAF5FF",
+        badgeBorder: "#E9D5FF",
+        badgeText: "#7E22CE",
+        kycHeader: "#3B0764",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#7E22CE",
+        kycCloseBtn: "#3B0764",
+        dropzoneInner: "#F5F0FA"
+      },
+      {
+        id: "electric-baingani",
+        name: "🍆 Velvet Baingani & Vivid Mint",
+        category: "baingani",
+        tag: "High-Tech Velvet Violet & Emerald Mint",
+        pageBg: "#FAFAFE",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F3F0F9",
+        border: "#DDD6FE",
+        textPrimary: "#1E1135",
+        textSecondary: "#54466B",
+        brand: "#4C1D95",
+        brandText: "#FFFFFF",
+        ctaStart: "#10B981",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#1E1135",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#1E1135",
+        activePill: "#4C1D95",
+        activePillText: "#A7F3D0",
+        accent: "#10B981",
+        badgeBg: "#EDE9FE",
+        badgeBorder: "#C4B5FD",
+        badgeText: "#5B21B6",
+        kycHeader: "#4C1D95",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#6D28D9",
+        kycCloseBtn: "#4C1D95",
+        dropzoneInner: "#F3F0F9"
+      },
+      {
+        id: "petroleum-citron",
+        name: "💎 Petroleum Slate & Citron",
+        category: "unique",
+        tag: "Futuristic Industrial (Polestar / Teenage Engineering)",
+        pageBg: "#FFFFFF",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F4F7F8",
+        border: "#D5E0E5",
+        textPrimary: "#0B1E28",
+        textSecondary: "#476070",
+        brand: "#0B1E28",
+        brandText: "#FFFFFF",
+        ctaStart: "#D4FF00",
+        ctaStartText: "#0B1E28",
+        ctaDemo: "#0B1E28",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#0B1E28",
+        activePill: "#0B1E28",
+        activePillText: "#D4FF00",
+        accent: "#10B981",
+        badgeBg: "#F9FFE5",
+        badgeBorder: "#E2FF80",
+        badgeText: "#4D6600",
+        kycHeader: "#0B1E28",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#0B1E28",
+        kycCloseBtn: "#0B1E28",
+        dropzoneInner: "#F4F7F8"
+      },
+      {
+        id: "bordeaux-gold",
+        name: "💎 Bordeaux & Champagne Gold",
+        category: "unique",
+        tag: "Old-Money Private Equity & Sovereign Wealth",
+        pageBg: "#FFFFFF",
+        cardBg: "#FFFFFF",
+        subCardBg: "#FDF7F8",
+        border: "#EED8DC",
+        textPrimary: "#2B070D",
+        textSecondary: "#66333C",
+        brand: "#4A0E17",
+        brandText: "#FFFFFF",
+        ctaStart: "#D4AF37",
+        ctaStartText: "#2B070D",
+        ctaDemo: "#4A0E17",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#4A0E17",
+        activePill: "#4A0E17",
+        activePillText: "#FFFFFF",
+        accent: "#D4AF37",
+        badgeBg: "#FDF8EC",
+        badgeBorder: "#F5E6B8",
+        badgeText: "#7A5A0A",
+        kycHeader: "#4A0E17",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#4A0E17",
+        kycCloseBtn: "#4A0E17",
+        dropzoneInner: "#FDF7F8"
+      },
+      {
+        id: "copper-charcoal",
+        name: "💎 Burnished Copper & Charcoal",
+        category: "unique",
+        tag: "Heavy Metallurgy, Hardware & Raw Manufacturing",
+        pageBg: "#FAF9F7",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F4F1EA",
+        border: "#E5DFC4",
+        textPrimary: "#18181B",
+        textSecondary: "#52525B",
+        brand: "#C85A32",
+        brandText: "#FFFFFF",
+        ctaStart: "#D35400",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#18181B",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#18181B",
+        activePill: "#C85A32",
+        activePillText: "#FFFFFF",
+        accent: "#D35400",
+        badgeBg: "#FDF3EC",
+        badgeBorder: "#F8D7C4",
+        badgeText: "#9C3916",
+        kycHeader: "#18181B",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#C85A32",
+        kycCloseBtn: "#C85A32",
+        dropzoneInner: "#F4F1EA"
+      },
+      {
+        id: "racing-moss-amber",
+        name: "💎 Racing Moss & Honey Amber",
+        category: "unique",
+        tag: "British Racing Heritage & High-Contrast Amber",
+        pageBg: "#FFFFFF",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F4F7F5",
+        border: "#D5E0D8",
+        textPrimary: "#0B251B",
+        textSecondary: "#425F53",
+        brand: "#0B251B",
+        brandText: "#FFFFFF",
+        ctaStart: "#FB8500",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#0B251B",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#0B251B",
+        activePill: "#0B251B",
+        activePillText: "#FFFFFF",
+        accent: "#FB8500",
+        badgeBg: "#FFF7ED",
+        badgeBorder: "#FED7AA",
+        badgeText: "#9A3412",
+        kycHeader: "#0B251B",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#0B251B",
+        kycCloseBtn: "#0B251B",
+        dropzoneInner: "#F4F7F5"
+      },
+      {
+        id: "ultraviolet-cyan",
+        name: "💎 Ultraviolet & Hyper Cyan",
+        category: "unique",
+        tag: "Algorithmic Commodities & AI Trade 2030",
+        pageBg: "#0B0714",
+        cardBg: "#150F24",
+        subCardBg: "#1F1633",
+        border: "#2F224A",
+        textPrimary: "#FFFFFF",
+        textSecondary: "#A79BC2",
+        brand: "#7C3AED",
+        brandText: "#FFFFFF",
+        ctaStart: "#00F5D4",
+        ctaStartText: "#0B0714",
+        ctaDemo: "#1F1633",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#7C3AED",
+        activePill: "#7C3AED",
+        activePillText: "#FFFFFF",
+        accent: "#00F5D4",
+        badgeBg: "#1F1633",
+        badgeBorder: "#7C3AED",
+        badgeText: "#00F5D4",
+        kycHeader: "#150F24",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#00F5D4",
+        kycCloseBtn: "#7C3AED",
+        dropzoneInner: "#0B0714"
+      },
+      {
+        id: "unique-tokyo-vermillion",
+        name: "💎 Tokyo Sumi Ink & Vermillion",
+        category: "unique",
+        tag: "Editorial Japanese Precision Industrial",
+        pageBg: "#FAF9F6",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F2EFE9",
+        border: "#E4DFD7",
+        textPrimary: "#111827",
+        textSecondary: "#4B5563",
+        brand: "#111827",
+        brandText: "#FFFFFF",
+        ctaStart: "#FF3B30",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#111827",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#111827",
+        activePill: "#111827",
+        activePillText: "#FF3B30",
+        accent: "#DC2626",
+        badgeBg: "#FEE2E2",
+        badgeBorder: "#FECACA",
+        badgeText: "#991B1B",
+        kycHeader: "#111827",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#DC2626",
+        kycCloseBtn: "#111827",
+        dropzoneInner: "#F2EFE9"
+      },
+      {
+        id: "nordic-arctic-teal",
+        name: "🌿 Nordic Arctic Teal & Mint",
+        category: "nordic",
+        tag: "Scandinavian Circular & Sustainable B2B",
+        pageBg: "#F4F8F8",
+        cardBg: "#FFFFFF",
+        subCardBg: "#EBF2F2",
+        border: "#CEE0E0",
+        textPrimary: "#082F2F",
+        textSecondary: "#3C6B6B",
+        brand: "#0E4D4D",
+        brandText: "#FFFFFF",
+        ctaStart: "#0D9488",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#082F2F",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#082F2F",
+        activePill: "#0E4D4D",
+        activePillText: "#5EEAD4",
+        accent: "#0F766E",
+        badgeBg: "#CCFBF1",
+        badgeBorder: "#99F6E4",
+        badgeText: "#0F766E",
+        kycHeader: "#082F2F",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#0D9488",
+        kycCloseBtn: "#0E4D4D",
+        dropzoneInner: "#EBF2F2"
+      },
+      {
+        id: "duxre-harmonized",
+        name: "★ Harmonized Duxre (Red & Obsidian)",
+        category: "brand",
+        tag: "Official Mercora: Red & Obsidian Unified",
+        pageBg: "#FFFFFF",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F8FAFC",
+        border: "#E2E8F0",
+        textPrimary: "#0F172A",
+        textSecondary: "#334155",
+        brand: "#EE3135",
+        brandText: "#FFFFFF",
+        ctaStart: "#EE3135",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#0D1117",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#0D1117",
+        activePill: "#EE3135",
+        activePillText: "#FFFFFF",
+        accent: "#15803D",
+        badgeBg: "#FFF1F2",
+        badgeBorder: "#FECDD3",
+        badgeText: "#EE3135",
+        kycHeader: "#0D1117",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#EE3135",
+        kycCloseBtn: "#EE3135",
+        dropzoneInner: "#F8FAFC"
+      },
+      {
+        id: "unified-cobalt-flame",
+        name: "★ Imperial Cobalt & Solar Flame",
+        category: "brand",
+        tag: "Global Trade OS: Cobalt & Vivid Orange",
+        pageBg: "#FFFFFF",
+        cardBg: "#FFFFFF",
+        subCardBg: "#F8FAFC",
+        border: "#E2E8F0",
+        textPrimary: "#0F172A",
+        textSecondary: "#334155",
+        brand: "#1D4ED8",
+        brandText: "#FFFFFF",
+        ctaStart: "#FF5A1F",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#0B0F19",
+        ctaDemoText: "#FFFFFF",
+        ctaDemoBorder: "#0B0F19",
+        activePill: "#1D4ED8",
+        activePillText: "#FFFFFF",
+        accent: "#10B981",
+        badgeBg: "#EFF6FF",
+        badgeBorder: "#BFDBFE",
+        badgeText: "#1D4ED8",
+        kycHeader: "#1D4ED8",
+        kycHeaderText: "#FFFFFF",
+        kycSub: "#1D4ED8",
+        kycCloseBtn: "#1D4ED8",
+        dropzoneInner: "#F8FAFC"
+      },
+      {
+        id: "deep-space-obsidian",
+        name: "Deep Space Obsidian Dark",
+        category: "dark",
+        tag: "Fintech Dark Mode (Linear / Stripe)",
+        pageBg: "#080B11",
+        cardBg: "#0F1523",
+        subCardBg: "#172033",
+        border: "#1E293B",
+        textPrimary: "#F8FAFC",
+        textSecondary: "#94A3B8",
+        brand: "#3B82F6",
+        brandText: "#FFFFFF",
+        ctaStart: "#3B82F6",
+        ctaStartText: "#FFFFFF",
+        ctaDemo: "#172033",
+        ctaDemoText: "#F8FAFC",
+        ctaDemoBorder: "#334155",
+        activePill: "#3B82F6",
+        activePillText: "#FFFFFF",
+        accent: "#10B981",
+        badgeBg: "rgba(59, 130, 246, 0.12)",
+        badgeBorder: "rgba(59, 130, 246, 0.3)",
+        badgeText: "#60A5FA",
+        kycHeader: "#0F1523",
+        kycHeaderText: "#F8FAFC",
+        kycSub: "#60A5FA",
+        kycCloseBtn: "#3B82F6",
+        dropzoneInner: "#080B11"
+      }
+    ];
+
+    const PILLS = [
+      { id: "all", label: "All Businesses", icon: "🏢" },
+      { id: "distributor", label: "Distributor", icon: "🚚" },
+      { id: "exporter", label: "Exporter", icon: "🛡️" },
+      { id: "manufacturer", label: "Manufacturer", icon: "🏭" },
+      { id: "seller", label: "Seller / Supplier", icon: "📦" },
+      { id: "service", label: "Service Provider", icon: "🔧" },
+      { id: "wholesaler", label: "Wholesaler", icon: "🏬" }
+    ];
+
+    let currentPalette = PALETTES[0]; // Apple Burgundy & Titanium is default
+    let activeFilter = "burgundy";
+    let activePillId = "manufacturer";
+
+    function filterCategory(cat) {
+      activeFilter = cat;
+      document.getElementById("btnFilterBurgundy").className = cat === "burgundy" ? "px-3 py-1.5 rounded-lg bg-rose-500 text-white font-bold cursor-pointer" : "px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer";
+      document.getElementById("btnFilterTopSites").className = cat === "top-sites" ? "px-3 py-1.5 rounded-lg bg-rose-500 text-white font-bold cursor-pointer" : "px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer";
+      document.getElementById("btnFilterAll").className = cat === "all" ? "px-3 py-1.5 rounded-lg bg-rose-500 text-white font-bold cursor-pointer" : "px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer";
+      document.getElementById("btnFilterBrand").className = cat === "brand" ? "px-3 py-1.5 rounded-lg bg-rose-500 text-white font-bold cursor-pointer" : "px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold cursor-pointer";
+      renderPlateGrid();
+    }
+
+    function renderPlateGrid() {
+      const grid = document.getElementById("paletteGrid");
+      const list = activeFilter === "all"
+        ? PALETTES
+        : activeFilter === "unique"
+        ? PALETTES.filter(p => p.category === "unique" || p.category === "baingani")
+        : PALETTES.filter(p => p.category === activeFilter);
+      grid.innerHTML = list.map(p => `
+        <button onclick="setPalette('${p.id}')" class="plate-card p-3 rounded-xl text-left border transition-all cursor-pointer ${currentPalette.id === p.id ? 'border-amber-400 bg-slate-800 ring-2 ring-amber-400/20 shadow-lg scale-[1.02]' : 'border-slate-800 bg-slate-900/90 hover:bg-slate-800/80'}">
+          <div class="flex items-center justify-between gap-1.5 mb-2">
+            <div class="flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded-full border border-white/20 shadow-xs flex-shrink-0" style="background-color: ${p.brand}"></span>
+              <span class="w-4 h-4 rounded-full border border-white/20 shadow-xs flex-shrink-0" style="background-color: ${p.ctaStart}"></span>
+              <span class="w-4 h-4 rounded-full border border-white/20 shadow-xs flex-shrink-0" style="background-color: ${p.ctaDemo}"></span>
+            </div>
+            ${p.referenceUrl ? `<span class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] font-mono">🌐 ${p.referenceUrl}</span>` : ''}
+          </div>
+          <div class="text-xs font-bold text-white leading-tight">${p.name}</div>
+          <div class="text-[9px] text-slate-400 truncate mt-1">${p.tag}</div>
+        </button>
+      `).join("");
+    }
+
+    function renderPills() {
+      const container = document.getElementById("pillsOuter");
+      container.innerHTML = PILLS.map(p => {
+        const isSelected = p.id === activePillId;
+        return `
+          <button onclick="selectPill('${p.id}')" class="pill-btn inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold cursor-pointer border transition-all ${isSelected ? 'shadow-sm scale-[1.02]' : 'opacity-85 hover:opacity-100'}" style="${
+            isSelected
+              ? `background-color: ${currentPalette.activePill}; color: ${currentPalette.activePillText || '#ffffff'}; border-color: ${currentPalette.activePill};`
+              : `background-color: ${currentPalette.subCardBg}; color: ${currentPalette.textSecondary}; border-color: ${currentPalette.border};`
+          }">
+            <span class="text-xs">${p.icon}</span>
+            <span>${p.label}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectPill(id) {
+      activePillId = id;
+      renderPills();
+    }
+
+    function setPalette(id) {
+      const p = PALETTES.find(item => item.id === id);
+      if (!p) return;
+      currentPalette = p;
+
+      document.getElementById("badgeThemeName").textContent = p.name;
+
+      // 1. Canvas Background & Border
+      const canvas = document.getElementById("previewCanvas");
+      canvas.style.backgroundColor = p.pageBg;
+      canvas.style.borderColor = p.border;
+      canvas.style.color = p.textPrimary;
+
+      // 2. Header
+      const header = document.getElementById("stageHeader");
+      header.style.backgroundColor = p.cardBg;
+      header.style.borderColor = p.border;
+
+      const navLogoIcon = document.getElementById("navLogoIcon");
+      navLogoIcon.style.backgroundColor = p.brand;
+      navLogoIcon.style.color = p.brandText || "#ffffff";
+
+      document.getElementById("navLogoText").style.color = p.textPrimary;
+      document.getElementById("navLogoAccent").style.color = p.ctaStart;
+
+      document.getElementById("navLinks").style.color = p.textSecondary;
+      document.getElementById("signInLink").style.color = p.textSecondary;
+
+      const navCta = document.getElementById("navCta");
+      navCta.style.backgroundColor = p.ctaStart;
+      navCta.style.color = p.ctaStartText || "#ffffff";
+
+      // 3. Hero
+      document.getElementById("heroHeadline").style.color = p.textPrimary;
+      document.getElementById("heroSubtitle").style.color = p.textSecondary;
+
+      const badge = document.getElementById("heroBadge");
+      badge.style.backgroundColor = p.badgeBg;
+      badge.style.borderColor = p.badgeBorder;
+      badge.style.color = p.badgeText;
+
+      // 4. Search Box
+      const searchBox = document.getElementById("searchBarContainer");
+      searchBox.style.backgroundColor = p.cardBg;
+      searchBox.style.borderColor = p.border;
+      document.getElementById("searchInput").style.color = p.textPrimary;
+
+      const searchBtn = document.getElementById("heroSearchBtn");
+      searchBtn.style.backgroundColor = p.brand;
+      searchBtn.style.color = p.brandText || "#ffffff";
+
+      // 5. Category Pills Outer
+      const pillsOuter = document.getElementById("pillsOuter");
+      pillsOuter.style.backgroundColor = p.cardBg;
+      pillsOuter.style.borderColor = p.border;
+
+      // 6. Action CTAs
+      const mainStart = document.getElementById("mainStartBtn");
+      mainStart.style.backgroundColor = p.ctaStart;
+      mainStart.style.color = p.ctaStartText || "#ffffff";
+
+      const mainDemo = document.getElementById("mainDemoBtn");
+      mainDemo.style.backgroundColor = p.ctaDemo;
+      mainDemo.style.color = p.ctaDemoText || "#ffffff";
+      mainDemo.style.borderColor = p.ctaDemoBorder || p.border;
+
+      // 7. Stats Strip
+      const statsStrip = document.getElementById("statsStrip");
+      statsStrip.style.borderColor = p.border;
+      document.querySelectorAll(".stat-card").forEach(el => {
+        el.style.backgroundColor = p.cardBg;
+        el.style.borderColor = p.border;
+      });
+      document.getElementById("statVal1").style.color = p.textPrimary;
+      document.getElementById("statVal2").style.color = p.textPrimary;
+      document.getElementById("statVal3").style.color = p.accent;
+      document.getElementById("statVal4").style.color = p.brand;
+
+      // 8. Modals Section
+      const modalsSec = document.getElementById("modalsSection");
+      modalsSec.style.backgroundColor = p.cardBg;
+      modalsSec.style.borderColor = p.border;
+
+      document.getElementById("modalsHeading").style.color = p.textPrimary;
+      document.getElementById("modalsSubheading").style.color = p.textSecondary;
+
+      // KYC Modal (HARMONIZED)
+      const kycModalCard = document.getElementById("kycModalCard");
+      kycModalCard.style.backgroundColor = p.pageBg;
+      kycModalCard.style.borderColor = p.border;
+
+      const kycModalHeader = document.getElementById("kycModalHeader");
+      kycModalHeader.style.backgroundColor = p.kycHeader;
+      kycModalHeader.style.color = p.kycHeaderText || "#ffffff";
+
+      document.getElementById("kycModalBody").style.backgroundColor = p.pageBg;
+
+      const kycSub1 = document.getElementById("kycSubcard1");
+      kycSub1.style.backgroundColor = p.subCardBg;
+      kycSub1.style.borderColor = p.border;
+      document.getElementById("kycSub1").style.color = p.kycSub;
+
+      const kycSub2 = document.getElementById("kycSubcard2");
+      kycSub2.style.backgroundColor = p.subCardBg;
+      kycSub2.style.borderColor = p.border;
+      document.getElementById("kycSub2").style.color = p.kycSub;
+
+      const kycCloseBtn = document.getElementById("kycCloseBtn");
+      kycCloseBtn.style.backgroundColor = p.kycCloseBtn || p.brand;
+      kycCloseBtn.style.color = p.brandText || "#ffffff";
+
+      // Dropzone Card
+      const dropzoneCard = document.getElementById("dropzoneCard");
+      dropzoneCard.style.backgroundColor = p.pageBg;
+      dropzoneCard.style.borderColor = p.border;
+
+      document.getElementById("dropzoneHeader").style.borderColor = p.border;
+      document.getElementById("dropzoneTitle").style.color = p.textPrimary;
+      document.getElementById("dropzoneSub").style.color = p.textSecondary;
+
+      const dzInner = document.getElementById("dropzoneInnerBox");
+      dzInner.style.backgroundColor = p.dropzoneInner || p.subCardBg;
+      dzInner.style.borderColor = p.border;
+      document.getElementById("dropzoneBoxTitle").style.color = p.textPrimary;
+
+      const dzAvatar = document.getElementById("dropzoneAvatarCircle");
+      dzAvatar.style.backgroundColor = p.brand;
+      dzAvatar.style.color = p.brandText || "#ffffff";
+
+      const btnReplace = document.getElementById("btnReplaceImg");
+      btnReplace.style.backgroundColor = p.cardBg;
+      btnReplace.style.borderColor = p.border;
+      btnReplace.style.color = p.textPrimary;
+
+      const btnRemove = document.getElementById("btnRemoveImg");
+      btnRemove.style.backgroundColor = p.cardBg;
+      btnRemove.style.borderColor = "rgba(239, 68, 68, 0.3)";
+      btnRemove.style.color = "#EF4444";
+
+      const doneBtn = document.getElementById("dropzoneDoneBtn");
+      doneBtn.style.backgroundColor = p.ctaStart;
+      doneBtn.style.color = p.ctaStartText || "#ffffff";
+
+      // 9. Footer Token List
+      const tokenFooter = document.getElementById("tokenFooter");
+      tokenFooter.style.backgroundColor = p.cardBg;
+      tokenFooter.style.borderColor = p.border;
+
+      document.getElementById("tokenList").innerHTML = `
+        <span><strong class="opacity-60">Canvas Bg:</strong> ${p.pageBg}</span>
+        <span><strong class="opacity-60">Card Surface:</strong> ${p.cardBg}</span>
+        <span><strong class="opacity-60">Border:</strong> ${p.border}</span>
+        <span><strong class="opacity-60">Brand Primary:</strong> ${p.brand}</span>
+        <span><strong class="opacity-60">CTA Start:</strong> ${p.ctaStart}</span>
+        <span><strong class="opacity-60">CTA Demo:</strong> ${p.ctaDemo}</span>
+      `;
+
+      renderPlateGrid();
+      renderPills();
+    }
+
+    document.getElementById("copyCssBtn").addEventListener("click", () => {
+      const p = currentPalette;
+      const css = `/* Mercora Unique Theme: ${p.name} */\n:root {\n  --background-canvas: ${p.pageBg};\n  --surface-card: ${p.cardBg};\n  --surface-subcard: ${p.subCardBg};\n  --border-color: ${p.border};\n  --text-primary: ${p.textPrimary};\n  --text-secondary: ${p.textSecondary};\n  --brand-primary: ${p.brand};\n  --cta-start-bg: ${p.ctaStart};\n  --cta-demo-bg: ${p.ctaDemo};\n  --pill-active-bg: ${p.activePill};\n  --badge-bg: ${p.badgeBg};\n  --badge-text: ${p.badgeText};\n  --modal-header-bg: ${p.kycHeader};\n}`;
+      navigator.clipboard.writeText(css).then(() => {
+        const btn = document.getElementById("copyCssBtn");
+        btn.textContent = "✅ Copied to Clipboard!";
+        setTimeout(() => btn.textContent = "📋 Copy Unique CSS Tokens", 2000);
+      });
+    });
+
+    // Default init: Apple Burgundy & Space Titanium
+    filterCategory("top-sites"); setPalette("ref-linear");
+  </script>
+</body>
+</html>
+

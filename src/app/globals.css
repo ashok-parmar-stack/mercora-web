@@ -432,6 +432,63 @@ input[type="number"] {
   transform: translateY(-1px);
 }
 
+/* ── Exact Rectangular CTAs: START FREE (Red) & BOOK A DEMO (Black) ── */
+.btn-primary-bold {
+  background-color: var(--theme-red, #e11d48);
+  color: #ffffff !important;
+  border: 1.5px solid var(--theme-red, #e11d48);
+  padding: 14px 30px;
+  border-radius: 2px;
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary-bold:hover {
+  background-color: var(--theme-red-hover, #be123c);
+  border-color: var(--theme-red-hover, #be123c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+}
+
+.btn-black {
+  background-color: #0d1117;
+  color: #ffffff !important;
+  border: 1.5px solid #0d1117;
+  padding: 14px 30px;
+  border-radius: 2px;
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-black:hover {
+  background-color: #000000;
+  border-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
 /* ── Cards ─────────────────────────────── */
 .duxre-card {
   background: var(--theme-card-bg);

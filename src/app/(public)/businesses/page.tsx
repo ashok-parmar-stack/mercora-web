@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BusinessSearch } from "@/features/businesses/components/listing/BusinessSearch";
@@ -17,9 +17,10 @@ import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-
 import { Business } from "@/features/businesses/types/business.types";
 import { SavedBusinessesDrawer } from "@/features/saved-businesses/components/SavedBusinessesDrawer";
 import { ContactInquiryModal } from "@/features/enquiries/components/ContactInquiryModal";
+import { AddBusinessModal } from "@/features/businesses/components/AddBusinessModal";
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Plus } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import {
   RadixSelect as Select,
@@ -55,13 +56,20 @@ export default function BusinessesDiscoveryPage() {
 
   const { savedIds, isSaved, toggleSave } = useSavedBusinesses();
   const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
   const [inquiryBusiness, setInquiryBusiness] = useState<Business | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.search.includes("action=add")) {
+      setIsAddModalOpen(true);
+    }
+  }, []);
 
   const savedList = businesses.filter((b) => savedIds.includes(b.id));
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans transition-colors">
       <Header savedCount={savedIds.length} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
@@ -116,6 +124,18 @@ export default function BusinessesDiscoveryPage() {
 
             {/* Card / Table Toggle */}
             <BusinessViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
+
+            {/* Add Business Action */}
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={() => setIsAddModalOpen(true)}
+              leftIcon={<Plus className="w-4 h-4" />}
+              className="font-bold rounded-xl shadow-xs"
+            >
+              Add Business
+            </Button>
           </div>
         </div>
 
@@ -200,6 +220,12 @@ export default function BusinessesDiscoveryPage() {
           businessName={inquiryBusiness.name}
         />
       )}
+
+      <AddBusinessModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onBusinessCreated={refresh}
+      />
 
       <Footer />
     </div>

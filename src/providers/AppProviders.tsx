@@ -44,10 +44,9 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     <QueryProvider>
       <ThemeProvider
         attribute="class"
-        defaultTheme="light"
-        enableSystem={false}
-        forcedTheme="light"
-        disableTransitionOnChange
+        defaultTheme="system"
+        enableSystem={true}
+        disableTransitionOnChange={false}
       >
         {children}
         <GlobalToasts />

@@ -159,7 +159,7 @@ export function SimpleFeaturesSection() {
                 {/* Link */}
                 <Link
                   href={item.linkHref}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 transition-colors pt-4 border-t"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline transition-colors pt-4 border-t"
                   style={{ borderColor: "var(--theme-glass-border)" }}
                 >
                   <span>{item.linkText}</span>

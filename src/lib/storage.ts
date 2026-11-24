@@ -3,6 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { optimizeImage } from './image-optimizer';
 
 export interface StorageConfig {
   driver: 's3' | 'local';
@@ -23,6 +24,11 @@ export interface UploadResult {
   key: string;
   driver: 's3' | 'local';
   size: number;
+  originalSize?: number;
+  savedPercentage?: number;
+  width?: number;
+  height?: number;
+  format?: string;
   mimeType: string;
   fallbackReason?: string;
 }
@@ -102,13 +108,14 @@ export async function uploadToS3Bucket(
   const s3 = getS3Client();
   const bucket = config.bucketName;
 
-  // 1. Send PutObjectCommand to upload the image buffer
+  // 1. Send PutObjectCommand to upload the image buffer with CDN immutable cache control
   await s3.send(
     new PutObjectCommand({
       Bucket: bucket,
       Key: key,
       Body: buffer,
       ContentType: mimeType,
+      CacheControl: 'public, max-age=31536000, immutable',
     })
   );
 
@@ -193,23 +200,40 @@ export async function uploadFileToBucket(
     throw new Error(`File size exceeds 10 MB limit.`);
   }
 
-  // Generate safe unique filename
-  const cleanExt = path.extname(originalFileName).toLowerCase() || (mimeType === 'image/png' ? '.png' : '.jpg');
+  // Optimize image buffer (WebP conversion, resizing, EXIF auto-rotation, metadata stripping)
+  const opt = await optimizeImage(fileBuffer, mimeType, folder);
+  const targetBuffer = opt.buffer;
+  const targetMime = opt.mimeType;
+  const targetExt = opt.extension;
+
+  // Generate safe unique filename using optimized extension (e.g. .webp)
+  const cleanExt = path.extname(originalFileName).toLowerCase();
   const safeBase = path.basename(originalFileName, cleanExt).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 24);
   const uniqueId = crypto.randomBytes(6).toString('hex');
-  const fileName = `${safeBase}-${Date.now()}-${uniqueId}${cleanExt}`;
+  const fileName = `${safeBase}-${Date.now()}-${uniqueId}${targetExt}`;
   const key = `${folder}/${fileName}`;
+
+  let result: UploadResult;
 
   // Attempt direct cloud upload to Neon S3 bucket
   if (config.driver === 's3' && config.isCloudConfigured) {
     try {
-      return await uploadToS3Bucket(fileBuffer, key, mimeType, config);
+      result = await uploadToS3Bucket(targetBuffer, key, targetMime, config);
     } catch (err: any) {
       console.warn(`[Storage] Cloud bucket upload failed, falling back to local storage:`, err?.message || err);
-      return await uploadToLocalDisk(fileBuffer, fileName, mimeType, folder, config.bucketName, err?.message);
+      result = await uploadToLocalDisk(targetBuffer, fileName, targetMime, folder, config.bucketName, err?.message);
     }
+  } else {
+    // Fallback to local storage if S3 credentials not present
+    result = await uploadToLocalDisk(targetBuffer, fileName, targetMime, folder, config.bucketName);
   }
 
-  // Fallback to local storage if S3 credentials not present
-  return await uploadToLocalDisk(fileBuffer, fileName, mimeType, folder, config.bucketName);
+  // Attach optimization metrics to response
+  result.originalSize = opt.originalSize;
+  result.savedPercentage = opt.savedPercentage;
+  result.width = opt.width;
+  result.height = opt.height;
+  result.format = targetExt.replace('.', '');
+
+  return result;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UploadCloud, RefreshCw, Loader2, AlertCircle, HardDrive } from "lucide-react";
+import { UploadCloud, RefreshCw, Loader2, AlertCircle, HardDrive, Zap } from "lucide-react";
 import { DropzoneRootProps, DropzoneInputProps } from "react-dropzone";
 
 export interface AvatarDropzoneProps {
@@ -11,6 +11,16 @@ export interface AvatarDropzoneProps {
   disabled?: boolean;
   isUploading: boolean;
   previewUrl: string;
+  uploadMeta?: {
+    size?: number;
+    originalSize?: number;
+    savedPercentage?: number;
+    width?: number;
+    height?: number;
+    format?: string;
+    bucket?: string;
+    driver?: string;
+  } | null;
   errorMessage: string | null;
   maxSizeMB: number;
   showBucketBadge?: boolean;
@@ -23,6 +33,13 @@ export interface AvatarDropzoneProps {
   onRemove: (e: React.MouseEvent) => void;
 }
 
+function formatBytes(bytes?: number): string {
+  if (!bytes) return "0 B";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export function AvatarDropzone({
   label,
   description,
@@ -30,6 +47,7 @@ export function AvatarDropzone({
   disabled,
   isUploading,
   previewUrl,
+  uploadMeta,
   errorMessage,
   maxSizeMB,
   showBucketBadge,
@@ -41,6 +59,11 @@ export function AvatarDropzone({
   openFileDialog,
   onRemove,
 }: AvatarDropzoneProps) {
+  const [imgError, setImgError] = React.useState(false);
+
+  React.useEffect(() => {
+    setImgError(false);
+  }, [previewUrl]);
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {label && <label className="text-xs font-bold text-[var(--text-primary)]">{label}</label>}
@@ -59,8 +82,13 @@ export function AvatarDropzone({
         >
           <input {...getInputProps()} />
 
-          {previewUrl ? (
-            <img src={previewUrl} alt="Uploaded Avatar" className="w-full h-full object-cover" />
+          {previewUrl && !imgError ? (
+            <img
+              src={previewUrl}
+              alt="Uploaded Avatar"
+              className="w-full h-full object-cover"
+              onError={() => setImgError(true)}
+            />
           ) : (
             <div className="flex flex-col items-center justify-center p-2 text-center">
               <UploadCloud className="w-6 h-6 text-[var(--text-muted)] mb-1" />
@@ -118,6 +146,15 @@ export function AvatarDropzone({
               </span>
             </div>
           )}
+
+          {uploadMeta?.savedPercentage && uploadMeta.savedPercentage > 0 ? (
+            <div className="flex items-center gap-1 text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold animate-in fade-in duration-300">
+              <Zap className="w-2.5 h-2.5 text-emerald-500" />
+              <span>
+                ⚡ Saved {uploadMeta.savedPercentage}% ({formatBytes(uploadMeta.size)}, {uploadMeta.format?.toUpperCase() || 'WEBP'})
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
 
