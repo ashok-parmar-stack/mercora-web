@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 
-export type BadgeVariant =
+export type CanonicalBadgeVariant =
   | "default"
   | "brand"
   | "neutral"
@@ -11,7 +11,10 @@ export type BadgeVariant =
   | "destructive"
   | "info"
   | "outline"
-  | "purple"
+  | "purple";
+
+export type BadgeVariant =
+  | CanonicalBadgeVariant
   | "green"
   | "red"
   | "amber"
@@ -46,7 +49,7 @@ export const Badge: React.FC<BadgeProps> = ({
     md: "text-[11px] px-2 py-0.5 gap-1.5 leading-tight font-medium",
   };
 
-  const normalizedVariant =
+  const normalizedVariant: CanonicalBadgeVariant =
     variant === "green"
       ? "success"
       : variant === "red"
@@ -63,7 +66,7 @@ export const Badge: React.FC<BadgeProps> = ({
                   ? "neutral"
                   : (variant || "neutral");
 
-  const variantStyles: Record<string, string> = {
+  const variantStyles: Record<CanonicalBadgeVariant, string> = {
     default: "bg-primary-soft text-primary border-primary/20",
     brand: "bg-primary-soft text-primary border-primary/20",
     neutral: "bg-secondary text-text-secondary border-border",
@@ -76,7 +79,7 @@ export const Badge: React.FC<BadgeProps> = ({
     purple: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20",
   };
 
-  const dotColors: Record<string, string> = {
+  const dotColors: Record<CanonicalBadgeVariant, string> = {
     default: "bg-primary",
     brand: "bg-primary",
     neutral: "bg-text-muted",

@@ -8,23 +8,19 @@ import { usePermissions } from "../../lib/hooks/usePermissions";
 import { useStatuses } from "../../lib/hooks/useStatuses";
 import { useUIStore } from "../../lib/store/ui-store";
 import { PageHeader } from "../../components/layout/PageHeader";
-import { Badge } from "../../components/ui/Badge";
-import { Button } from "../../components/ui/Button";
+import { Badge, Button } from "@/components/common";
+import { DashboardStats } from "@/features/dashboard/components/DashboardStats";
+import { DashboardAuditTimeline } from "@/features/dashboard/components/DashboardAuditTimeline";
 import {
   Shield,
   Users,
-  Key,
   Layers,
   Activity,
-  ArrowUpRight,
   Plus,
-  CheckCircle2,
-  Clock,
   Sparkles,
   FolderTree,
   Hash,
 } from "lucide-react";
-
 
 export default function AdminDashboardPage() {
   const { roles, isLoading: rolesLoading } = useRoles();
@@ -35,41 +31,7 @@ export default function AdminDashboardPage() {
 
   const activeUsersCount = users.filter((u) => !u.deletedAt).length;
   const activeRolesCount = roles.filter((r) => !r.deletedAt).length;
-
-  const quickStats = [
-    {
-      label: "Active Roles",
-      value: rolesLoading ? "..." : String(activeRolesCount),
-      subtext: `${roles.filter((r) => r.isSystem).length} System Enforced`,
-      icon: Shield,
-      href: "/admin/roles",
-      color: "text-blue-600 bg-blue-50 border-blue-100",
-    },
-    {
-      label: "Directory Users",
-      value: usersLoading ? "..." : String(activeUsersCount),
-      subtext: "Enterprise accounts",
-      icon: Users,
-      href: "/admin/users",
-      color: "text-emerald-600 bg-emerald-50 border-emerald-100",
-    },
-    {
-      label: "Permission Modules",
-      value: permsLoading ? "..." : String(permissions.length),
-      subtext: "Granular action matrix",
-      icon: Key,
-      href: "/admin/permissions",
-      color: "text-purple-600 bg-purple-50 border-purple-100",
-    },
-    {
-      label: "Status Types",
-      value: statusesLoading ? "..." : String(statuses.length),
-      subtext: "Domain lifecycle records",
-      icon: Layers,
-      href: "/admin/statuses",
-      color: "text-amber-600 bg-amber-50 border-amber-100",
-    },
-  ];
+  const systemRolesCount = roles.filter((r) => r.isSystem).length;
 
   const quickLinks = [
     {
@@ -110,38 +72,6 @@ export default function AdminDashboardPage() {
     },
   ];
 
-
-  const recentEvents = [
-    {
-      action: "Role Permission Updated",
-      target: "Sales Manager",
-      actor: "Security Officer",
-      time: "10 mins ago",
-      type: "RBAC",
-    },
-    {
-      action: "User Provisioned",
-      target: "john.smith@mercora.com",
-      actor: "Admin Console",
-      time: "25 mins ago",
-      type: "UBAC",
-    },
-    {
-      action: "Domain Status Registered",
-      target: "LEAD → QUALIFIED",
-      actor: "System Configurator",
-      time: "1 hour ago",
-      type: "Status",
-    },
-    {
-      action: "Persona Switched",
-      target: activePersona.roleName,
-      actor: "Local Session",
-      time: "Active",
-      type: "Session",
-    },
-  ];
-
   return (
     <div className="flex flex-col gap-8 max-w-6xl">
       <PageHeader
@@ -149,38 +79,17 @@ export default function AdminDashboardPage() {
         description="Unified enterprise control plane for Mercora Global B2B Intelligence Platform."
       />
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {quickStats.map((stat, idx) => {
-          const Icon = stat.icon;
-          return (
-            <Link
-              key={idx}
-              href={stat.href}
-              className="bg-card border border-border hover:border-border-focus/40 rounded-xl p-5 shadow-xs transition-all hover:shadow-sm group flex flex-col justify-between gap-4"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold text-text-muted uppercase tracking-wider">
-                  {stat.label}
-                </span>
-                <div className="p-2 rounded-lg border border-primary/20 bg-primary/10 text-primary">
-                  <Icon className="w-4 h-4" />
-                </div>
-              </div>
-
-              <div>
-                <div className="text-2xl font-bold text-text-primary tracking-tight">
-                  {stat.value}
-                </div>
-                <div className="text-[11px] text-text-muted font-medium mt-0.5 flex items-center justify-between">
-                  <span>{stat.subtext}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-text-muted group-hover:text-primary transition-colors" />
-                </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+      <DashboardStats
+        rolesLoading={rolesLoading}
+        usersLoading={usersLoading}
+        permsLoading={permsLoading}
+        statusesLoading={statusesLoading}
+        activeRolesCount={activeRolesCount}
+        activeUsersCount={activeUsersCount}
+        systemRolesCount={systemRolesCount}
+        permissionsCount={permissions.length}
+        statusesCount={statuses.length}
+      />
 
       {/* Active Persona Banner */}
       <div className="bg-card border border-border text-text-primary rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -224,9 +133,7 @@ export default function AdminDashboardPage() {
         <div className="lg:col-span-2 bg-card border border-border rounded-xl p-6 shadow-xs flex flex-col gap-4">
           <div className="border-b border-border pb-3">
             <h3 className="font-semibold text-sm text-text-primary">Quick Configuration Actions</h3>
-            <p className="text-xs text-text-muted mt-0.5">
-              Jump directly to dedicated management workflows.
-            </p>
+            <p className="text-xs text-text-muted mt-0.5">Jump directly to dedicated management workflows.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -248,9 +155,7 @@ export default function AdminDashboardPage() {
                     <h4 className="font-semibold text-xs text-text-primary group-hover:text-primary transition-colors">
                       {link.title}
                     </h4>
-                    <p className="text-[11px] text-text-muted mt-0.5 leading-snug">
-                      {link.desc}
-                    </p>
+                    <p className="text-[11px] text-text-muted mt-0.5 leading-snug">{link.desc}</p>
                   </div>
                 </Link>
               );
@@ -259,49 +164,7 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Recent Activity Timeline */}
-        <div className="bg-card border border-border rounded-xl p-6 shadow-xs flex flex-col gap-4">
-          <div className="border-b border-border pb-3">
-            <h3 className="font-semibold text-sm text-text-primary flex items-center gap-2">
-              <Clock className="w-4 h-4 text-text-muted" />
-              Recent Security Audit
-            </h3>
-            <p className="text-xs text-text-muted mt-0.5">
-              Chronological log of administrative actions.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {recentEvents.map((evt, idx) => (
-              <div
-                key={idx}
-                className="p-3 rounded-lg border border-border bg-surface-hover/30 flex flex-col gap-1 text-xs"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-text-primary text-[11px]">
-                    {evt.action}
-                  </span>
-                  <Badge variant="blue" size="sm">
-                    {evt.type}
-                  </Badge>
-                </div>
-                <div className="text-[11px] text-text-secondary">
-                  Target: <strong className="text-text-primary font-medium">{evt.target}</strong>
-                </div>
-                <div className="flex items-center justify-between text-[10px] text-text-muted mt-1">
-                  <span>Actor: {evt.actor}</span>
-                  <span>{evt.time}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <Link
-            href="/admin/audit-logs"
-            className="text-xs font-semibold text-primary hover:underline text-center pt-2"
-          >
-            View Full Audit Trail →
-          </Link>
-        </div>
+        <DashboardAuditTimeline activePersonaRoleName={activePersona.roleName} />
       </div>
     </div>
   );

@@ -176,3 +176,5 @@ export function DialogClose({
     </button>
   );
 }
+
+export default Dialog;
