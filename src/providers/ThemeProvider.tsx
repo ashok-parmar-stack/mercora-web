@@ -2,7 +2,12 @@
 
 import React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { themeConfig } from "@/config/theme.config";
+import themeConfigDefault, { themeConfig as namedThemeConfig } from "@/config/theme.config";
+
+const activeThemeConfig = themeConfigDefault || namedThemeConfig || {
+  defaultTheme: "light",
+  storageKey: "mercora-theme",
+};
 
 export interface ThemeProviderProps {
   children: React.ReactNode;
@@ -17,8 +22,8 @@ export interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   attribute = "class",
-  defaultTheme = themeConfig.defaultTheme,
-  storageKey = themeConfig.storageKey,
+  defaultTheme = activeThemeConfig?.defaultTheme || "light",
+  storageKey = activeThemeConfig?.storageKey || "mercora-theme",
   enableSystem = true,
   disableTransitionOnChange = false,
   ...props
