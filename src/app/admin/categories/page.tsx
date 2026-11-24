@@ -5,6 +5,7 @@ import { Plus, RefreshCw, FolderTree, Sparkles, List } from "lucide-react";
 import { useProductCategories } from "../../../lib/hooks/useProductCategories";
 import { CategoryTreeNode, ProductCategory } from "@mercora/shared-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
+import { Button } from "@/components/common";
 import { DataTable, BulkAction } from "../../../components/data-table/DataTable";
 import { DeleteConfirmDialog, StatusConfirmDialog } from "../../../components/common/ConfirmDialog";
 import { Select } from "../../../components/ui/Select";
@@ -212,30 +213,31 @@ export default function ProductCategoriesAdminPage() {
             </div>
 
             {/* Seed Baseline Button */}
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="md"
               onClick={ops.handleSeedBaseline}
               disabled={ops.isSeeding}
-              className="px-3 py-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              leftIcon={<Sparkles className={`w-3.5 h-3.5 text-amber-500 ${ops.isSeeding ? "animate-spin" : ""}`} />}
               title="Populate baseline Ceramic & Tiles category hierarchy"
             >
-              <Sparkles className={`w-3.5 h-3.5 text-amber-500 ${ops.isSeeding ? "animate-spin" : ""}`} />
               <span>{ops.isSeeding ? "Seeding..." : "Seed Baseline"}</span>
-            </button>
+            </Button>
 
             {/* Refresh Button */}
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="md"
               onClick={() => {
                 refetch();
                 refetchTree();
               }}
-              className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-2xs cursor-pointer"
+              className="w-10 h-10 p-0"
               title="Refresh Categories"
               aria-label="Refresh"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading || isTreeLoading ? "animate-spin text-brand-600" : ""}`} />
-            </button>
+              <RefreshCw className={`w-4 h-4 ${isLoading || isTreeLoading ? "animate-spin text-primary" : ""}`} />
+            </Button>
           </div>
         }
       />

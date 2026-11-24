@@ -1,143 +1,119 @@
 /* ──────────────────────────────────────────────────────────────────────────
- * MERCORA & LINEAR-INSPIRED CENTRALIZED DESIGN SYSTEM TOKENS  v3.0
+ * MERCORA GLOBAL DESIGN SYSTEM THEME TOKENS
  * ──────────────────────────────────────────────────────────────────────────
- * High-craft production SaaS design architecture.
- * Single source of truth for semantic tokens across Light & Dark themes.
- * Signature Brand Accent: Linear Signature Indigo (#5E6AD2 / #4E5AC0 / #717EEF)
+ * Official Canva Design Specification
+ * Deep Plum (#2B1220) · Wine (#7F1D3F) · Warm Ivory (#FFF7F5)
  * ────────────────────────────────────────────────────────────────────────── */
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   ☀️  LIGHT THEME — Clean, Crisp, Minimalist Titanium (Linear Light)
-   ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-  /* Canvas & Viewport */
-  --background:              #f8f9fa;  /* Clean off-white canvas */
-  --background-secondary:    #f1f3f5;  /* Recessed regions & subtle panels */
-  --foreground:              #0f1012;  /* Primary heading typography */
+  /* Backgrounds — Recommended: #FFF7F5, #F9EDEF, #FFFFFF */
+  --background:              #FFF7F5;
+  --background-secondary:    #F9EDEF;
+  --foreground:              #3F2932;
 
-  /* Surfaces — Cards, Popovers, Modals */
-  --surface:                 #ffffff;  /* Card surface */
-  --surface-raised:          #ffffff;  /* Elevated modals, dialogs, popovers */
-  --surface-hover:           #f4f5f8;  /* Linear-grade subtle hover tint */
-  --surface-active:          #ebeef5;  /* Selected / pressed state */
+  /* Surfaces & Cards — White Card Background (#FFFFFF) */
+  --surface:                 #FFFFFF;
+  --surface-raised:          #FFFFFF;
+  --surface-hover:           #FBF2F4;
+  --surface-active:          #F5E2E6;
 
-  /* shadcn/ui Standard Semantic Mappings */
-  --card:                    #ffffff;
-  --card-foreground:         #0f1012;
-  --popover:                 #ffffff;
-  --popover-foreground:      #0f1012;
+  /* Card and Popovers */
+  --card:                    #FFFFFF;
+  --card-foreground:         #3F2932;
+  --popover:                 #FFFFFF;
+  --popover-foreground:      #3F2932;
 
-  /* Typography Hierarchy (Linear High-Craft) */
-  --text-primary:            #0f1012;  /* Linear Void Charcoal headings */
-  --text-secondary:          #575c66;  /* Readable, elegant body text */
-  --text-muted:              #7a7f8c;  /* Subtle helper & metadata text */
-  --text-disabled:           #9ea3ac;  /* Disabled state */
-  --text-inverse:            #ffffff;  /* Contrast text on dark/colored buttons */
+  /* Typography — Charcoal Plum (#3F2932) & Dusty Plum (#765C67) */
+  --text-primary:            #3F2932;
+  --text-secondary:          #765C67;
+  --text-muted:              #947D87;
+  --text-disabled:           #B8A7AE;
+  --text-inverse:            #FFFFFF;
 
-  /* Hairline Borders & Dividers */
-  --border:                  #e1e4e8;  /* 1px crisp subtle border */
-  --border-hover:            #d0d4db;  /* Subtle border hover */
-  --border-strong:           #9ea3ac;  /* Focused or emphasized divider */
-  --border-focus:            #5e6ad2;  /* Linear brand focus ring */
+  /* Borders — Rose Gray (#E5D4DA) */
+  --border:                  #E5D4DA;
+  --border-hover:            #C08497;
+  --border-strong:           #765C67;
+  --border-focus:            #7F1D3F;
 
-  /* Brand Primary Accent (Linear Signature Indigo) */
-  --primary:                 #5e6ad2;  /* Linear Indigo */
-  --primary-hover:           #4e5ac0;  /* Deep Indigo hover */
-  --primary-active:          #434ea8;  /* Active pressed */
-  --primary-soft:            #f0f2fd;  /* Soft indigo highlight */
-  --primary-foreground:      #ffffff;  /* Crisp white text on primary */
+  /* Brand Primary — Wine (#7F1D3F), Dark Wine Hover (#641631) */
+  --primary:                 #7F1D3F;
+  --primary-hover:           #641631;
+  --primary-active:          #521127;
+  --primary-soft:            #F9EDEF;
+  --primary-foreground:      #FFFFFF;
 
-  /* Secondary / Auxiliary Elements */
-  --secondary:               #f1f3f5;
-  --secondary-foreground:    #0f1012;
-  --muted:                   #f1f3f5;
-  --muted-foreground:        #7a7f8c;
-  --accent:                  #f0f2fd;
-  --accent-foreground:       #5e6ad2;
-  --destructive:             #e11d48;
-  --destructive-foreground:  #ffffff;
-  --ring:                    #5e6ad2;
+  /* Secondary & Brand Auxiliary — Berry (#A63D5A), Pale Rose (#F9EDEF) */
+  --secondary:               #F9EDEF;
+  --secondary-foreground:    #3F2932;
+  --secondary-brand:         #A63D5A;
+  --muted:                   #F9EDEF;
+  --muted-foreground:        #765C67;
+
+  /* Accents & Highlights — Soft Rose (#C08497), Blush (#F2D9DF) */
+  --accent:                  #C08497;
+  --accent-soft:             #F2D9DF;
+  --accent-foreground:       #2B1220;
+
+  /* Semantic Status Indicators */
+  --destructive:             #B42318;
+  --destructive-hover:       #961C13;
+  --destructive-foreground:  #FFFFFF;
+  --success:                 #16846A;
+  --success-foreground:      #FFFFFF;
+  --warning:                 #B7791F;
+  --warning-foreground:      #FFFFFF;
+  --info:                    #356AE6;
+  --info-foreground:         #FFFFFF;
+
+  --ring:                    #7F1D3F;
   --radius:                  8px;
 
-  /* High-Impact Rectangular Action Buttons (Linear & Trade CTAs) */
-  --cta-start-bg:            #5e6ad2;  /* [START FREE] Linear Indigo */
-  --cta-start-text:          #ffffff;
-  --cta-start-hover:         #4e5ac0;
-  --cta-demo-bg:             #0f1012;  /* [BOOK A DEMO] Linear Void Black */
-  --cta-demo-text:           #ffffff;
-  --cta-demo-border:         #0f1012;
-  --cta-demo-hover:          #23252a;
+  /* Navigation & Dark Sections — Deep Plum (#2B1220) */
+  --sidebar-bg:              #2B1220;
+  --sidebar-border:          rgba(229, 212, 218, 0.12);
+  --sidebar-text:            #E5D4DA;
+  --sidebar-text-muted:      rgba(229, 212, 218, 0.55);
+  --sidebar-hover-bg:        rgba(255, 255, 255, 0.08);
+  --sidebar-hover-text:      #FFFFFF;
+  --sidebar-active-bg:       #7F1D3F;
+  --sidebar-active-text:     #FFFFFF;
 
-  /* Category Capsule Filter Pills */
-  --pill-active-bg:          #5e6ad2;
-  --pill-active-text:        #ffffff;
-  --pill-inactive-bg:        #ffffff;
-  --pill-inactive-text:      #575c66;
-  --pill-inactive-border:    #e1e4e8;
+  /* Header */
+  --header-bg:               rgba(255, 255, 255, 0.96);
+  --header-border:           #E5D4DA;
 
-  /* Navigation Sidebar (Linear High-Craft Clean Hierarchy) */
-  --sidebar-bg:              #ffffff;
-  --sidebar-border:          #e1e4e8;
-  --sidebar-text:            #575c66;
-  --sidebar-text-muted:      #7a7f8c;
-  --sidebar-hover-bg:        #f4f5f8;
-  --sidebar-active-bg:       #f0f2fd;
-  --sidebar-active-text:     #5e6ad2;
-  --sidebar-active-border:   #d4d8f8;
+  /* Table */
+  --table-header-bg:         #FFFFFF;
+  --table-row-hover:         #FBF2F4;
+  --table-border:            #E5D4DA;
+  --table-stripe:            #FFFFFF;
 
-  /* App Header & Navbar */
-  --header-bg:               rgba(255, 255, 255, 0.92);
-  --header-border:           #e1e4e8;
-
-  /* Data Table (Linear Dense Tabular Grid) */
-  --table-header-bg:         #f8f9fa;
-  --table-row-hover:         #f4f5f8;
-  --table-row-selected:      rgba(94, 106, 210, 0.06);
-  --table-border:            #e1e4e8;
-  --table-stripe:            #fcfdfe;
-
-  /* Forms & Input Controls */
-  --input-background:        #ffffff;
-  --input-border:            #d0d4db;
-  --input-border-focus:      #5e6ad2;
-  --input-placeholder:       #9ea3ac;
-  --input-text:              #0f1012;
-
-  /* Modals & Dialogs */
-  --modal-header-bg:         #0f1012;
-  --modal-header-text:       #ffffff;
-  --modal-header-border:     #202228;
+  /* Forms & Inputs */
+  --input-background:        #FFFFFF;
+  --input-border:            #E5D4DA;
+  --input-border-focus:      #7F1D3F;
+  --input-placeholder:       #765C67;
+  --input-text:              #3F2932;
 
   /* Status / Telemetry Badges */
-  --success:                 #059669;
-  --success-bg:              #ecfdf5;
-  --success-border:          #a7f3d0;
-  --success-text:            #047857;
+  --status-success:          #16846A;
+  --status-success-bg:       #E8F6F2;
+  --status-success-border:   #A3DEC8;
 
-  --warning:                 #d97706;
-  --warning-bg:              #fffbeb;
-  --warning-border:          #fde68a;
-  --warning-text:            #92400e;
+  --status-warning:          #B7791F;
+  --status-warning-bg:       #FEF7EB;
+  --status-warning-border:   #F8D89B;
 
-  --error:                   #e11d48;
-  --error-bg:                #fff1f2;
-  --error-border:            #fecdd3;
-  --error-text:              #be123c;
+  --status-error:            #B42318;
+  --status-error-bg:         #FDF0EF;
+  --status-error-border:     #F6B1AC;
 
-  --info:                    #2563eb;
-  --info-bg:                 #eff6ff;
-  --info-border:             #bfdbfe;
-  --info-text:               #1d4ed8;
-
-  /* Shadows — Linear Subtlety (Micro Hairline Elevation) */
-  --shadow-2xs:              0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-xs:               0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-sm:               0 2px 4px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
-  --shadow-md:               0 4px 12px -2px rgba(0, 0, 0, 0.07), 0 2px 6px -2px rgba(0, 0, 0, 0.04);
-  --shadow-lg:               0 12px 28px -4px rgba(0, 0, 0, 0.10), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+  --status-info:             #356AE6;
+  --status-info-bg:          #EDF3FD;
+  --status-info-border:      #ADC7FA;
 
   /* Legacy Bindings */
-  --theme-red:               var(--primary);
   --theme-canvas:            var(--background);
   --theme-card-bg:           var(--surface);
   --theme-panel-bg:          var(--background-secondary);
@@ -146,184 +122,138 @@
   --theme-glass-header:      var(--header-bg);
   --theme-ink-darkest:       var(--text-primary);
   --theme-ink:               var(--text-secondary);
-  --badge-bg:                var(--primary-soft);
-  --badge-border:            #d4d8f8;
-  --badge-text:              #5e6ad2;
+  --theme-red:               var(--primary);
+  --theme-red-hover:         var(--primary-hover);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   🌙  DARK THEME — Linear-Grade Deep Obsidian Void & Linear Indigo
-   ═══════════════════════════════════════════════════════════════════════════ */
 .dark {
-  /* Canvas & Viewport */
-  --background:              #08090a;  /* Linear pitch void */
-  --background-secondary:    #0d0e11;  /* Recessed dark panels */
-  --foreground:              #ededee;  /* Off-white crisp text */
+  --background:              #171018;
+  --background-secondary:    #211722;
+  --foreground:              #FFF7F5;
 
-  /* Surfaces — Cards, Popovers, Modals */
-  --surface:                 #121316;  /* Card surface */
-  --surface-raised:          #18191d;  /* Elevated modal / popover surface */
-  --surface-hover:           #1e2025;  /* Interactive hover layer */
-  --surface-active:          #262830;  /* Active / pressed layer */
+  --surface:                 #211722;
+  --surface-raised:          #2C1E2D;
+  --surface-hover:           #362537;
+  --surface-active:          #422E44;
 
-  /* shadcn/ui Standard Semantic Mappings */
-  --card:                    #121316;
-  --card-foreground:         #ededee;
-  --popover:                 #18191d;
-  --popover-foreground:      #ededee;
+  --card:                    #211722;
+  --card-foreground:         #FFF7F5;
+  --popover:                 #211722;
+  --popover-foreground:      #FFF7F5;
 
-  /* Typography Hierarchy (Linear Contrast) */
-  --text-primary:            #ededee;  /* High-contrast off-white */
-  --text-secondary:          #a0a2a7;  /* Readable mid-slate */
-  --text-muted:              #686b73;  /* Subtle metadata */
-  --text-disabled:           #43464c;  /* Disabled text */
-  --text-inverse:            #08090a;  /* Inverse dark text */
+  --text-primary:            #FFF7F5;
+  --text-secondary:          #E5D4DA;
+  --text-muted:              #B9A7B0;
+  --text-disabled:           #765C67;
+  --text-inverse:            #171018;
 
-  /* Hairline Borders & Dividers */
-  --border:                  rgba(255, 255, 255, 0.08);  /* 1px subtle hairline */
-  --border-hover:            rgba(255, 255, 255, 0.16);  /* Hover hairline */
-  --border-strong:           rgba(255, 255, 255, 0.24);  /* Emphasized divider */
-  --border-focus:            #5e6ad2;  /* Linear indigo focus */
+  --border:                  #45313D;
+  --border-hover:            #5C4252;
+  --border-strong:           #B9A7B0;
+  --border-focus:            #C45A83;
 
-  /* Brand Primary Accent (Linear Signature Indigo) */
-  --primary:                 #5e6ad2;  /* Linear Indigo */
-  --primary-hover:           #717eef;  /* Vibrant Indigo Glow */
-  --primary-active:          #4e5ac0;  /* Pressed */
-  --primary-soft:            rgba(94, 106, 210, 0.16);
-  --primary-foreground:      #ffffff;
+  --primary:                 #C45A83;
+  --primary-hover:           #D8799C;
+  --primary-active:          #A63D5A;
+  --primary-soft:            rgba(196, 90, 131, 0.15);
+  --primary-foreground:      #FFFFFF;
 
-  /* Secondary / Auxiliary Elements */
-  --secondary:               #18191d;
-  --secondary-foreground:    #ededee;
-  --muted:                   #18191d;
-  --muted-foreground:        #686b73;
-  --accent:                  rgba(94, 106, 210, 0.16);
-  --accent-foreground:       #717eef;
-  --destructive:             #f43f5e;
-  --destructive-foreground:  #ffffff;
-  --ring:                    #5e6ad2;
+  --secondary:               #30212D;
+  --secondary-foreground:    #FFF7F5;
+  --secondary-brand:         #A63D5A;
+  --muted:                   #211722;
+  --muted-foreground:        #B9A7B0;
 
-  /* High-Impact Action Buttons */
-  --cta-start-bg:            #5e6ad2;  /* [START FREE] Linear Indigo */
-  --cta-start-text:          #ffffff;
-  --cta-start-hover:         #717eef;
-  --cta-demo-bg:             #18191d;  /* [BOOK A DEMO] Dark Cell */
-  --cta-demo-text:           #ededee;
-  --cta-demo-border:         rgba(255, 255, 255, 0.14);
-  --cta-demo-hover:          #24262c;
+  --accent:                  #7F1D3F;
+  --accent-soft:             rgba(127, 29, 63, 0.25);
+  --accent-foreground:       #FFF7F5;
 
-  /* Category Capsule Filter Pills */
-  --pill-active-bg:          #5e6ad2;
-  --pill-active-text:        #ffffff;
-  --pill-inactive-bg:        #121316;
-  --pill-inactive-text:      #a0a2a7;
-  --pill-inactive-border:    rgba(255, 255, 255, 0.08);
+  --destructive:             #F06A6A;
+  --destructive-hover:       #E54848;
+  --destructive-foreground:  #FFFFFF;
+  --success:                 #42BD89;
+  --success-foreground:      #FFFFFF;
+  --warning:                 #E8B451;
+  --warning-foreground:      #171018;
+  --info:                    #5C8FF7;
+  --info-foreground:         #FFFFFF;
+  --ring:                    #C45A83;
 
-  /* Navigation Sidebar */
-  --sidebar-bg:              #0a0b0d;
-  --sidebar-border:          rgba(255, 255, 255, 0.07);
-  --sidebar-text:            #a0a2a7;
-  --sidebar-text-muted:      #686b73;
-  --sidebar-hover-bg:        #16171b;
-  --sidebar-active-bg:       rgba(94, 106, 210, 0.16);
-  --sidebar-active-text:     #ffffff;
-  --sidebar-active-border:   rgba(94, 106, 210, 0.40);
+  --sidebar-bg:              #120A13;
+  --sidebar-border:          #2B1220;
+  --sidebar-text:            #B9A7B0;
+  --sidebar-text-muted:      rgba(185, 167, 176, 0.5);
+  --sidebar-hover-bg:        rgba(255, 255, 255, 0.08);
+  --sidebar-hover-text:      #FFFFFF;
+  --sidebar-active-bg:       #7F1D3F;
+  --sidebar-active-text:     #FFFFFF;
 
-  /* App Header & Navbar */
-  --header-bg:               rgba(10, 11, 13, 0.88);
-  --header-border:           rgba(255, 255, 255, 0.07);
+  --header-bg:               #171018;
+  --header-border:           #45313D;
 
-  /* Data Table */
-  --table-header-bg:         #0d0e11;
-  --table-row-hover:         rgba(255, 255, 255, 0.025);
-  --table-row-selected:      rgba(94, 106, 210, 0.12);
-  --table-border:            rgba(255, 255, 255, 0.07);
-  --table-stripe:            #0f1013;
+  --table-header-bg:         #211722;
+  --table-row-hover:         #2C1E2D;
+  --table-border:            #45313D;
+  --table-stripe:            #211722;
 
-  /* Forms & Input Controls */
-  --input-background:        #0d0e11;
-  --input-border:            rgba(255, 255, 255, 0.10);
-  --input-border-focus:      #5e6ad2;
-  --input-placeholder:       #555860;
-  --input-text:              #ededee;
+  --input-background:        #211722;
+  --input-border:            #45313D;
+  --input-border-focus:      #C45A83;
+  --input-placeholder:       #765C67;
+  --input-text:              #FFF7F5;
 
-  /* Modals & Dialogs */
-  --modal-header-bg:         #141518;
-  --modal-header-text:       #ededee;
-  --modal-header-border:     rgba(255, 255, 255, 0.08);
+  --status-success:          #42BD89;
+  --status-success-bg:       rgba(66, 189, 137, 0.12);
+  --status-success-border:   rgba(66, 189, 137, 0.25);
 
-  /* Status / Telemetry Badges */
-  --success:                 #10b981;
-  --success-bg:              rgba(16, 185, 129, 0.12);
-  --success-border:          rgba(16, 185, 129, 0.25);
-  --success-text:            #34d399;
+  --status-warning:          #E8B451;
+  --status-warning-bg:       rgba(232, 180, 81, 0.12);
+  --status-warning-border:   rgba(232, 180, 81, 0.25);
 
-  --warning:                 #f59e0b;
-  --warning-bg:              rgba(245, 158, 11, 0.12);
-  --warning-border:          rgba(245, 158, 11, 0.25);
-  --warning-text:            #fbbf24;
+  --status-error:            #F06A6A;
+  --status-error-bg:         rgba(240, 106, 106, 0.12);
+  --status-error-border:     rgba(240, 106, 106, 0.25);
 
-  --error:                   #f43f5e;
-  --error-bg:                rgba(244, 63, 94, 0.12);
-  --error-border:            rgba(244, 63, 94, 0.25);
-  --error-text:              #fb7185;
-
-  --info:                    #3b82f6;
-  --info-bg:                 rgba(59, 130, 246, 0.12);
-  --info-border:             rgba(59, 130, 246, 0.25);
-  --info-text:               #60a5fa;
-
-  /* Shadows (Subtle Dark Mode Elevation with Alpha Shadows) */
-  --shadow-2xs:              0 1px 2px 0 rgba(0, 0, 0, 0.50);
-  --shadow-xs:               0 1px 3px 0 rgba(0, 0, 0, 0.60);
-  --shadow-sm:               0 2px 6px 0 rgba(0, 0, 0, 0.65);
-  --shadow-md:               0 6px 16px -2px rgba(0, 0, 0, 0.75);
-  --shadow-lg:               0 16px 36px -4px rgba(0, 0, 0, 0.85);
-
-  /* Legacy Bindings */
-  --theme-red:               var(--primary);
-  --theme-canvas:            var(--background);
-  --theme-card-bg:           var(--surface);
-  --theme-panel-bg:          var(--background-secondary);
-  --theme-warm-line:         var(--border);
-  --theme-glass-border:      var(--border);
-  --theme-glass-header:      var(--header-bg);
-  --theme-ink-darkest:       var(--text-primary);
-  --theme-ink:               var(--text-secondary);
-  --badge-bg:                rgba(94, 106, 210, 0.16);
-  --badge-border:            rgba(94, 106, 210, 0.35);
-  --badge-text:              #717eef;
+  --status-info:             #5C8FF7;
+  --status-info-bg:          rgba(92, 143, 247, 0.12);
+  --status-info-border:      rgba(92, 143, 247, 0.25);
 }
 
-/* ── HTML Color Scheme & Smooth Transitions ── */
-html {
-  color-scheme: light;
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
-}
-
-html.dark {
-  color-scheme: dark;
-}
-
-/* ── Minimal Sleek Scrollbar for Sidebars and Lists ── */
+/* ── Clean Invisible Scrollbar for Sidebar ── */
 .sidebar-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
-}
-.dark .sidebar-scrollbar {
-  scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 .sidebar-scrollbar::-webkit-scrollbar {
-  width: 4px;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
-.sidebar-scrollbar::-webkit-scrollbar-track {
+
+/* ── Clean Sleek Modern Scrollbars Across App ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
   background: transparent;
 }
-.sidebar-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
-  border-radius: 4px;
+::-webkit-scrollbar-thumb {
+  background: rgba(118, 92, 103, 0.2);
+  border-radius: 9999px;
 }
-.dark .sidebar-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(118, 92, 103, 0.4);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(229, 212, 218, 0.15);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 212, 218, 0.3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(118, 92, 103, 0.2) transparent;
 }

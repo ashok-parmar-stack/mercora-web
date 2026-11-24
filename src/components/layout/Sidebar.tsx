@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo, LogoIcon } from "@/components/Logo";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useUIStore } from "../../lib/store/ui-store";
 import { useAuthStore } from "../../lib/store/auth-store";
 import {
@@ -28,6 +28,22 @@ export const Sidebar: React.FC = () => {
   const toggleGroup = (groupId: string) => {
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
   };
+
+  // Automatically ensure the group containing the active route is open
+  useEffect(() => {
+    ADMIN_NAV_SECTIONS.forEach((section) => {
+      section.items.forEach((item) => {
+        if (isGroupItem(item)) {
+          const hasActiveChild = item.children.some(
+            (c) => pathname === c.href || (c.href !== "/admin" && pathname?.startsWith(c.href))
+          );
+          if (hasActiveChild) {
+            setOpenGroups((prev) => ({ ...prev, [item.id]: true }));
+          }
+        }
+      });
+    });
+  }, [pathname]);
 
   const [hoveredGroup, setHoveredGroup] = useState<string | null>(null);
   const [pinnedGroup, setPinnedGroup] = useState<string | null>(null);
@@ -94,41 +110,37 @@ export const Sidebar: React.FC = () => {
           }`}
       >
         <div
-          className={`h-16 flex items-center border-b border-[var(--sidebar-border,var(--border))] flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-3.5 ${isCollapsed ? "justify-center" : "justify-between"
-            }`}
+          className={`h-16 flex items-center border-b border-[var(--sidebar-border,var(--border))] flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-4 ${
+            isCollapsed ? "justify-center" : "justify-between"
+          }`}
         >
           {isCollapsed ? (
             <button
               type="button"
               onClick={toggleSidebar}
-              className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors mx-auto cursor-pointer"
+              className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors mx-auto cursor-pointer"
               title="Expand sidebar"
               aria-label="Expand sidebar"
               aria-expanded={false}
               aria-controls="admin-sidebar"
             >
-              <LogoIcon size={30} />
+              <LogoIcon size={30} dark={true} />
             </button>
           ) : (
             <div className="flex items-center justify-between w-full">
               <Link
                 href="/admin"
-                className="flex items-center gap-2 min-w-0"
-                title="Mercora Admin Console"
+                className="flex items-center gap-2.5 min-w-0"
+                title="Mercora Deal OS"
               >
-                <Logo height={24} className="max-w-[135px]" />
-                <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider bg-brand-50 text-brand-600 border border-brand-200/80 dark:bg-brand-950/60 dark:text-brand-300 dark:border-brand-800/60 rounded flex-shrink-0">
-                  Admin
-                </span>
+                <Logo height={24} dark={true} className="max-w-[140px]" />
               </Link>
               <button
                 type="button"
                 onClick={toggleSidebar}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                className="hidden lg:flex w-7 h-7 items-center justify-center rounded-lg text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 title="Collapse sidebar"
                 aria-label="Collapse sidebar"
-                aria-expanded={true}
-                aria-controls="admin-sidebar"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -136,11 +148,11 @@ export const Sidebar: React.FC = () => {
           )}
         </div>
 
-        <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto sidebar-scrollbar"} py-4 px-3 flex flex-col gap-5`}>
+        <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto sidebar-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"} py-4 px-3 flex flex-col gap-5`}>
           {ADMIN_NAV_SECTIONS.map((section, idx) => (
             <div key={idx} className="flex flex-col gap-1">
               {!isCollapsed && (
-                <div className="px-3 text-[11px] font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500 mb-1 select-none">
+                <div className="px-3 text-[10.5px] font-bold tracking-wider uppercase text-white/40 mb-1 select-none">
                   {section.label}
                 </div>
               )}
@@ -188,7 +200,7 @@ export const Sidebar: React.FC = () => {
           ))}
         </div>
 
-        <div className="p-2.5 border-t border-[var(--border)] flex-shrink-0 bg-[var(--surface)] flex flex-col gap-2">
+        <div className="p-2.5 border-t border-[var(--sidebar-border)] flex-shrink-0 bg-[var(--sidebar-bg)] flex flex-col gap-2">
           <SidebarUserFooter
             user={user}
             isCollapsed={isCollapsed}

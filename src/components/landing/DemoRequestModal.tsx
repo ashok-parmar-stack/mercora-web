@@ -14,7 +14,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useUIStore } from "@/lib/store/ui-store";
-import { Button } from "@/components/ui/Button";
+import { Button, Badge } from "@/components/common";
 import axios from "axios";
 
 interface DemoRequestModalProps {
@@ -66,11 +66,9 @@ export function DemoRequestModal({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [leadId, setLeadId] = useState<string>("");
 
-  // Field-level error validation state
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  // Individual field validator functions
   const validateFullName = (val: string): string | undefined => {
     if (!val.trim()) return "Full name is required.";
     if (val.trim().length < 2) return "Full name must be at least 2 characters.";
@@ -94,7 +92,7 @@ export function DemoRequestModal({
   };
 
   const validatePhone = (val: string): string | undefined => {
-    if (!val.trim()) return undefined; // Optional
+    if (!val.trim()) return undefined;
     const digitsOnly = val.replace(/[\s\-()]/g, "");
     if (!/^\d{6,15}$/.test(digitsOnly)) {
       return "Please enter a valid telephone number (6-15 digits).";
@@ -102,7 +100,6 @@ export function DemoRequestModal({
     return undefined;
   };
 
-  // Close on Escape key press
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -113,13 +110,11 @@ export function DemoRequestModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Lock background scroll when open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
-      // Reset state when closed
       setTimeout(() => {
         setIsSubmitted(false);
         setErrors({});
@@ -146,7 +141,6 @@ export function DemoRequestModal({
   };
 
   const handleChange = (field: keyof FormErrors, value: string) => {
-    // Clear error immediately on change
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
@@ -182,7 +176,6 @@ export function DemoRequestModal({
     setIsSubmitting(true);
 
     try {
-      // Connect directly to our real API endpoint
       const res = await axios.post("/api/demo-request", {
         fullName: fullName.trim(),
         email: email.trim(),
@@ -214,12 +207,7 @@ export function DemoRequestModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-      style={{
-        background: "rgba(15, 23, 42, 0.65)",
-        backdropFilter: "blur(8px)",
-        WebkitBackdropFilter: "blur(8px)",
-      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -228,41 +216,22 @@ export function DemoRequestModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
-        className="w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl relative transition-all"
-        style={{
-          background: "var(--theme-card-bg)",
-          border: "1px solid var(--theme-glass-border)",
-          color: "var(--theme-ink-darkest)",
-        }}
+        className="w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl relative transition-all bg-surface border border-border text-text-primary"
       >
         {/* Header Bar */}
-        <div
-          className="flex items-center justify-between px-6 py-5 border-b"
-          style={{
-            borderColor: "var(--theme-glass-border)",
-            background: "var(--theme-canvas)",
-          }}
-        >
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-[var(--background)]">
           <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{
-                background: "var(--theme-blush)",
-                border: "1px solid rgba(238, 49, 53, 0.2)",
-                color: "var(--theme-red)",
-              }}
-            >
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-brand-blush text-brand-wine border border-brand-rose/30 shadow-2xs">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h2
                 id="modal-headline"
-                className="text-lg font-bold tracking-tight"
-                style={{ color: "var(--theme-ink-darkest)" }}
+                className="text-lg font-bold tracking-tight text-text-primary"
               >
                 Request Enterprise Demo
               </h2>
-              <p className="text-xs" style={{ color: "var(--theme-gray-500)" }}>
+              <p className="text-xs text-text-muted">
                 Experience Mercora Deal OS tailored to your trade data workflows
               </p>
             </div>
@@ -271,7 +240,7 @@ export function DemoRequestModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg text-gray-400 hover:text-gray-700 transition-colors"
+            className="p-2 rounded-lg text-text-muted hover:text-text-primary hover:bg-surface-hover transition-colors cursor-pointer"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -283,79 +252,64 @@ export function DemoRequestModal({
           {isSubmitted ? (
             /* Success State */
             <div className="py-8 text-center flex flex-col items-center">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
-                style={{
-                  background: "rgba(16, 185, 129, 0.12)",
-                  color: "#10b981",
-                  border: "2px solid #10b981",
-                }}
-              >
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 bg-status-success-bg text-status-success border-2 border-status-success shadow-xs">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: "var(--theme-ink-darkest)" }}>
+              <h3 className="text-xl font-bold mb-2 text-text-primary">
                 Demo Request Confirmed!
               </h3>
-              <p
-                className="text-sm max-w-md mx-auto mb-6 leading-relaxed"
-                style={{ color: "var(--theme-gray-600)" }}
-              >
-                Thank you, <strong style={{ color: "var(--theme-ink-darkest)" }}>{fullName}</strong>. A Mercora Trade
+              <p className="text-sm max-w-md mx-auto mb-6 leading-relaxed text-text-secondary">
+                Thank you, <strong className="text-text-primary">{fullName}</strong>. A Mercora Trade
                 Architecture specialist will contact you at{" "}
-                <span className="font-semibold text-red-600">{email}</span> within 4 business hours to schedule your
+                <span className="font-semibold text-brand-wine">{email}</span> within 4 business hours to schedule your
                 live interactive walkthrough.
               </p>
 
-              <div
-                className="w-full max-w-sm p-4 rounded-xl mb-6 text-left text-xs space-y-1.5"
-                style={{
-                  background: "var(--theme-canvas)",
-                  border: "1px solid var(--theme-glass-border)",
-                }}
-              >
+              <div className="w-full max-w-sm p-4 rounded-xl mb-6 text-left text-xs space-y-1.5 bg-[var(--background)] border border-border">
                 {leadId && (
-                  <div className="flex justify-between border-b pb-1.5 mb-1.5" style={{ borderColor: "var(--theme-glass-border)" }}>
-                    <span style={{ color: "var(--theme-gray-500)" }}>Tracking Ref:</span>
-                    <span className="font-mono font-bold text-red-600">{leadId}</span>
+                  <div className="flex justify-between border-b border-border pb-1.5 mb-1.5">
+                    <span className="text-text-muted">Tracking Ref:</span>
+                    <span className="font-mono font-bold text-brand-wine">{leadId}</span>
                   </div>
                 )}
                 <div className="flex justify-between">
-                  <span style={{ color: "var(--theme-gray-500)" }}>Organization:</span>
-                  <span className="font-semibold">{company}</span>
+                  <span className="text-text-muted">Organization:</span>
+                  <span className="font-semibold text-text-primary">{company}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span style={{ color: "var(--theme-gray-500)" }}>Primary Module:</span>
-                  <span className="font-semibold text-red-600">{interest}</span>
+                  <span className="text-text-muted">Primary Module:</span>
+                  <span className="font-semibold text-brand-wine">{interest}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span style={{ color: "var(--theme-gray-500)" }}>Contact Number:</span>
-                  <span className="font-semibold">{countryCode} {phoneNumber || "N/A"}</span>
+                  <span className="text-text-muted">Contact Number:</span>
+                  <span className="font-semibold text-text-primary">{countryCode} {phoneNumber || "N/A"}</span>
                 </div>
               </div>
 
-              <button
+              <Button
                 type="button"
+                variant="primary"
+                size="md"
                 onClick={onClose}
-                className="btn-red px-8 py-3 rounded-xl font-bold text-sm cursor-pointer"
+                className="px-8 py-2.5 font-bold text-sm bg-brand-wine hover:bg-brand-darkWine text-white shadow-sm"
               >
                 Done &amp; Return to Platform
-              </button>
+              </Button>
             </div>
           ) : (
-            /* Lead Capture Form with noValidate to block native browser bubbles */
+            /* Lead Capture Form */
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
               {/* Row 1: Name & Work Email */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label
                     htmlFor="fullName"
-                    className="block text-xs font-semibold mb-1.5"
-                    style={{ color: "var(--theme-ink-darkest)" }}
+                    className="block text-xs font-semibold mb-1.5 text-text-primary"
                   >
                     Full Name *
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                    <User className="w-4 h-4 absolute left-3 top-3 text-text-muted" />
                     <input
                       id="fullName"
                       type="text"
@@ -366,20 +320,16 @@ export function DemoRequestModal({
                         setFullName(e.target.value);
                         handleChange("fullName", e.target.value);
                       }}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none"
-                      style={{
-                        background: errors.fullName ? "rgba(238, 49, 53, 0.05)" : "var(--theme-canvas)",
-                        border: errors.fullName
-                          ? "1.5px solid var(--theme-red)"
-                          : "1px solid var(--theme-glass-border)",
-                        color: "var(--theme-ink-darkest)",
-                        boxShadow: errors.fullName ? "0 0 0 3px rgba(238, 49, 53, 0.12)" : "none",
-                      }}
+                      className={`w-full pl-9 pr-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none bg-[var(--background)] text-text-primary border ${
+                        errors.fullName
+                          ? "border-status-error bg-status-error-bg/20 ring-2 ring-status-error/20"
+                          : "border-border focus:border-brand-wine"
+                      }`}
                     />
                   </div>
                   {errors.fullName && (
-                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-red-600 animate-in fade-in duration-150">
-                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 text-red-500" />
+                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-status-error animate-in fade-in duration-150">
+                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span>{errors.fullName}</span>
                     </div>
                   )}
@@ -388,13 +338,12 @@ export function DemoRequestModal({
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-xs font-semibold mb-1.5"
-                    style={{ color: "var(--theme-ink-darkest)" }}
+                    className="block text-xs font-semibold mb-1.5 text-text-primary"
                   >
                     Work Email *
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                    <Mail className="w-4 h-4 absolute left-3 top-3 text-text-muted" />
                     <input
                       id="email"
                       type="email"
@@ -405,20 +354,16 @@ export function DemoRequestModal({
                         setEmail(e.target.value);
                         handleChange("email", e.target.value);
                       }}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none"
-                      style={{
-                        background: errors.email ? "rgba(238, 49, 53, 0.05)" : "var(--theme-canvas)",
-                        border: errors.email
-                          ? "1.5px solid var(--theme-red)"
-                          : "1px solid var(--theme-glass-border)",
-                        color: "var(--theme-ink-darkest)",
-                        boxShadow: errors.email ? "0 0 0 3px rgba(238, 49, 53, 0.12)" : "none",
-                      }}
+                      className={`w-full pl-9 pr-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none bg-[var(--background)] text-text-primary border ${
+                        errors.email
+                          ? "border-status-error bg-status-error-bg/20 ring-2 ring-status-error/20"
+                          : "border-border focus:border-brand-wine"
+                      }`}
                     />
                   </div>
                   {errors.email && (
-                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-red-600 animate-in fade-in duration-150">
-                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 text-red-500" />
+                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-status-error animate-in fade-in duration-150">
+                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span>{errors.email}</span>
                     </div>
                   )}
@@ -430,13 +375,12 @@ export function DemoRequestModal({
                 <div>
                   <label
                     htmlFor="company"
-                    className="block text-xs font-semibold mb-1.5"
-                    style={{ color: "var(--theme-ink-darkest)" }}
+                    className="block text-xs font-semibold mb-1.5 text-text-primary"
                   >
                     Company / Trade Firm *
                   </label>
                   <div className="relative">
-                    <Building className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
+                    <Building className="w-4 h-4 absolute left-3 top-3 text-text-muted" />
                     <input
                       id="company"
                       type="text"
@@ -447,20 +391,16 @@ export function DemoRequestModal({
                         setCompany(e.target.value);
                         handleChange("company", e.target.value);
                       }}
-                      className="w-full pl-9 pr-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none"
-                      style={{
-                        background: errors.company ? "rgba(238, 49, 53, 0.05)" : "var(--theme-canvas)",
-                        border: errors.company
-                          ? "1.5px solid var(--theme-red)"
-                          : "1px solid var(--theme-glass-border)",
-                        color: "var(--theme-ink-darkest)",
-                        boxShadow: errors.company ? "0 0 0 3px rgba(238, 49, 53, 0.12)" : "none",
-                      }}
+                      className={`w-full pl-9 pr-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none bg-[var(--background)] text-text-primary border ${
+                        errors.company
+                          ? "border-status-error bg-status-error-bg/20 ring-2 ring-status-error/20"
+                          : "border-border focus:border-brand-wine"
+                      }`}
                     />
                   </div>
                   {errors.company && (
-                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-red-600 animate-in fade-in duration-150">
-                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 text-red-500" />
+                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-status-error animate-in fade-in duration-150">
+                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span>{errors.company}</span>
                     </div>
                   )}
@@ -469,8 +409,7 @@ export function DemoRequestModal({
                 <div>
                   <label
                     htmlFor="phoneNumber"
-                    className="block text-xs font-semibold mb-1.5"
-                    style={{ color: "var(--theme-ink-darkest)" }}
+                    className="block text-xs font-semibold mb-1.5 text-text-primary"
                   >
                     Phone Number
                   </label>
@@ -479,12 +418,7 @@ export function DemoRequestModal({
                       value={countryCode}
                       onChange={(e) => setCountryCode(e.target.value)}
                       aria-label="Country Calling Code"
-                      className="w-28 px-2 py-2.5 rounded-lg text-xs font-medium focus:outline-none"
-                      style={{
-                        background: "var(--theme-canvas)",
-                        border: "1px solid var(--theme-glass-border)",
-                        color: "var(--theme-ink-darkest)",
-                      }}
+                      className="w-28 px-2 py-2.5 rounded-lg text-xs font-medium focus:outline-none bg-[var(--background)] text-text-primary border border-border"
                     >
                       {COUNTRY_CODES.map((c) => (
                         <option key={c.code} value={c.code}>
@@ -502,20 +436,16 @@ export function DemoRequestModal({
                         setPhoneNumber(e.target.value);
                         handleChange("phoneNumber", e.target.value);
                       }}
-                      className="flex-1 px-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none"
-                      style={{
-                        background: errors.phoneNumber ? "rgba(238, 49, 53, 0.05)" : "var(--theme-canvas)",
-                        border: errors.phoneNumber
-                          ? "1.5px solid var(--theme-red)"
-                          : "1px solid var(--theme-glass-border)",
-                        color: "var(--theme-ink-darkest)",
-                        boxShadow: errors.phoneNumber ? "0 0 0 3px rgba(238, 49, 53, 0.12)" : "none",
-                      }}
+                      className={`flex-1 px-3 py-2.5 rounded-lg text-sm transition-all focus:outline-none bg-[var(--background)] text-text-primary border ${
+                        errors.phoneNumber
+                          ? "border-status-error bg-status-error-bg/20 ring-2 ring-status-error/20"
+                          : "border-border focus:border-brand-wine"
+                      }`}
                     />
                   </div>
                   {errors.phoneNumber && (
-                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-red-600 animate-in fade-in duration-150">
-                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 text-red-500" />
+                    <div className="flex items-center gap-1.5 mt-1.5 text-2xs font-semibold text-status-error animate-in fade-in duration-150">
+                      <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
                       <span>{errors.phoneNumber}</span>
                     </div>
                   )}
@@ -524,7 +454,7 @@ export function DemoRequestModal({
 
               {/* Row 3: Primary Module of Interest */}
               <div>
-                <label className="block text-xs font-semibold mb-2" style={{ color: "var(--theme-ink-darkest)" }}>
+                <label className="block text-xs font-semibold mb-2 text-text-primary">
                   Primary Module of Interest
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -535,14 +465,11 @@ export function DemoRequestModal({
                         key={item}
                         type="button"
                         onClick={() => setInterest(item)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer"
-                        style={{
-                          background: isSelected ? "var(--theme-red)" : "var(--theme-canvas)",
-                          color: isSelected ? "#ffffff" : "var(--theme-ink-darkest)",
-                          border: isSelected
-                            ? "1px solid var(--theme-red)"
-                            : "1px solid var(--theme-glass-border)",
-                        }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer border ${
+                          isSelected
+                            ? "bg-brand-wine text-white border-brand-wine shadow-2xs"
+                            : "bg-[var(--background)] text-text-primary border-border hover:bg-surface-hover"
+                        }`}
                       >
                         {item}
                       </button>
@@ -558,13 +485,13 @@ export function DemoRequestModal({
                   variant="primary"
                   size="lg"
                   isLoading={isSubmitting}
-                  className="w-full py-3 rounded-xl font-bold text-sm shadow-md hover:shadow-lg transition-all"
+                  className="w-full py-3 rounded-xl font-bold text-sm bg-brand-wine hover:bg-brand-darkWine text-white shadow-md hover:shadow-lg transition-all"
                   rightIcon={!isSubmitting ? <ArrowRight className="w-4 h-4" /> : undefined}
                 >
                   Schedule Live Walkthrough
                 </Button>
-                <p className="text-center text-3xs sm:text-2xs text-gray-400 mt-2 flex items-center justify-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <p className="text-center text-[11px] text-text-muted mt-2 flex items-center justify-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-status-success" />
                   <span>No credit card required · Instant access to live sandbox · NDA protected</span>
                 </p>
               </div>
@@ -575,4 +502,5 @@ export function DemoRequestModal({
     </div>
   );
 }
+
 export default DemoRequestModal;

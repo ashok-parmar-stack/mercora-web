@@ -1,12 +1,12 @@
 /**
  * Centralized Typography Configuration
- * Professional SaaS Typography Scale (Geist primary, Inter fallback)
+ * Professional SaaS Typography Scale (Geist primary)
  */
 
 export const typographyConfig = {
   fontFamily: {
-    sans: 'var(--font-sans, "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
-    mono: 'var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace)',
+    sans: 'var(--font-geist-sans, "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
+    mono: 'var(--font-geist-mono, "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace)',
   },
 
   // Token Hierarchy matching exact requirements

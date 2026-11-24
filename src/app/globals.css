@@ -1,4 +1,4 @@
-@import '../styles/theme.css';
+@import '../styles/themes.css';
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Rethink+Sans:wght@400;500;600;700;800&family=Work+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -6,51 +6,51 @@
 @tailwind utilities;
 
 :root {
-  /* Brand Red Palette - UNCHANGED */
-  --theme-red: #ee3135;
-  --theme-red-hover: #d92c30;
-  --theme-red-dark: #b82029;
-  --theme-red-soft: #fff3f4;
-  --theme-red-glow: rgba(238, 49, 53, 0.25);
+  /* Brand Primary (Bound to Theme System: Wine #7F1D3F / Dark Wine #641631) */
+  --theme-red: var(--primary, #7F1D3F);
+  --theme-red-hover: var(--primary-hover, #641631);
+  --theme-red-dark: var(--primary-active, #521127);
+  --theme-red-soft: var(--primary-soft, #F9EDEF);
+  --theme-red-glow: rgba(127, 29, 63, 0.25);
 
-  /* Inks & Text Colors (Bound to Theme System) */
-  --theme-ink: var(--text-secondary, #475569);
-  --theme-ink-darkest: var(--text-primary, #0f172a);
-  --theme-ink-darker: var(--text-primary, #0f172a);
-  --theme-dark: #282828;
-  --theme-dark-card: var(--surface, #1f2126);
+  /* Inks & Text Colors (Bound to Theme System: Charcoal Plum #3F2932 / Dusty Plum #765C67) */
+  --theme-ink: var(--text-secondary, #765C67);
+  --theme-ink-darkest: var(--text-primary, #3F2932);
+  --theme-ink-darker: var(--text-primary, #3F2932);
+  --theme-dark: #2B1220;
+  --theme-dark-card: var(--surface, #FFFFFF);
 
-  /* Grays - UNCHANGED */
-  --theme-gray-900: #1e1e20;
-  --theme-gray-800: #353538;
-  --theme-gray-700: #4c4c4e;
-  --theme-gray-600: #636466;
-  --theme-gray-500: #73767c;
-  --theme-gray-400: #777779;
-  --theme-gray-300: #bfbebf;
-  --theme-gray-200: #e5e5e5;
-  --theme-gray-100: #f2f2f2;
-  --theme-gray-50: #fafafa;
+  /* Grays */
+  --theme-gray-900: #2B1220;
+  --theme-gray-800: #3F2932;
+  --theme-gray-700: #59404B;
+  --theme-gray-600: #765C67;
+  --theme-gray-500: #947D87;
+  --theme-gray-400: #B8A7AE;
+  --theme-gray-300: #D4C7CD;
+  --theme-gray-200: #E5D4DA;
+  --theme-gray-100: #F4EAEF;
+  --theme-gray-50: #FFF7F5;
 
-  /* Surfaces (Bound to Theme System) */
-  --theme-canvas: var(--background, #ffffff);
-  --theme-warm-line: var(--border, #e2e8f0);
-  --theme-blush: #fff7f7;
-  --theme-glass-header: rgba(255, 255, 255, 0.96);
-  --theme-glass-border: var(--border, #e6e5e4);
-  --theme-card-bg: var(--surface, #ffffff);
-  --theme-panel-bg: var(--background-secondary, #f8f9fb);
+  /* Surfaces (Bound to Theme System: Warm Ivory #FFF7F5 / Rose Gray #E5D4DA) */
+  --theme-canvas: var(--background, #FFF7F5);
+  --theme-warm-line: var(--border, #E5D4DA);
+  --theme-blush: var(--background-secondary, #F9EDEF);
+  --theme-glass-header: var(--header-bg, rgba(255, 255, 255, 0.96));
+  --theme-glass-border: var(--border, #E5D4DA);
+  --theme-card-bg: var(--surface, #FFFFFF);
+  --theme-panel-bg: var(--background-secondary, #F9EDEF);
 
-  /* Semantic Status - UNCHANGED */
-  --theme-success: #2e7d32;
-  --theme-success-bg: #f0fdf4;
-  --theme-success-border: #bbf7d0;
-  --theme-warning: #b8860b;
-  --theme-warning-bg: #fffbf0;
-  --theme-warning-border: #fef08a;
-  --theme-error: #ee3135;
-  --theme-error-bg: #fff3f4;
-  --theme-error-border: #fecaca;
+  /* Semantic Status (Bound to Theme System: Emerald / Amber / Deep Red) */
+  --theme-success: var(--success, #16846A);
+  --theme-success-bg: var(--status-success-bg, #E8F6F2);
+  --theme-success-border: var(--status-success-border, #A3DEC8);
+  --theme-warning: var(--warning, #B7791F);
+  --theme-warning-bg: var(--status-warning-bg, #FEF7EB);
+  --theme-warning-border: var(--status-warning-border, #F8D89B);
+  --theme-error: var(--destructive, #B42318);
+  --theme-error-bg: var(--status-error-bg, #FDF0EF);
+  --theme-error-border: var(--status-error-border, #F6B1AC);
 
   /*
    * ──────────────────────────────────────────────────────────────────────────
@@ -144,10 +144,12 @@ html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  overflow-x: hidden;
   background-color: var(--theme-canvas);
   color: var(--theme-ink-darkest);
   /* Default body = Work Sans (16px, line-height 1.5, weight 400) */
@@ -1028,25 +1030,38 @@ html.dark body {
 }
 
 .dark ::selection {
-  background-color: rgba(238, 49, 53, 0.3);
+  background-color: rgba(127, 29, 63, 0.3);
   color: #ffffff;
 }
 
-/* Dark Mode Scrollbars */
-.dark ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ── Clean Professional Minimalist Scrollbars (Both Light and Dark Mode) ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.dark ::-webkit-scrollbar-track {
-  background: var(--background);
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(118, 92, 103, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(118, 92, 103, 0.35);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+  background: rgba(229, 212, 218, 0.15);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-hover);
+  background: rgba(229, 212, 218, 0.3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(118, 92, 103, 0.2) transparent;
 }

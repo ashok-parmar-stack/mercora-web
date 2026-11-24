@@ -17,6 +17,7 @@ export interface SelectProps extends Omit<React.SelectHTMLAttributes<HTMLSelectE
   helperText?: string;
   placeholder?: string;
   selectSize?: "sm" | "md" | "lg";
+  dropdownPosition?: "top" | "bottom" | "auto";
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
@@ -29,6 +30,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       helperText,
       placeholder = "Select an option...",
       selectSize = "md",
+      dropdownPosition = "bottom",
       className = "",
       id,
       value,
@@ -98,9 +100,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     };
 
     const sizeStyles = {
-      sm: "h-8 text-xs px-2.5",
-      md: "h-9 text-sm px-3",
-      lg: "h-10 text-sm px-3.5",
+      sm: "h-9 text-xs px-2.5",
+      md: "h-10 text-sm px-3",
+      lg: "h-11 text-sm px-3.5",
     };
 
     return (
@@ -123,9 +125,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             aria-haspopup="listbox"
             aria-expanded={isOpen}
             className={cn(
-              "w-full rounded-lg border border-border bg-surface text-foreground font-normal",
+              "w-full rounded-lg border border-border bg-surface text-foreground font-normal shadow-2xs",
               "transition-colors duration-150 outline-none flex items-center justify-between gap-2 text-left cursor-pointer",
-              "focus:border-border-focus focus:ring-1 focus:ring-ring",
+              "hover:border-border-hover focus:border-border-focus focus:ring-1 focus:ring-ring",
+              isOpen && "border-border-focus ring-1 ring-ring",
               "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-surface-hover",
               sizeStyles[selectSize],
               error && "border-destructive focus:border-destructive focus:ring-destructive",
@@ -144,7 +147,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </button>
 
           {isOpen && (
-            <div className="absolute top-full left-0 mt-1 w-full min-w-[140px] max-h-60 overflow-y-auto rounded-lg border border-border bg-surface-raised p-1 shadow-lg z-50 animate-in fade-in-50 zoom-in-95 duration-100">
+            <div
+              className={cn(
+                "absolute left-0 w-full min-w-[140px] max-h-60 overflow-y-auto rounded-lg border border-border bg-surface-raised p-1 shadow-lg z-50 animate-in fade-in-50 zoom-in-95 duration-100",
+                dropdownPosition === "top" ? "bottom-full mb-1" : "top-full mt-1"
+              )}
+            >
               {extractedOptions.map((opt, idx) => {
                 const isSelected = opt.value === currentVal;
                 return (

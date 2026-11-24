@@ -10,6 +10,16 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+  Badge,
+  Button,
+} from "@/components/common";
 
 export function SimpleFeaturesSection() {
   const features = [
@@ -56,116 +66,97 @@ export function SimpleFeaturesSection() {
         "Tamper-evident audit logging for all mutations",
       ],
       linkText: "Inspect Security Console",
-      linkHref: "/admin",
+      linkHref: "/admin/roles",
     },
   ];
 
   return (
-    <section className="py-20 border-b" style={{ borderColor: "var(--theme-glass-border)", background: "var(--theme-canvas)" }}>
-      <div className="container">
+    <section className="py-20 border-y border-border bg-[var(--background-secondary)] transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
-        <div className="max-w-2xl mb-14">
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-3 text-xs font-bold tracking-wide"
-            style={{
-              background: "var(--theme-blush)",
-              border: "1px solid rgba(238, 49, 53, 0.2)",
-              color: "var(--theme-red)",
-            }}
+        <div className="max-w-2xl mb-14 text-left">
+          <Badge
+            variant="brand"
+            size="md"
+            className="mb-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-blush text-brand-wine border border-brand-rose/25"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <Sparkles className="w-3.5 h-3.5 mr-1" />
             <span>ENTERPRISE MASTER CAPABILITIES</span>
-          </div>
+          </Badge>
 
-          <h2
-            className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3"
-            style={{ color: "var(--theme-ink-darkest)" }}
-          >
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-primary mb-3">
             Built for Modern B2B Global Trade &amp; Commerce
           </h2>
 
-          <p className="text-base text-gray-500 leading-relaxed">
+          <p className="text-base text-text-secondary leading-relaxed">
             Mercora provides the foundational master data layers required to eliminate catalog chaos, address ambiguity, and access vulnerabilities.
           </p>
         </div>
 
-        {/* 3-Column Pillar Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* 3-Column Linear High-Craft Pillar Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {features.map((item) => {
             const Icon = item.icon;
             return (
-              <div
+              <Card
                 key={item.id}
                 id={item.id}
-                className="p-8 rounded-2xl border transition-all hover:shadow-lg flex flex-col justify-between scroll-mt-24"
-                style={{
-                  background: "var(--theme-card-bg)",
-                  borderColor: "var(--theme-glass-border)",
-                }}
+                className="p-6 sm:p-8 rounded-2xl border border-border bg-surface hover:border-brand-rose/50 hover:shadow-md transition-all duration-200 flex flex-col justify-between scroll-mt-24"
               >
                 <div>
-                  {/* Icon & Badge */}
+                  {/* Icon & Badge Header */}
                   <div className="flex items-center justify-between mb-6">
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{
-                        background: "var(--theme-blush)",
-                        border: "1px solid rgba(238, 49, 53, 0.2)",
-                        color: "var(--theme-red)",
-                      }}
-                    >
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-brand-blush text-brand-wine border border-brand-rose/30 shadow-2xs">
                       <Icon className="w-6 h-6" />
                     </div>
 
-                    <span
-                      className="text-3xs font-extrabold px-2.5 py-1 rounded-full"
-                      style={{
-                        background: "var(--theme-canvas)",
-                        border: "1px solid var(--theme-glass-border)",
-                        color: "var(--theme-gray-600)",
-                      }}
+                    <Badge
+                      variant="neutral"
+                      size="sm"
+                      className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 bg-surface border-border text-text-secondary"
                     >
                       {item.badge}
-                    </span>
+                    </Badge>
                   </div>
 
                   {/* Title & Description */}
-                  <h3
-                    className="text-xl font-bold mb-3 tracking-tight"
-                    style={{ color: "var(--theme-ink-darkest)" }}
-                  >
+                  <h3 className="text-xl font-bold mb-3 tracking-tight text-text-primary">
                     {item.title}
                   </h3>
 
-                  <p className="text-sm text-gray-500 leading-relaxed mb-6">
+                  <p className="text-sm text-text-secondary leading-relaxed mb-6">
                     {item.description}
                   </p>
 
-                  {/* Benefit Points */}
+                  {/* Benefit Points with Emerald Telemetry Checkmarks */}
                   <ul className="space-y-2.5 mb-8">
                     {item.points.map((point) => (
                       <li
                         key={point}
-                        className="flex items-start gap-2.5 text-xs font-medium"
-                        style={{ color: "var(--theme-ink-darkest)" }}
+                        className="flex items-start gap-2.5 text-xs font-medium text-text-primary"
                       >
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-status-success shrink-0 mt-0.5" />
                         <span>{point}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                {/* Link */}
-                <Link
-                  href={item.linkHref}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline transition-colors pt-4 border-t"
-                  style={{ borderColor: "var(--theme-glass-border)" }}
-                >
-                  <span>{item.linkText}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
+                {/* Card Action Link */}
+                <div className="pt-4 border-t border-border">
+                  <Button
+                    variant="link"
+                    size="sm"
+                    className="p-0 text-brand-wine hover:text-brand-darkWine font-semibold text-xs inline-flex items-center gap-1.5 transition-colors"
+                    asChild
+                  >
+                    <Link href={item.linkHref}>
+                      <span>{item.linkText}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </Button>
+                </div>
+              </Card>
             );
           })}
         </div>
@@ -173,4 +164,5 @@ export function SimpleFeaturesSection() {
     </section>
   );
 }
+
 export default SimpleFeaturesSection;

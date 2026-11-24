@@ -1,22 +1,20 @@
 import {
+  LayoutDashboard,
   Shield,
   Users,
   Key,
   Layers,
-  Mail,
-  History,
   Sparkles,
   Globe,
   MapPin,
   Map,
   Building2,
   Navigation,
-  Building,
-  Milestone,
-  Home,
   FolderTree,
   Hash,
   Package,
+  FileText,
+  Mail,
   LucideIcon,
 } from "lucide-react";
 
@@ -50,7 +48,17 @@ export function isGroupItem(item: NavEntry): item is NavGroupItem {
   return "children" in item;
 }
 
+/**
+ * Functional Admin Navigation Sections
+ * Grouped logically with Overview / Dashboard as the primary landing item.
+ */
 export const ADMIN_NAV_SECTIONS: NavSection[] = [
+  {
+    label: "Overview",
+    items: [
+      { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+    ],
+  },
   {
     label: "Access & Security",
     items: [
@@ -58,6 +66,7 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
       { href: "/admin/users", label: "Users & UBAC", icon: Users },
       { href: "/admin/permissions", label: "Permissions", icon: Key },
       { href: "/admin/statuses", label: "Status Management", icon: Layers },
+      { href: "/admin/audit-logs", label: "Audit Logs", icon: FileText },
     ],
   },
   {
@@ -70,7 +79,6 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
         children: [
           { href: "/admin/categories", label: "Product Categories", icon: FolderTree },
           { href: "/admin/hsn-codes", label: "HSN Code Master", icon: Hash },
-          { href: "/admin/hsn-sync", label: "HSN Sync Runs", icon: Sparkles },
         ],
       },
       {
@@ -78,25 +86,18 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
         label: "Geographic Master",
         icon: Globe,
         children: [
-          { href: "/admin/geography", label: "Geo Dashboard", icon: Globe },
           { href: "/admin/countries", label: "Countries Master", icon: MapPin },
           { href: "/admin/states", label: "States & UTs", icon: Map },
           { href: "/admin/districts", label: "Districts Master", icon: Building2 },
           { href: "/admin/sub-districts", label: "Sub-districts (Tehsils)", icon: Navigation },
-          { href: "/admin/cities", label: "Cities & Towns", icon: Building },
-          { href: "/admin/localities", label: "Localities & Hubs", icon: Milestone },
-          { href: "/admin/postal-codes", label: "Postal Codes (PIN)", icon: Home },
-          { href: "/admin/post-offices", label: "Post Offices Master", icon: Mail },
         ],
       },
     ],
   },
   {
-    label: "System & Compliance",
+    label: "Communications",
     items: [
-      { href: "/admin/email-templates", label: "Email Notifications", icon: Mail },
-      { href: "/admin/audit-logs", label: "Security Audit Logs", icon: History },
-      { href: "/admin/storybook", label: "UI Design System", icon: Sparkles },
+      { href: "/admin/email-templates", label: "Email Templates", icon: Mail },
     ],
   },
 ];

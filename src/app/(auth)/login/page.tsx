@@ -3,15 +3,13 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, ShieldCheck, Loader2, ArrowRight } from 'lucide-react';
 import { z } from 'zod';
 import { loginServerAction } from '@/app/actions/auth-actions';
 import { useAuthStore } from '@/lib/store/auth-store';
-import { LoadingSpinner, LogoLoader } from '@/components/ui/Loading';
-import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/Logo';
+import { Input, Button, Checkbox, Card } from '@/components/common';
 import { LoginFormAlerts } from './components/LoginFormAlerts';
-import { LoginFormHeader } from './components/LoginFormHeader';
-import { LoginFormFooter } from './components/LoginFormFooter';
 
 /* ── Zod Validation Schema ─────────────────────────────────────────────── */
 const loginSchema = z.object({
@@ -22,7 +20,7 @@ const loginSchema = z.object({
   password: z
     .string()
     .min(1, 'Password is required')
-    .min(8, 'Password must be at least 8 characters long'),
+    .min(6, 'Password must be at least 6 characters long'),
 });
 
 type LoginFieldErrors = {
@@ -37,7 +35,7 @@ function LoginForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<LoginFieldErrors>({});
   const [loading, setLoading] = useState(false);
@@ -86,7 +84,7 @@ function LoginForm() {
 
       setAuth(res.data);
       setEvictionNotice(null);
-      const redirectPath = searchParams.get('redirect') || '/dashboard';
+      const redirectPath = searchParams.get('redirect') || '/admin';
       router.push(redirectPath);
       router.refresh();
     } catch (err: any) {
@@ -97,131 +95,156 @@ function LoginForm() {
   };
 
   return (
-    <>
-      <LoginFormHeader />
+    <div className="w-full">
+      {/* ── LOGO (Exact 1:1 clean placement matching Canva mockup) ── */}
+      <div className="mb-3 sm:mb-3.5">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 transition-transform hover:scale-105 duration-200"
+          title="Mercora Home"
+        >
+          <Logo height={30} />
+        </Link>
+      </div>
 
-      <LoginFormAlerts
-        isDisplaced={isDisplaced}
-        evictionNotice={evictionNotice}
-        verifiedNotice={verifiedNotice}
-        error={error}
-      />
+      {/* ── HEADINGS (Welcome in Charcoal Plum, "back" in Brand Wine #7F1D3F) ── */}
+      <div className="mb-3 sm:mb-3.5">
+          <h1 className="text-2xl sm:text-[28px] md:text-[30px] font-extrabold tracking-tight text-[#2B1220] leading-tight">
+            Welcome <span className="text-[#7F1D3F]">back</span>
+          </h1>
+          <p className="text-xs sm:text-[13px] text-[#765C67] mt-0.5 leading-normal font-normal">
+            Your listings, contacts &amp; market intelligence — just where you left them.
+          </p>
+      </div>
 
-      <form className="space-y-3 sm:space-y-3.5 font-rethink" onSubmit={handleSubmit} noValidate>
-        <div>
-          <label
-            htmlFor="login-email"
-            className="block text-xs font-semibold mb-1 font-rethink"
-            style={{ color: 'var(--theme-ink-darkest)' }}
-          >
-            Email Address
-          </label>
-          <input
-            id="login-email"
-            type="email"
-            value={email}
-            onChange={(e) => { setEmail(e.target.value); if (fieldErrors.email) validateField('email', e.target.value); }}
-            onBlur={(e) => validateField('email', e.target.value)}
-            placeholder="you@company.com"
-            autoComplete="email"
-            className="block w-full px-3.5 py-2.5 rounded-xl text-sm font-rethink transition-all focus:outline-none"
-            style={{
-              background: fieldErrors.email ? 'var(--theme-error-bg)' : 'var(--theme-gray-50)',
-              border: `1.5px solid ${fieldErrors.email ? 'var(--theme-error)' : 'var(--theme-warm-line)'}`,
-              color: 'var(--theme-ink-darkest)',
-              boxShadow: fieldErrors.email ? '0 0 0 3px rgba(238,49,53,0.08)' : undefined,
-            }}
+      {/* ── ELEVATED WHITE CARD CONTAINER (Using Common Card component) ── */}
+        <Card className="bg-white rounded-2xl sm:rounded-[22px] p-5 sm:p-6 md:p-7 shadow-[0_18px_50px_-10px_rgba(43,18,32,0.07),0_2px_8px_rgba(0,0,0,0.02)] border border-[#F0E4E8]">
+          {/* Alerts for displaced session / errors */}
+          <LoginFormAlerts
+            isDisplaced={isDisplaced}
+            evictionNotice={evictionNotice}
+            verifiedNotice={verifiedNotice}
+            error={error}
           />
-          {fieldErrors.email && (
-            <div className="flex items-center gap-1.5 mt-1 text-xs font-rethink" style={{ color: 'var(--theme-error)' }}>
-              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-              <span>{fieldErrors.email}</span>
-            </div>
-          )}
-        </div>
 
-        <div>
-          <label
-            htmlFor="login-password"
-            className="block text-xs font-semibold mb-1 font-rethink"
-            style={{ color: 'var(--theme-ink-darkest)' }}
-          >
-            Password
-          </label>
-          <div className="relative">
-            <input
-              id="login-password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => { setPassword(e.target.value); if (fieldErrors.password) validateField('password', e.target.value); }}
-              onBlur={(e) => validateField('password', e.target.value)}
-              placeholder="Min 8 characters"
-              autoComplete="current-password"
-              className="block w-full pl-3.5 pr-11 py-2.5 rounded-xl text-sm font-rethink transition-all focus:outline-none"
-              style={{
-                background: fieldErrors.password ? 'var(--theme-error-bg)' : 'var(--theme-gray-50)',
-                border: `1.5px solid ${fieldErrors.password ? 'var(--theme-error)' : 'var(--theme-warm-line)'}`,
-                color: 'var(--theme-ink-darkest)',
-                boxShadow: fieldErrors.password ? '0 0 0 3px rgba(238,49,53,0.08)' : undefined,
-              }}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute inset-y-0 right-0 pr-3.5 flex items-center transition-colors cursor-pointer"
-              style={{ color: 'var(--theme-gray-400)' }}
-              title={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
-          </div>
-          {fieldErrors.password && (
-            <div className="flex items-center gap-1.5 mt-1 text-xs font-rethink" style={{ color: 'var(--theme-error)' }}>
-              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-              <span>{fieldErrors.password}</span>
-            </div>
-          )}
-        </div>
+            <form className="space-y-3 sm:space-y-3.5 md:space-y-4" onSubmit={handleSubmit} noValidate>
+              {/* Email Address Field using Common Input */}
+              <Input
+                id="login-email"
+                label={
+                  <span className="flex items-center gap-1.5 text-xs font-semibold text-[#2B1220] select-none">
+                    <Mail className="w-3.5 h-3.5 text-[#765C67]" />
+                    <span>Email Address</span>
+                  </span>
+                }
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (fieldErrors.email) validateField('email', e.target.value);
+                }}
+                onBlur={(e) => validateField('email', e.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                leftIcon={<Mail className="w-4 h-4 text-[#8A727D]" />}
+                error={fieldErrors.email}
+                inputSize="lg"
+                className="h-11 sm:h-[46px] rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              />
 
-        <div className="flex items-center justify-between pt-0.5">
-          <label className="inline-flex items-center gap-2 cursor-pointer select-none font-rethink">
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-3.5 h-3.5 rounded cursor-pointer"
-              style={{ accentColor: 'var(--theme-red)' }}
-            />
-            <span className="text-xs font-medium font-rethink" style={{ color: 'var(--theme-gray-700)' }}>
-              Remember me
-            </span>
-          </label>
-          <Link
-            href="/forgot-password"
-            className="text-xs font-bold font-rethink transition-colors"
-            style={{ color: 'var(--theme-red)' }}
-          >
-            Forgot password?
-          </Link>
-        </div>
+              {/* Password Field using Common Input */}
+              <Input
+                id="login-password"
+                label={
+                  <span className="flex items-center gap-1.5 text-xs font-semibold text-[#2B1220] select-none">
+                    <Lock className="w-3.5 h-3.5 text-[#765C67]" />
+                    <span>Password</span>
+                  </span>
+                }
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (fieldErrors.password) validateField('password', e.target.value);
+                }}
+                onBlur={(e) => validateField('password', e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                leftIcon={<Lock className="w-4 h-4 text-[#8A727D]" />}
+                rightIcon={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((p) => !p)}
+                    className="p-1 rounded text-[#8A727D] hover:text-[#2B1220] transition-colors cursor-pointer"
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                }
+                error={fieldErrors.password}
+                inputSize="lg"
+                className="h-11 sm:h-[46px] rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              />
 
-        <div className="pt-1">
-          <Button
-            id="login-submit"
-            type="submit"
-            variant="primary"
-            size="lg"
-            isLoading={loading}
-            className="w-full font-bold tracking-widest text-xs py-2.5 sm:py-3 rounded-xl font-rethink"
-            rightIcon={!loading ? <ArrowRight className="w-3.5 h-3.5" /> : undefined}
-          >
-            SIGN IN
-          </Button>
-        </div>
-      </form>
+              {/* Remember me & Forgot password row using Common Checkbox */}
+              <div className="flex items-center justify-between pt-0.5">
+                <Checkbox
+                  id="remember-me"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  label={<span className="text-xs font-medium text-[#2B1220]">Remember me</span>}
+                />
 
-      <LoginFormFooter />
-    </>
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-semibold text-[#7F1D3F] hover:underline transition-colors"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              {/* Sign In Button using Common Button */}
+              <div className="pt-1">
+                <Button
+                  id="login-submit"
+                  type="submit"
+                  variant="primary"
+                  size="lg"
+                  isLoading={loading}
+                  loadingText="Signing in..."
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                  className="w-full h-11 sm:h-[46px] text-sm font-bold rounded-xl"
+                >
+                  Sign In
+                </Button>
+              </div>
+
+              {/* Divider: or */}
+              <div className="text-center text-xs text-[#8A727D] pt-0.5 select-none">or</div>
+
+              {/* Create Free Account Link */}
+              <div className="text-center text-xs text-[#765C67]">
+                Don&apos;t have an account?{' '}
+                <Link
+                  href="/register"
+                  className="font-bold text-[#7F1D3F] hover:underline transition-colors ml-0.5 inline-flex items-center gap-1 group"
+                >
+                  <span>Create a free account</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </form>
+        </Card>
+
+        {/* ── BOTTOM SECURITY BADGE (Exact 1:1 matching Canva mockup) ── */}
+        <div className="flex items-center justify-center gap-1.5 text-xs text-[#765C67] pt-3.5 select-none">
+          <ShieldCheck className="w-3.5 h-3.5 text-[#765C67]" />
+          <span>Secure &amp; Trusted</span>
+          <span className="text-[#E5D4DA]">|</span>
+          <span>Enterprise Grade Security</span>
+        </div>
+    </div>
   );
 }
 
@@ -230,7 +253,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="min-h-[300px] flex items-center justify-center">
-          <LogoLoader size="md" dark={false} />
+          <Loader2 className="w-6 h-6 text-[#7F1D3F] animate-spin" />
         </div>
       }
     >

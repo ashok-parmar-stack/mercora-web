@@ -2,7 +2,9 @@
 
 import React from "react";
 import { AlertCircle, RefreshCw } from "lucide-react";
+import { Button } from "./Button";
 import { APP_MESSAGES } from "@/config/messages.config";
+import { cn } from "@/lib/utils";
 
 export interface ErrorStateProps {
   title?: string;
@@ -19,26 +21,29 @@ export function ErrorState({
 }: ErrorStateProps) {
   return (
     <div
-      className={`flex flex-col items-center justify-center p-10 text-center rounded-2xl border border-red-200 dark:border-red-900/40 bg-red-50/50 dark:bg-red-950/20 ${className}`}
+      className={cn(
+        "flex flex-col items-center justify-center p-10 text-center rounded-2xl border border-destructive/20 bg-destructive/5 text-foreground",
+        className
+      )}
     >
-      <div className="w-14 h-14 rounded-2xl bg-red-100 dark:bg-red-900/50 text-red-600 dark:text-red-400 flex items-center justify-center mb-4">
-        <AlertCircle className="w-7 h-7" />
+      <div className="w-12 h-12 rounded-xl bg-destructive/10 text-destructive flex items-center justify-center mb-3">
+        <AlertCircle className="w-6 h-6" />
       </div>
-      <h3 className="text-base font-semibold text-red-950 dark:text-red-200 mb-1">
+      <h3 className="text-base font-semibold text-foreground mb-1">
         {title}
       </h3>
-      <p className="text-sm text-red-700 dark:text-red-300 max-w-md mb-5">
+      <p className="text-xs text-muted-foreground max-w-md mb-4 leading-relaxed">
         {message}
       </p>
       {onRetry && (
-        <button
-          type="button"
+        <Button
+          variant="outline"
+          size="sm"
           onClick={onRetry}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-300 font-medium text-sm hover:bg-red-50 dark:hover:bg-slate-700/60 transition-all shadow-sm"
+          leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
         >
-          <RefreshCw className="w-4 h-4" />
-          <span>Try Again</span>
-        </button>
+          Try Again
+        </Button>
       )}
     </div>
   );

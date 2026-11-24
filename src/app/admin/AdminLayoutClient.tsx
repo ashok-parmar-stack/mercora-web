@@ -11,7 +11,7 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
   const isCollapsed = useUIStore((s) => s.isSidebarCollapsed);
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] font-sans antialiased flex flex-col transition-colors duration-200">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] font-sans antialiased flex flex-col transition-colors duration-200 overflow-x-hidden">
       {/* 1. Collapsible Enterprise Sidebar */}
       <Sidebar />
 
@@ -25,7 +25,7 @@ export function AdminLayoutClient({ children }: { children: React.ReactNode }) {
         <AdminHeader />
 
         {/* Content Container */}
-        <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 flex flex-col gap-4 sm:gap-5 min-w-0">
+        <main className="flex-1 w-full max-w-[1700px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 flex flex-col gap-4 sm:gap-5 min-w-0">
           {/* Unified Breadcrumb Navigation */}
           <Breadcrumb />
           {children}

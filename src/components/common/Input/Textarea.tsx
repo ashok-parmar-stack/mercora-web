@@ -32,7 +32,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           className={cn(
             "flex min-h-[80px] w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground",
             "transition-colors duration-150 outline-none",
-            "focus:border-border-focus focus:ring-1 focus:ring-ring",
+            "hover:border-border-hover focus:border-border-focus focus:ring-1 focus:ring-ring",
             "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-surface-hover",
             error && "border-destructive focus:border-destructive focus:ring-destructive",
             className

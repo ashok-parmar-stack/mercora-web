@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Hash, RefreshCw, Layers, ArrowUpRight } from "lucide-react";
+import { Hash, RefreshCw, Layers } from "lucide-react";
 import { useHsnCodes } from "../../../lib/hooks/useHsnCodes";
 import { HsnCode, HsnCodeCategoryMapping, ProductCategory } from "@mercora/shared-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
@@ -154,22 +153,14 @@ export default function HsnCodesAdminPage() {
         }}
         extraActions={
           <div className="flex items-center gap-2">
-            <Link
-              href="/admin/hsn-sync"
-              className="px-3 py-2 text-xs font-bold rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 shadow-2xs transition-colors flex items-center gap-1.5"
-            >
-              <span>Sync History</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-gray-400" />
-            </Link>
-
             <button
               type="button"
               onClick={() => refetch()}
-              className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-2xs cursor-pointer"
+              className="p-2 rounded-lg border border-border bg-surface hover:bg-surface-hover text-muted-foreground transition-colors shadow-2xs cursor-pointer"
               title="Refresh Data"
               aria-label="Refresh"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-brand-600" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-primary" : ""}`} />
             </button>
           </div>
         }

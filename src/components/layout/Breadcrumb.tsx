@@ -14,7 +14,6 @@ const ROUTE_LABELS: Record<string, string> = {
   "saved-businesses": "Saved Businesses",
   enquiries: "My Inquiries",
   "hsn-codes": "HSN Codes",
-  "hsn-sync": "HSN Sync Runs",
   users: "Users",
   roles: "Roles",
   permissions: "Permissions",
@@ -25,7 +24,6 @@ const ROUTE_LABELS: Record<string, string> = {
   states: "States",
   districts: "Districts",
   "sub-districts": "Sub-Districts",
-  geography: "Geographic Master",
   create: "Create",
   edit: "Edit",
   profile: "Profile",
@@ -69,9 +67,9 @@ export const Breadcrumb: React.FC = () => {
       >
         <Link
           href="/admin"
-          className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-brand-600 dark:hover:text-brand-400 font-semibold transition-colors flex-shrink-0"
+          className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-primary font-semibold transition-colors flex-shrink-0"
         >
-          <Home className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+          <Home className="w-3.5 h-3.5 text-primary" />
           <span>Admin</span>
         </Link>
 
@@ -144,9 +142,9 @@ export const Breadcrumb: React.FC = () => {
     >
       <Link
         href="/admin"
-        className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-brand-600 dark:hover:text-brand-400 font-semibold transition-colors flex-shrink-0"
+        className="flex items-center gap-1.5 text-[var(--text-secondary)] hover:text-primary font-semibold transition-colors flex-shrink-0"
       >
-        <Home className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+        <Home className="w-3.5 h-3.5 text-primary" />
         <span>Admin</span>
       </Link>
 

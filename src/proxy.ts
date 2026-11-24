@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 const PROTECTED_PREFIXES = ['/dashboard', '/admin'];
-const AUTH_ROUTES = ['/login', '/register'];
+const AUTH_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password'];
 
 export function proxy(request: NextRequest) {
   try {
@@ -13,12 +13,21 @@ export function proxy(request: NextRequest) {
     const userCookie = request.cookies.get('mercora_user')?.value;
     const isAuthenticated = Boolean(accessToken || refreshToken || userCookie);
 
-    // 1. Guard Protected Routes (only redirect if completely unauthenticated)
+    // 1. Guard Auth Routes (Authenticated users must NOT access login, register, forgot-password, reset-password)
+    const isAuthRoute = AUTH_ROUTES.some(
+      (route) => pathname === route || pathname.startsWith(`${route}/`),
+    );
+
+    if (isAuthenticated && isAuthRoute) {
+      const redirectUrl = request.nextUrl.searchParams.get('redirect') || '/admin';
+      return NextResponse.redirect(new URL(redirectUrl, request.url));
+    }
+
+    // 2. Guard Protected Routes (Only redirect if completely unauthenticated)
     const isProtected = PROTECTED_PREFIXES.some(
       (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
     );
 
-    // If already on or navigating with redirect query, do not loop
     const hasRedirectParam = request.nextUrl.searchParams.has('redirect');
 
     if (isProtected && !isAuthenticated && !hasRedirectParam) {
@@ -29,7 +38,7 @@ export function proxy(request: NextRequest) {
 
     return NextResponse.next();
   } catch (error) {
-    console.error('Middleware proxy error:', error);
+    console.error('Proxy error:', error);
     return NextResponse.next();
   }
 }
@@ -41,7 +50,13 @@ export const config = {
     '/admin',
     '/admin/:path*',
     '/login',
+    '/login/:path*',
     '/register',
+    '/register/:path*',
+    '/forgot-password',
+    '/forgot-password/:path*',
+    '/reset-password',
+    '/reset-password/:path*',
   ],
 };
 

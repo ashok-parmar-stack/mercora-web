@@ -9,15 +9,12 @@ import { Role } from "../../../lib/admin-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { DataTable, Column, BulkAction } from "../../../components/data-table/DataTable";
 import { StatusBadge } from "../../../components/status/StatusBadge";
-import { Tooltip } from "../../../components/ui/Tooltip";
 import {
   ConfirmDialog,
   DeleteConfirmDialog,
   StatusConfirmDialog,
 } from "../../../components/common/ConfirmDialog";
-import { Badge } from "../../../components/ui/Badge";
-import { Select } from "../../../components/ui/Select";
-import { Button } from "../../../components/ui/Button";
+import { Badge, Select, Button, Tooltip } from "@/components/common";
 import {
   Shield,
   Plus,
@@ -33,19 +30,50 @@ import {
 
 export default function RolesListPage() {
   const [mounted, setMounted] = useState(false);
-  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [includeDeleted, setIncludeDeleted] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [sortBy, setSortBy] = useState<string | undefined>("name");
+  const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("ASC");
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Hooks & Store
-  const { roles, isLoading, error, refetch, deleteRole, restoreRole, updateRole } = useRoles({
+  // Debounce search input by 300ms before sending to server
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Server-driven Hooks & Store
+  const {
+    roles,
+    total,
+    page: serverPage,
+    limit: serverLimit,
+    isLoading,
+    error,
+    refetch,
+    deleteRole,
+    restoreRole,
+    updateRole,
+  } = useRoles({
     statusId: statusFilter !== "ALL" ? statusFilter : undefined,
     includeDeleted,
+    search: debouncedSearch.trim() || undefined,
+    sortBy,
+    sortOrder,
+    page,
+    limit,
   });
+
   const { statuses } = useStatuses("ROLE");
   const activePersona = useUIStore((s) => s.activePersona);
   const clearSelection = useUIStore((s) => s.clearSelection);
@@ -55,21 +83,7 @@ export default function RolesListPage() {
   const [bulkDeletingIds, setBulkDeletingIds] = useState<string[] | null>(null);
   const [bulkStatusConfirm, setBulkStatusConfirm] = useState<{ ids: string[]; targetStatus: string } | null>(null);
 
-  // Filtered Roles
-  const filteredRoles = roles.filter((r) => {
-    if (!includeDeleted && r.deletedAt) return false;
-    if (statusFilter !== "ALL" && r.statusId !== statusFilter) return false;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      const matchName = r.name.toLowerCase().includes(q);
-      const matchCode = r.code.toLowerCase().includes(q);
-      const matchDesc = r.description?.toLowerCase().includes(q);
-      if (!matchName && !matchCode && !matchDesc) return false;
-    }
-    return true;
-  });
-
-  // Table Columns
+  // Table Columns (Exact match to Canva reference: Role Definition, Description / Scope, Priority, Status, Actions)
   const columns: Column<Role>[] = [
     {
       key: "name",
@@ -138,18 +152,6 @@ export default function RolesListPage() {
           status={role.status?.code || (role.statusId ? "ACTIVE" : undefined)}
           isDeleted={Boolean(role.deletedAt)}
         />
-      ),
-    },
-    {
-      key: "createdAt",
-      header: "Created",
-      sortable: true,
-      sortAccessor: (role) => role.createdAt ? new Date(role.createdAt).getTime() : 0,
-      width: "120px",
-      render: (role) => (
-        <span className="text-xs text-gray-500">
-          {role.createdAt ? new Date(role.createdAt).toLocaleDateString('en-US') : "Not Available"}
-        </span>
       ),
     },
   ];
@@ -259,14 +261,14 @@ export default function RolesListPage() {
         }}
         extraActions={
           <Button
-            size="sm"
+            size="md"
             variant="outline"
             onClick={() => refetch()}
-            className="h-9 w-9 p-0"
+            className="w-10 h-10 p-0"
             title="Refresh list"
             aria-label="Refresh"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-primary" : ""}`} />
           </Button>
         }
       />
@@ -274,25 +276,45 @@ export default function RolesListPage() {
       {/* Main Data Table */}
       <DataTable<Role>
         tableKey="roles-table"
-        data={filteredRoles}
+        data={roles}
         columns={columns}
-        keyExtractor={(r) => r.id || r.code}
+        keyExtractor={(r) => String(r.id || r.code)}
         isLoading={!mounted || isLoading}
-        searchQuery={search}
-        onSearchChange={setSearch}
-        searchPlaceholder="Search roles by name, code, or description..."
+        searchQuery={searchInput}
+        onSearchChange={setSearchInput}
+        searchPlaceholder="Search roles by name, code, or description.."
         emptyTitle="No roles found"
         emptyDescription="Create your first role to start managing RBAC access policies."
         isItemSoftDeleted={(r) => Boolean(r.deletedAt)}
         renderActions={renderActions}
         bulkActions={bulkActions}
+        showColumnPicker={false}
+        totalCount={total}
+        currentPage={page}
+        pageSize={limit}
+        onPageChange={(p) => setPage(p)}
+        onPageSizeChange={(newLimit) => {
+          setLimit(newLimit);
+          setPage(1);
+        }}
+        sortKey={sortBy}
+        sortDir={sortOrder?.toLowerCase() as "asc" | "desc"}
+        onSortChange={(colKey, dir) => {
+          setSortBy(colKey || undefined);
+          setSortOrder(dir ? (dir.toUpperCase() as "ASC" | "DESC") : "ASC");
+          setPage(1);
+        }}
         filterSlot={
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center gap-2.5 flex-wrap">
             {statuses.length > 0 && (
               <div className="w-44">
                 <Select
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value);
+                    setPage(1);
+                  }}
+                  selectSize="md"
                 >
                   <option value="ALL">All Statuses</option>
                   {statuses.map((s) => (
@@ -304,14 +326,17 @@ export default function RolesListPage() {
               </div>
             )}
 
-            <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer select-none bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors">
+            <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none bg-surface h-10 px-3 rounded-lg border border-border hover:bg-surface-hover hover:border-border-hover transition-colors shadow-2xs">
               <input
                 type="checkbox"
                 checked={includeDeleted}
-                onChange={(e) => setIncludeDeleted(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-300 accent-brand-600 text-brand-600 focus:ring-brand-500 cursor-pointer"
+                onChange={(e) => {
+                  setIncludeDeleted(e.target.checked);
+                  setPage(1);
+                }}
+                className="w-4 h-4 rounded border-border-strong text-primary accent-primary cursor-pointer focus:ring-1 focus:ring-ring"
               />
-              Show Trash
+              <span>Show Trash</span>
             </label>
           </div>
         }

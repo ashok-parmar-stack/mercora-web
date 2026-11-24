@@ -92,16 +92,16 @@ export function DatePicker({
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         className={cn(
-          "flex h-9 w-full items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-xs",
-          "text-text-primary shadow-xs transition-colors hover:border-border-hover cursor-pointer",
-          "focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed",
+          "flex h-10 w-full items-center justify-between rounded-lg border border-border bg-surface px-3 py-2 text-sm",
+          "text-foreground shadow-2xs transition-colors hover:border-border-hover cursor-pointer",
+          "focus:outline-none focus:ring-1 focus:ring-ring focus:border-border-focus disabled:opacity-50 disabled:cursor-not-allowed",
           error && "border-destructive focus:ring-destructive"
         )}
       >
-        <span className={cn(!selectedDate && "text-text-muted")}>
+        <span className={cn(!selectedDate && "text-muted-foreground")}>
           {selectedDate ? formatDateDisplay(selectedDate) : placeholder}
         </span>
-        <CalendarIcon className="w-4 h-4 text-text-muted opacity-60" />
+        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
       </button>
 
       {error && <span className="text-[11px] text-destructive leading-tight">{error}</span>}

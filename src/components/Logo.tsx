@@ -54,10 +54,10 @@ export function LogoIcon({
         d="M 117 163.5 L 117 711.5 L 287 813.5 L 287 446.5 L 500 571.5 L 883 351.5 L 883 163.5 L 500 382.5 Z"
         fill={inkColor}
       />
-      {/* Brand Red Accent Pillar */}
+      {/* Brand Primary Accent Pillar */}
       <path
         d="M 693 511.5 L 693 836.5 L 883 724.5 L 883 397.5 Z"
-        fill="#EE3135"
+        fill="var(--primary, #7F1D3F)"
       />
     </svg>
   );
@@ -112,18 +112,18 @@ export function Logo({
         />
         <path
           d="M 693 511.5 L 693 836.5 L 883 724.5 L 883 397.5 Z"
-          fill="#EE3135"
+          fill="var(--primary, #7F1D3F)"
         />
       </g>
 
-      {/* 2. Unified Wordmark: "MERCORA" with Signature Red 'A' */}
+      {/* 2. Unified Wordmark: "MERCORA" with Signature Primary 'A' */}
       <text
         x="230"
         y="164"
         className="mercora-wordmark"
         fill={inkColor}
       >
-        MERCOR<tspan fill="#EE3135">A</tspan>
+        MERCOR<tspan fill="var(--primary, #7F1D3F)">A</tspan>
       </text>
     </svg>
   );

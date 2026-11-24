@@ -12,7 +12,6 @@ export * from "./ImageUploadDropzone";
 export * from "./Loading";
 export * from "./Dialog";
 export * from "./Sheet";
-export * from "./RadixSelect";
 export * from "./RoleContext";
 export * from "./RoleGuard";
 
@@ -58,7 +57,6 @@ export {
   type RadioOption,
   MultiSelect,
   type MultiSelectProps,
-  type MultiSelectOption,
   SearchInput,
   type SearchInputProps,
   FormField,

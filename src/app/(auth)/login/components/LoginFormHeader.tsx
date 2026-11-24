@@ -2,15 +2,12 @@ import React from 'react';
 
 export function LoginFormHeader() {
   return (
-    <div className="mb-3.5 sm:mb-4 text-center">
-      <h1
-        className="text-xl sm:text-2xl font-extrabold tracking-[-0.03em] mb-1 font-jakarta"
-        style={{ color: 'var(--theme-ink-darkest)', lineHeight: 1.2 }}
-      >
-        Welcome back
+    <div className="mb-6 text-center space-y-1.5">
+      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-text-primary">
+        Welcome Back
       </h1>
-      <p className="text-xs font-work" style={{ color: 'var(--theme-gray-600)', lineHeight: 1.5 }}>
-        Your listings, contacts & market intel — just where you left them.
+      <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
+        Sign in to your enterprise control plane and master data catalog.
       </p>
     </div>
   );

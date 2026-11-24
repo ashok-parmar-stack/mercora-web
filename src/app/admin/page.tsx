@@ -205,14 +205,14 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <Link href="/admin/roles">
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="md">
               Manage Roles
             </Button>
           </Link>
           <Link href="/admin/users">
-            <Button variant="primary" size="sm">
+            <Button variant="primary" size="md">
               Manage Users
             </Button>
           </Link>

@@ -230,7 +230,7 @@ export default function UsersListPage() {
             <button
               onClick={() => restoreUser(u.slug || u.id)}
               disabled={!activePersona.canEdit}
-              className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 transition-colors disabled:opacity-40 cursor-pointer"
+              className="p-1.5 rounded-lg text-success hover:bg-success/10 transition-colors disabled:opacity-40 cursor-pointer"
               aria-label="Restore user"
             >
               <RotateCcw className="w-4 h-4" />
@@ -246,7 +246,7 @@ export default function UsersListPage() {
         <Tooltip content="View User Details">
           <button
             onClick={() => setSelectedViewUser(u)}
-            className="p-1.5 rounded-lg text-gray-500 hover:text-brand-600 hover:bg-gray-100 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-hover transition-colors cursor-pointer"
             aria-label="View user details"
           >
             <Eye className="w-4 h-4" />
@@ -257,7 +257,7 @@ export default function UsersListPage() {
         <Tooltip content="Manage UBAC Permission Overrides">
           <Link
             href={`/admin/users/${encodeURIComponent(u.slug || u.id)}/permissions`}
-            className="p-1.5 rounded-lg text-gray-500 hover:text-brand-600 hover:bg-gray-100 transition-colors"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-hover transition-colors"
             aria-label="User permissions"
           >
             <KeyRound className="w-4 h-4" />
@@ -268,7 +268,7 @@ export default function UsersListPage() {
         <Tooltip content="Edit User Profile">
           <Link
             href={`/admin/users/${encodeURIComponent(u.slug || u.id)}/edit`}
-            className={`p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors ${!activePersona.canEdit ? "pointer-events-none opacity-40" : ""
+            className={`p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-hover transition-colors ${!activePersona.canEdit ? "pointer-events-none opacity-40" : ""
               }`}
             aria-label="Edit user"
           >
@@ -281,7 +281,7 @@ export default function UsersListPage() {
           <button
             onClick={() => setDeletingUser(u)}
             disabled={!activePersona.canDelete}
-            className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors disabled:opacity-30 cursor-pointer"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-30 cursor-pointer"
             aria-label="Delete user"
           >
             <Trash2 className="w-4 h-4" />
@@ -334,14 +334,14 @@ export default function UsersListPage() {
         }}
         extraActions={
           <Button
-            size="sm"
+            size="md"
             variant="outline"
             onClick={() => refetch()}
-            className="h-9 w-9 p-0"
+            className="w-10 h-10 p-0"
             title="Refresh user directory"
             aria-label="Refresh user directory"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-brand-600" : ""}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-primary" : ""}`} />
           </Button>
         }
       />
@@ -401,12 +401,12 @@ export default function UsersListPage() {
             )}
 
             {/* Show Trash Toggle */}
-            <label className="flex items-center gap-2 text-xs font-bold text-gray-700 cursor-pointer select-none bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-100 transition-colors shadow-2xs">
+            <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none bg-surface px-3 py-2.5 rounded-lg border border-border hover:bg-surface-hover hover:border-border-hover transition-colors shadow-2xs">
               <input
                 type="checkbox"
                 checked={includeDeleted}
                 onChange={(e) => setIncludeDeleted(e.target.checked)}
-                className="rounded border-gray-300 accent-brand-600 text-brand-600 focus:ring-brand-500 cursor-pointer w-4 h-4"
+                className="rounded border-border accent-primary focus:ring-primary/20 cursor-pointer w-4 h-4"
               />
               Show Trash
             </label>

@@ -11,12 +11,17 @@ import {
   restoreRole,
   fetchRolePermissions,
   updateRolePermissions,
+  RoleQueryParams,
 } from "../admin-api";
 import { useUIStore } from "../store/ui-store";
 import { isAbortError } from "../api-abort";
 
-export function useRoles(params?: { statusId?: string; includeDeleted?: boolean }) {
+export function useRoles(params?: RoleQueryParams) {
   const [roles, setRoles] = useState<Role[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [page, setPage] = useState<number>(params?.page || 1);
+  const [limit, setLimit] = useState<number>(params?.limit || 10);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const addToast = useUIStore((s) => s.addToast);
@@ -42,8 +47,23 @@ export function useRoles(params?: { statusId?: string; includeDeleted?: boolean 
         return;
       }
 
-      const list = Array.isArray(res) ? res : res?.data || [];
-      setRoles(list);
+      if (Array.isArray(res)) {
+        setRoles(res);
+        setTotal(res.length);
+        setPage(params?.page || 1);
+        setLimit(params?.limit || res.length || 10);
+        setTotalPages(1);
+      } else if (res && typeof res === 'object') {
+        const list = Array.isArray(res.items) ? res.items : Array.isArray(res.data) ? res.data : [];
+        setRoles(list);
+        setTotal(typeof res.total === 'number' ? res.total : list.length);
+        setPage(typeof res.page === 'number' ? res.page : (params?.page || 1));
+        setLimit(typeof res.limit === 'number' ? res.limit : (params?.limit || 10));
+        setTotalPages(typeof res.totalPages === 'number' ? res.totalPages : 1);
+      } else {
+        setRoles([]);
+        setTotal(0);
+      }
       setIsLoading(false);
     } catch (err: any) {
       // 4. Do not show error or update state if aborted
@@ -57,7 +77,15 @@ export function useRoles(params?: { statusId?: string; includeDeleted?: boolean 
         abortControllerRef.current = null;
       }
     }
-  }, [params?.statusId, params?.includeDeleted]);
+  }, [
+    params?.statusId,
+    params?.includeDeleted,
+    params?.search,
+    params?.sortBy,
+    params?.sortOrder,
+    params?.page,
+    params?.limit,
+  ]);
 
   // Clean up on component unmount
   useEffect(() => {
@@ -121,6 +149,10 @@ export function useRoles(params?: { statusId?: string; includeDeleted?: boolean 
 
   return {
     roles,
+    total,
+    page,
+    limit,
+    totalPages,
     isLoading,
     error,
     refetch: load,

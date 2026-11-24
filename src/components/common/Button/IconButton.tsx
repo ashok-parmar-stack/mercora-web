@@ -12,9 +12,9 @@ export interface IconButtonProps extends Omit<ButtonProps, "leftIcon" | "rightIc
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ icon, className, size = "md", "aria-label": ariaLabel, ...props }, ref) => {
     const sizeClasses = {
-      sm: "h-8 w-8 p-0",
-      md: "h-9 w-9 p-0",
-      lg: "h-10 w-10 p-0",
+      sm: "h-8 w-8 p-0 rounded-lg",
+      md: "h-10 w-10 p-0 rounded-lg",
+      lg: "h-11 w-11 p-0 rounded-lg",
     };
 
     return (

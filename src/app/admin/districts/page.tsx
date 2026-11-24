@@ -14,6 +14,7 @@ import {
 import { useDistricts } from "../../../lib/hooks/useDistricts";
 import { District } from "@mercora/shared-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
+import { Button } from "@/components/common";
 import { DataTable, Column, BulkAction } from "../../../components/data-table/DataTable";
 import { StatusBadge } from "../../../components/status/StatusBadge";
 import { Tooltip } from "../../../components/ui/Tooltip";
@@ -254,25 +255,26 @@ export default function DistrictsAdminPage() {
         }}
         extraActions={
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              variant="outline"
+              size="md"
               onClick={handleSyncLgd}
               disabled={isSyncingLgd}
-              className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold rounded-lg border border-teal-200 bg-teal-50 text-teal-700 hover:bg-teal-100 transition-colors shadow-2xs disabled:opacity-50 cursor-pointer"
+              leftIcon={<Sparkles className={`w-3.5 h-3.5 ${isSyncingLgd ? "animate-spin" : "text-teal-600"}`} />}
               title="Sync official districts from Government LGD Directory"
             >
-              <Sparkles className={`w-3.5 h-3.5 ${isSyncingLgd ? "animate-spin" : "text-teal-600"}`} />
               <span>{isSyncingLgd ? "Syncing LGD..." : "Sync from LGD"}</span>
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="outline"
+              size="md"
               onClick={() => refetch()}
-              className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-2xs cursor-pointer"
+              className="w-10 h-10 p-0"
               title="Refresh Registry"
               aria-label="Refresh"
             >
-              <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-brand-600" : ""}`} />
-            </button>
+              <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-primary" : ""}`} />
+            </Button>
           </div>
         }
       />

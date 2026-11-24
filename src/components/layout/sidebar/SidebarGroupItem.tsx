@@ -51,8 +51,8 @@ export function SidebarGroupItem({
           onClick={onPinClick}
           className={`w-full flex items-center justify-center p-2 rounded-lg transition-all cursor-pointer ${
             isAnyChildActive || isMenuOpen
-              ? "bg-primary text-white shadow-xs"
-              : "text-text-secondary hover:bg-surface-hover hover:text-text-primary"
+              ? "bg-[var(--sidebar-active-bg)] text-white shadow-xs"
+              : "text-[var(--sidebar-text)] hover:bg-white/10 hover:text-white"
           }`}
           aria-label={entry.label}
           title={isPinned ? `${entry.label} (Pinned - click to close)` : `${entry.label} (Click to keep open)`}
@@ -99,7 +99,7 @@ export function SidebarGroupItem({
                       onClick={onChildClick}
                       className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs transition-colors cursor-pointer ${
                         isChildActive
-                          ? "bg-primary/10 text-primary font-semibold dark:bg-primary/20 dark:text-brand-burgundy-light"
+                          ? "bg-primary/10 text-primary font-semibold"
                           : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
                       }`}
                     >
@@ -127,16 +127,16 @@ export function SidebarGroupItem({
         onClick={onToggleOpen}
         className={`group relative w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-all duration-150 cursor-pointer ${
           isAnyChildActive
-            ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-brand-burgundy-light font-semibold border border-primary/20"
-            : "text-text-secondary hover:text-text-primary hover:bg-surface-hover border border-transparent font-medium"
+            ? "bg-white/10 text-white font-semibold"
+            : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <div
             className={`flex items-center justify-center flex-shrink-0 w-6 h-6 rounded-md transition-all duration-150 ${
               isAnyChildActive
-                ? "bg-primary text-white shadow-xs"
-                : "bg-surface-hover text-text-secondary group-hover:text-primary group-hover:bg-surface"
+                ? "bg-[var(--sidebar-active-bg)] text-white shadow-xs"
+                : "bg-white/5 text-[var(--sidebar-text)] group-hover:text-white group-hover:bg-white/10"
             }`}
           >
             <Icon className="w-3.5 h-3.5 transition-transform duration-150 group-hover:scale-105" />
@@ -150,22 +150,22 @@ export function SidebarGroupItem({
           <span
             className={`px-1.5 py-0.5 text-[10px] rounded-full font-bold transition-colors ${
               isAnyChildActive
-                ? "bg-primary/10 text-primary border border-primary/20"
-                : "bg-surface-hover text-text-muted"
+                ? "bg-white/20 text-white"
+                : "bg-white/10 text-white/60"
             }`}
           >
             {entry.children.length}
           </span>
           <ChevronDown
-            className={`w-3.5 h-3.5 text-text-muted transition-transform duration-150 ${
-              isOpen ? "rotate-180 text-primary" : "group-hover:text-text-secondary"
+            className={`w-3.5 h-3.5 text-white/50 transition-transform duration-150 ${
+              isOpen ? "rotate-180 text-white" : "group-hover:text-white"
             }`}
           />
         </div>
       </button>
 
       {isOpen && (
-        <div className="ml-3.5 pl-3 border-l-2 border-primary/20 flex flex-col gap-0.5 mt-1 pt-0.5 pb-1 animate-in fade-in duration-150">
+        <div className="ml-3.5 pl-3 border-l border-white/15 flex flex-col gap-0.5 mt-1 pt-0.5 pb-1 animate-in fade-in duration-150">
           {entry.children.map((child) => {
             const ChildIcon = child.icon;
             const isChildActive =
@@ -178,15 +178,15 @@ export function SidebarGroupItem({
                 href={child.href}
                 className={`group/child flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-150 relative ${
                   isChildActive
-                    ? "bg-primary/10 text-primary dark:bg-primary/20 dark:text-brand-burgundy-light font-semibold border border-primary/20"
-                    : "text-text-secondary hover:text-text-primary hover:bg-surface-hover border border-transparent font-medium"
+                    ? "bg-[var(--sidebar-active-bg)] text-white font-semibold shadow-xs"
+                    : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
                 }`}
               >
                 <div
                   className={`flex items-center justify-center w-5 h-5 rounded-md flex-shrink-0 transition-all duration-150 ${
                     isChildActive
-                      ? "bg-primary text-white"
-                      : "bg-surface-hover text-text-muted group-hover/child:text-primary"
+                      ? "bg-white/20 text-white"
+                      : "bg-white/5 text-white/60 group-hover/child:text-white"
                   }`}
                 >
                   <ChildIcon className="w-3 h-3 transition-transform duration-150 group-hover/child:scale-105" />

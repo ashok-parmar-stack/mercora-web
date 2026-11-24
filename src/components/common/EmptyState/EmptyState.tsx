@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { FolderOpen } from "lucide-react";
+import { Button } from "../Button";
 import { cn } from "@/lib/utils";
 
 export interface EmptyStateProps {
@@ -7,6 +10,8 @@ export interface EmptyStateProps {
   description?: string;
   icon?: React.ReactNode;
   action?: React.ReactNode;
+  actionLabel?: string;
+  onAction?: () => void;
   className?: string;
 }
 
@@ -19,21 +24,35 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   description = "Try adjusting your filters or search terms.",
   icon,
   action,
+  actionLabel,
+  onAction,
   className = "",
 }) => {
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-dashed border-border bg-surface/50",
+        "flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-2xl border border-dashed border-border bg-surface/50 text-foreground",
         className
       )}
     >
-      <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-surface-raised border border-border text-text-muted mb-4 shadow-2xs">
-        {icon || <FolderOpen className="w-5 h-5 text-text-muted" />}
+      <div className="w-14 h-14 rounded-2xl bg-secondary text-primary flex items-center justify-center mb-3.5 border border-border">
+        {icon || <FolderOpen className="w-7 h-7" />}
       </div>
-      <h3 className="text-sm font-semibold text-text-primary tracking-tight mb-1">{title}</h3>
-      {description && <p className="text-xs text-text-secondary max-w-sm mb-5 leading-relaxed">{description}</p>}
-      {action && <div className="mt-1">{action}</div>}
+      <h3 className="text-base font-semibold text-foreground mb-1 tracking-tight">
+        {title}
+      </h3>
+      {description && (
+        <p className="text-xs text-muted-foreground max-w-sm mb-4 leading-relaxed">
+          {description}
+        </p>
+      )}
+      {action ? (
+        action
+      ) : actionLabel && onAction ? (
+        <Button variant="primary" size="sm" onClick={onAction}>
+          {actionLabel}
+        </Button>
+      ) : null}
     </div>
   );
 };

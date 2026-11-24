@@ -13,6 +13,7 @@ import {
 import { useStates } from "../../../lib/hooks/useStates";
 import { State } from "@mercora/shared-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
+import { Button } from "@/components/common";
 import { DataTable, Column, BulkAction } from "../../../components/data-table/DataTable";
 import { StatusBadge } from "../../../components/status/StatusBadge";
 import { Tooltip } from "../../../components/ui/Tooltip";
@@ -239,15 +240,16 @@ export default function StatesAdminPage() {
           icon: <Plus className="w-4 h-4" />,
         }}
         extraActions={
-          <button
-            type="button"
+          <Button
+            variant="outline"
+            size="md"
             onClick={() => refetch()}
-            className="p-2 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 text-gray-600 transition-colors shadow-2xs cursor-pointer"
+            className="w-10 h-10 p-0"
             title="Refresh Registry"
             aria-label="Refresh"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-brand-600" : ""}`} />
-          </button>
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-primary" : ""}`} />
+          </Button>
         }
       />
 

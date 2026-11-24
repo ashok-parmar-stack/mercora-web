@@ -20,15 +20,9 @@ import { ContactInquiryModal } from "@/features/enquiries/components/ContactInqu
 import { AddBusinessModal } from "@/features/businesses/components/AddBusinessModal";
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
-import { SlidersHorizontal, Plus } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import {
-  RadixSelect as Select,
-  RadixSelectContent as SelectContent,
-  RadixSelectItem as SelectItem,
-  RadixSelectTrigger as SelectTrigger,
-  RadixSelectValue as SelectValue,
-} from "@/components/ui/RadixSelect";
+import { Select } from "@/components/common";
 import {
   Sheet,
   SheetContent,
@@ -108,34 +102,20 @@ export default function BusinessesDiscoveryPage() {
             </Button>
 
             {/* Sort Selector */}
-            <Select
-              value={filters.sortBy}
-              onValueChange={(val) => setFilters((prev) => ({ ...prev, sortBy: val as any }))}
-            >
-              <SelectTrigger className="w-[180px] h-9 text-xs font-semibold bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="relevance">Sort: Relevance</SelectItem>
-                <SelectItem value="rating">Sort: Highest Rated</SelectItem>
-                <SelectItem value="established">Sort: Established Year</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="w-[180px]">
+              <Select
+                value={filters.sortBy}
+                onChange={(e) => setFilters((prev) => ({ ...prev, sortBy: e.target.value as any }))}
+                selectSize="sm"
+              >
+                <option value="relevance">Sort: Relevance</option>
+                <option value="rating">Sort: Highest Rated</option>
+                <option value="established">Sort: Established Year</option>
+              </Select>
+            </div>
 
             {/* Card / Table Toggle */}
             <BusinessViewToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-
-            {/* Add Business Action */}
-            <Button
-              type="button"
-              variant="primary"
-              size="sm"
-              onClick={() => setIsAddModalOpen(true)}
-              leftIcon={<Plus className="w-4 h-4" />}
-              className="font-bold rounded-xl shadow-xs"
-            >
-              Add Business
-            </Button>
           </div>
         </div>
 

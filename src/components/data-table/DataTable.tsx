@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { cn } from "@/lib/utils";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../ui/Table";
-import { Input } from "../ui/Input";
+import { SearchInput } from "@/components/common/Input/SearchInput";
 import { Button } from "../ui/Button";
 import { useUIStore } from "../../lib/store/ui-store";
 import {
@@ -318,15 +319,18 @@ export function DataTable<T>({
       <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl px-4 py-3 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5 flex-wrap flex-1 min-w-0">
           {onSearchChange && (
-            <div className="min-w-[200px] max-w-sm flex-1">
-              <Input
+            <div className="min-w-[220px] max-w-sm flex-1">
+              <SearchInput
                 placeholder={searchPlaceholder}
                 value={searchQuery || ""}
                 onChange={(e) => {
                   onSearchChange(e.target.value);
                   handlePageChange(1);
                 }}
-                leftIcon={<Search className="w-4 h-4 text-[var(--text-muted)]" />}
+                onClear={() => {
+                  onSearchChange("");
+                  handlePageChange(1);
+                }}
               />
             </div>
           )}
@@ -336,23 +340,22 @@ export function DataTable<T>({
         {/* Column Picker */}
         {showColumnPicker && columns.length > 1 && (
           <div className="relative flex-shrink-0" ref={colPickerRef}>
-            <button
+            <Button
               type="button"
+              variant={isColPickerOpen ? "primary" : "secondary"}
+              size="md"
               onClick={() => setIsColPickerOpen((v) => !v)}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg border transition-all cursor-pointer ${isColPickerOpen
-                ? "bg-primary/10 border-primary/30 text-primary dark:bg-primary/20 dark:text-brand-burgundy-light ring-1 ring-primary/20"
-                : "bg-surface border-border text-text-secondary hover:bg-surface-hover hover:border-border-focus/40"
-                }`}
+              leftIcon={<SlidersHorizontal className="w-3.5 h-3.5" />}
+              className="text-xs font-semibold"
               title="Toggle column visibility"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
               <span>Columns</span>
               {hiddenCols.size > 0 && (
-                <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-primary text-white text-[10px] font-bold leading-none">
+                <span className="ml-1 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold leading-none border border-primary/20">
                   {hiddenCols.size}
                 </span>
               )}
-            </button>
+            </Button>
 
             {isColPickerOpen && (
               <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-1.5 w-60 max-w-[calc(100vw-32px)] bg-surface border border-border rounded-xl shadow-xl p-2 z-50 animate-in fade-in-50 zoom-in-95 duration-100 ring-1 ring-black/5 dark:ring-white/10">
@@ -450,11 +453,11 @@ export function DataTable<T>({
         <Table className="min-w-full">
           {/* ── Header (MUI-Style Clean Design with Vertical Dividers) ── */}
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              {/* Checkbox Column with right divider */}
+            <TableRow className="hover:bg-transparent bg-surface">
+              {/* Checkbox Column */}
               {isSelectionEnabled && (
-                <TableHead className="w-11 min-w-[44px] px-0 py-0 text-center border-b border-[var(--border)]">
-                  <div className="flex items-center justify-center h-10 px-3 border-r border-[var(--border)]">
+                <TableHead className="w-11 min-w-[44px] px-3 py-0 text-center border-b border-border bg-surface">
+                  <div className="flex items-center justify-center h-10">
                     <input
                       type="checkbox"
                       checked={isAllSelected}
@@ -463,7 +466,7 @@ export function DataTable<T>({
                       }}
                       disabled={isLoading || executingActionIdx !== null || allVisibleIds.length === 0}
                       onChange={() => selectAllRows(tableKey, allVisibleIds)}
-                      className="w-4 h-4 rounded border-[var(--border)] accent-[var(--border-focus)] focus:ring-[var(--border-focus)] focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      className="w-4 h-4 rounded border-border accent-primary focus:ring-primary/20 focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                       aria-label="Select all visible rows"
                     />
                   </div>
@@ -471,61 +474,63 @@ export function DataTable<T>({
               )}
 
               {/* Data Columns */}
-              {visibleColumns.map((col, idx) => {
+              {visibleColumns.map((col) => {
                 const isSortable = col.sortable !== false;
                 const isActiveSortCol = sortKey === col.key && Boolean(sortDir);
-                const isLastCol = idx === visibleColumns.length - 1;
                 return (
                   <TableHead
                     key={col.key}
                     style={{ width: col.width, minWidth: col.minWidth }}
-                    className={`px-0 py-0 select-none whitespace-nowrap text-xs tracking-normal border-b border-[var(--border)] ${col.className || ""}`}
+                    className={cn(
+                      "px-0 py-0 select-none whitespace-nowrap text-xs tracking-normal border-b border-border bg-surface",
+                      col.className
+                    )}
                   >
                     <div
-                      className={`flex items-center justify-between h-10 px-4 transition-colors ${isSortable ? "cursor-pointer hover:bg-[var(--surface-hover)]" : ""
-                        } ${isActiveSortCol ? "bg-[var(--surface-hover)]" : ""}`}
+                      className={cn(
+                        "flex items-center justify-between h-10 px-4 transition-colors",
+                        isSortable && "cursor-pointer hover:bg-surface-hover/70",
+                        isActiveSortCol && "bg-surface-hover/50"
+                      )}
                       onClick={isSortable ? () => handleSort(col.key) : undefined}
                     >
                       <div
-                        className={`inline-flex items-center gap-1.5 flex-1 min-w-0 ${col.align === "right"
+                        className={cn(
+                          "inline-flex items-center gap-1.5 flex-1 min-w-0",
+                          col.align === "right"
                             ? "flex-row-reverse justify-end"
                             : col.align === "center"
                               ? "justify-center"
-                              : "justify-start"
-                          } ${isSortable ? "group/sort" : ""}`}
+                              : "justify-start",
+                          isSortable && "group/sort"
+                        )}
                       >
                         <span
-                          className={`truncate transition-colors ${isActiveSortCol
-                              ? "font-bold text-[var(--text-primary)]"
-                              : "font-semibold text-[var(--text-secondary)] group-hover/sort:text-[var(--text-primary)]"
-                            }`}
+                          className={cn(
+                            "truncate transition-colors text-xs",
+                            isActiveSortCol
+                              ? "font-bold text-foreground"
+                              : "font-semibold text-muted-foreground group-hover/sort:text-foreground"
+                          )}
                         >
                           {col.header}
                         </span>
 
-                        {/* Sort Indicator: default ArrowUpDown visible on all sortable columns */}
+                        {/* Sort Indicator */}
                         {isSortable && (
                           <span className="flex-shrink-0 inline-flex items-center">
                             {isActiveSortCol ? (
                               sortDir === "asc" ? (
-                                <ArrowUp className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[2.5]" />
+                                <ArrowUp className="w-3.5 h-3.5 text-primary stroke-[2.5]" />
                               ) : (
-                                <ArrowDown className="w-3.5 h-3.5 text-[var(--text-primary)] stroke-[2.5]" />
+                                <ArrowDown className="w-3.5 h-3.5 text-primary stroke-[2.5]" />
                               )
                             ) : (
-                              <ArrowUpDown className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover/sort:text-[var(--text-secondary)] transition-colors" />
+                              <ArrowUpDown className="w-3.5 h-3.5 text-muted-foreground/50 group-hover/sort:text-muted-foreground transition-colors" />
                             )}
                           </span>
                         )}
                       </div>
-
-                      {/* MUI Column Separator Divider (only between columns, never on the last column) */}
-                      {!isLastCol && (
-                        <div
-                          className="h-4 w-[1px] bg-[var(--border-strong)] flex-shrink-0 ml-3"
-                          aria-hidden="true"
-                        />
-                      )}
                     </div>
                   </TableHead>
                 );
@@ -533,9 +538,9 @@ export function DataTable<T>({
 
               {/* Actions Column */}
               {renderActions && (
-                <TableHead className="w-24 min-w-[90px] px-0 py-0 text-right sticky right-0 bg-[var(--background-secondary)] border-b border-[var(--border)] z-10">
+                <TableHead className="w-24 min-w-[90px] px-0 py-0 text-right sticky right-0 bg-surface border-b border-border z-10">
                   <div className="flex items-center justify-end h-10 px-4">
-                    <span className="font-semibold text-[var(--text-secondary)] text-xs tracking-normal">
+                    <span className="font-semibold text-muted-foreground text-xs tracking-normal">
                       {actionsHeader}
                     </span>
                   </div>
@@ -595,37 +600,36 @@ export function DataTable<T>({
                 const isDeleted = isItemSoftDeleted ? isItemSoftDeleted(item) : false;
                 const isEven = rowIdx % 2 === 0;
 
-                // Solid background color class — uses CSS vars so both themes work automatically
                 const rowBg = isSelected
-                  ? "bg-[var(--surface-active)]"
+                  ? "bg-primary/5"
                   : isDeleted
-                    ? "bg-rose-50 dark:bg-rose-950/20"
-                    : isEven
-                      ? "bg-[var(--surface)]"
-                      : "bg-[var(--background-secondary)]";
+                    ? "bg-destructive/5 opacity-75"
+                    : "bg-surface";
 
                 const stickyBg = isSelected
-                  ? "bg-[var(--surface-active)]"
+                  ? "bg-primary/5"
                   : isDeleted
-                    ? "bg-rose-50 dark:bg-rose-950/20"
-                    : isEven
-                      ? "bg-[var(--surface)]"
-                      : "bg-[var(--background-secondary)]";
+                    ? "bg-destructive/5"
+                    : "bg-surface";
 
                 return (
                   <TableRow
                     key={key}
-                    className={`transition-colors duration-100 group/row ${rowBg} hover:bg-[var(--table-row-hover)]`}
+                    className={cn(
+                      "transition-colors duration-150 group/row",
+                      rowBg,
+                      "hover:bg-surface-hover/60"
+                    )}
                   >
                     {/* Row Checkbox */}
                     {isSelectionEnabled && (
-                      <TableCell className="w-11 min-w-[44px] px-3 py-3 text-center border-r border-[var(--border)]">
+                      <TableCell className="w-11 min-w-[44px] px-3 py-3 text-center">
                         <input
                           type="checkbox"
                           checked={isSelected}
                           disabled={isLoading || executingActionIdx !== null}
                           onChange={() => toggleRowSelection(tableKey, key)}
-                          className="w-4 h-4 rounded border-[var(--border)] accent-[var(--border-focus)] focus:ring-[var(--border-focus)] focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                          className="w-4 h-4 rounded border-border accent-primary focus:ring-primary/20 focus:ring-offset-0 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                           aria-label={`Select row ${key}`}
                         />
                       </TableCell>
@@ -647,10 +651,14 @@ export function DataTable<T>({
                       </TableCell>
                     ))}
 
-                    {/* Action Cells – sticky right column with solid bg */}
+                    {/* Action Cells – sticky right column with matching bg */}
                     {renderActions && (
                       <TableCell
-                        className={`w-24 min-w-[90px] px-4 py-3 text-right sticky right-0 transition-colors duration-100 z-10 ${stickyBg} group-hover/row:bg-[var(--table-row-hover)]`}
+                        className={cn(
+                          "w-24 min-w-[90px] px-4 py-3 text-right sticky right-0 transition-colors duration-150 z-10",
+                          stickyBg,
+                          "group-hover/row:bg-surface-hover/60"
+                        )}
                       >
                         <div className="inline-flex items-center justify-end gap-1">
                           {renderActions(item)}
@@ -666,7 +674,7 @@ export function DataTable<T>({
 
         {/* ── Pagination Footer ───────────────────── */}
         {!isLoading && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-4 bg-[var(--background-secondary)] border-t border-[var(--border)] text-xs text-[var(--text-muted)]">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 bg-surface border-t border-border text-xs text-muted-foreground">
             {/* Record count */}
             <div className="text-[var(--text-muted)]">
               Showing{" "}

@@ -72,9 +72,9 @@ export function MultiSelect({
         <div
           onClick={() => !disabled && setIsOpen((prev) => !prev)}
           className={cn(
-            "min-h-[36px] w-full rounded-lg border border-border bg-surface px-2.5 py-1 text-sm text-foreground",
+            "min-h-[40px] w-full rounded-lg border border-border bg-surface px-2.5 py-1 text-sm text-foreground",
             "transition-colors duration-150 outline-none flex items-center justify-between gap-2 cursor-pointer flex-wrap",
-            "focus-within:border-border-focus focus-within:ring-1 focus-within:ring-ring",
+            "hover:border-border-hover focus-within:border-border-focus focus-within:ring-1 focus-within:ring-ring",
             disabled && "cursor-not-allowed opacity-50 bg-surface-hover",
             error && "border-destructive",
             className

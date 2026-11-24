@@ -140,14 +140,21 @@ export async function removeUserPermissionOverride(
 }
 
 // ── Roles API ──
+export interface RoleQueryParams {
+  statusId?: string;
+  includeDeleted?: boolean;
+  search?: string;
+  sortBy?: string;
+  sortOrder?: 'ASC' | 'DESC' | 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+}
+
 export async function fetchRoles(
-  params?: {
-    statusId?: string;
-    includeDeleted?: boolean;
-  },
+  params?: RoleQueryParams,
   options?: AbortableRequestOptions,
-): Promise<ApiResponse<Role[]>> {
-  return request<Role[]>(apiClient.get('/roles', { params, signal: options?.signal }));
+): Promise<any> {
+  return request(apiClient.get('/roles', { params, signal: options?.signal }));
 }
 
 export async function fetchRoleByIdOrCode(

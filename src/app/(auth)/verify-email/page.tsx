@@ -3,13 +3,13 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { CheckCircle2, AlertTriangle, Mail } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, Mail, ShieldCheck, ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import {
   verifyEmailServerAction,
   resendVerificationServerAction,
 } from '@/app/actions/auth-actions';
-import { LoadingSpinner, LogoLoader } from '@/components/ui/Loading';
-import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/Logo';
+import { Input, Button, Card } from '@/components/common';
 
 function VerifyEmailContent() {
   const router = useRouter();
@@ -68,125 +68,143 @@ function VerifyEmailContent() {
   };
 
   return (
-    <>
-      {/* Heading & Subtitle */}
-      <div className="mb-5 sm:mb-6">
-        <h1 className="text-3xl font-extrabold tracking-[-0.03em] text-[#14161a] mb-2">
-          Email Verification
+    <div className="w-full">
+      {/* ── LOGO ── */}
+      <div className="mb-3 sm:mb-3.5">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 transition-transform hover:scale-105 duration-200"
+          title="Mercora Home"
+        >
+          <Logo height={28} />
+        </Link>
+      </div>
+
+      {/* ── HEADINGS ── */}
+      <div className="mb-3 sm:mb-3.5">
+        <h1 className="text-[26px] sm:text-[28px] font-extrabold tracking-tight text-[#2B1220] leading-tight">
+          Email <span className="text-[#7F1D3F]">Verification</span>
         </h1>
-        <p className="text-xs sm:text-sm text-[#636466] leading-relaxed">
+        <p className="text-xs sm:text-[13px] text-[#765C67] mt-0.5 leading-normal font-normal">
           Confirming your credentials for Mercora Enterprise Deal OS.
         </p>
       </div>
 
-      {/* Loading verification state */}
-      {loading && (
-        <div className="py-8 flex flex-col items-center justify-center text-center space-y-3">
-          <LoadingSpinner size="lg" variant="red" />
-          <p className="text-sm font-semibold text-[#14161a]">Verifying security token...</p>
-          <p className="text-xs text-[#73767c]">Please wait while we activate your account.</p>
-        </div>
-      )}
-
-      {/* Success state */}
-      {success && (
-        <div className="py-4 space-y-5">
-          <div className="p-4 rounded-xl bg-[#f0fdf4] border border-[#bbf7d0] text-[#2e7d32] text-xs leading-relaxed flex items-start gap-2.5">
-            <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-[#2e7d32]" />
-            <div>
-              <strong className="font-semibold block mb-0.5 text-sm">Account Verified!</strong>
-              Your email has been confirmed. Redirecting you to login...
-            </div>
+      {/* ── ELEVATED WHITE CARD CONTAINER ── */}
+      <Card className="bg-white rounded-2xl sm:rounded-[22px] p-5 sm:p-6 md:p-7 shadow-[0_18px_50px_-10px_rgba(43,18,32,0.07),0_2px_8px_rgba(0,0,0,0.02)] border border-[#F0E4E8]">
+        {/* Loading verification state */}
+        {loading && (
+          <div className="py-6 flex flex-col items-center justify-center text-center space-y-3">
+            <Loader2 className="w-8 h-8 text-[#7F1D3F] animate-spin" />
+            <p className="text-sm font-semibold text-[#2B1220]">Verifying security token...</p>
+            <p className="text-xs text-[#765C67]">Please wait while we activate your account.</p>
           </div>
-          <Button
-            variant="primary"
-            size="lg"
-            asChild
-            className="w-full font-bold uppercase tracking-wider text-xs py-3 rounded-lg"
-          >
-            <Link href="/login?verified=true">
-              CONTINUE TO SIGN IN
-            </Link>
-          </Button>
-        </div>
-      )}
+        )}
 
-      {/* Error / Resend State */}
-      {!loading && !success && error && (
-        <div className="space-y-5">
-          <div className="p-3.5 rounded-xl bg-[#fff3f4] border border-[#fecaca] text-[#ee3135] flex items-start gap-2.5 text-xs leading-relaxed">
-            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-[#ee3135]" />
-            <div>
-              <strong className="font-semibold block mb-0.5">Verification Failed</strong>
-              {error}
-            </div>
-          </div>
-
-          {/* Resend Form */}
-          <div className="pt-2">
-            <h4 className="text-xs font-bold text-[#14161a] uppercase tracking-wider mb-2">
-              Request New Activation Link
-            </h4>
-            {resendMsg ? (
-              <div className="p-3 rounded-lg bg-[#f0fdf4] border border-[#bbf7d0] text-[#2e7d32] text-xs">
-                {resendMsg}
+        {/* Success state */}
+        {success && (
+          <div className="space-y-4">
+            <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] text-xs leading-relaxed flex items-start gap-2.5">
+              <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-semibold block mb-0.5 text-sm">Account Verified!</strong>
+                Your email has been confirmed. Redirecting you to login...
               </div>
-            ) : (
-              <form onSubmit={handleResend} className="space-y-3">
-                <div>
-                  <input
+            </div>
+            <Button
+              variant="primary"
+              size="lg"
+              asChild
+              className="w-full"
+              rightIcon={<ArrowRight className="w-4 h-4" />}
+            >
+              <Link href="/login?verified=true">Continue to Sign In</Link>
+            </Button>
+          </div>
+        )}
+
+        {/* Error / Resend State */}
+        {!loading && !success && error && (
+          <div className="space-y-4">
+            <div className="p-3.5 rounded-xl bg-[#FFF1F2] border border-[#FECDD3] text-[#BE123C] flex items-start gap-2.5 text-xs leading-relaxed">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-semibold block mb-0.5">Verification Failed</strong>
+                {error}
+              </div>
+            </div>
+
+            {/* Resend Form */}
+            <div className="pt-1">
+              <h4 className="text-xs font-semibold text-[#2B1220] mb-2">
+                Request New Activation Link
+              </h4>
+              {resendMsg ? (
+                <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] text-xs leading-relaxed">
+                  {resendMsg}
+                </div>
+              ) : (
+                <form onSubmit={handleResend} className="space-y-3">
+                  <Input
                     type="email"
                     required
                     value={resendEmail}
                     onChange={(e) => setResendEmail(e.target.value)}
                     placeholder="Enter your registered email"
-                    className="block w-full px-3.5 py-2.5 bg-white border border-[#dcdfe4] rounded-lg text-sm text-[#14161a] placeholder-[#9ca3af] focus:outline-none focus:border-[#ee3135] focus:ring-1 focus:ring-[#ee3135]"
+                    leftIcon={<Mail className="w-4 h-4 text-[#8A727D]" />}
+                    inputSize="lg"
+                    className="h-11 rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
                   />
-                </div>
-                <Button
-                  type="submit"
-                  variant="primary"
-                  size="lg"
-                  isLoading={resendLoading}
-                  className="w-full font-bold uppercase tracking-wider text-xs py-2.5 rounded-lg"
-                >
-                  SEND VERIFICATION EMAIL
-                </Button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Idle state without token in URL */}
-      {!loading && !success && !error && !tokenFromUrl && (
-        <div className="py-4 space-y-4">
-          <div className="p-4 rounded-xl bg-[#fffbf0] border border-[#fef08a] text-[#b8860b] text-xs leading-relaxed flex items-start gap-2.5">
-            <Mail className="w-5 h-5 shrink-0 mt-0.5 text-[#b8860b]" />
-            <div>
-              <strong className="font-semibold block mb-0.5 text-sm">Check Your Inbox</strong>
-              Please click the verification link sent to your registered email address to activate your account.
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    isLoading={resendLoading}
+                    loadingText="Sending..."
+                    className="w-full"
+                    rightIcon={<ArrowRight className="w-4 h-4" />}
+                  >
+                    Send Verification Email
+                  </Button>
+                </form>
+              )}
             </div>
           </div>
-          <Link
-            href="/login"
-            className="w-full inline-flex justify-center items-center py-3 px-4 rounded-lg text-xs font-bold uppercase tracking-wider text-[#14161a] border-2 border-[#14161a] bg-white hover:bg-gray-50 transition-colors"
-          >
-            RETURN TO LOGIN
-          </Link>
-        </div>
-      )}
+        )}
 
-      {/* Bottom link */}
-      <div className="mt-6 text-center sm:text-left">
-        <Link
-          href="/login"
-          className="text-xs font-bold text-[#ee3135] hover:text-[#d92c30] transition-colors"
-        >
-          Back to Login
-        </Link>
+        {/* Idle state without token in URL */}
+        {!loading && !success && !error && !tokenFromUrl && (
+          <div className="space-y-4">
+            <div className="p-4 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] text-[#B45309] text-xs leading-relaxed flex items-start gap-2.5">
+              <Mail className="w-5 h-5 shrink-0 mt-0.5" />
+              <div>
+                <strong className="font-semibold block mb-0.5 text-sm">Check Your Inbox</strong>
+                Please click the verification link sent to your registered email address to activate your account.
+              </div>
+            </div>
+            <Button
+              variant="secondary"
+              size="lg"
+              asChild
+              className="w-full"
+            >
+              <Link href="/login">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Return to Login</span>
+              </Link>
+            </Button>
+          </div>
+        )}
+      </Card>
+
+      {/* ── BOTTOM SECURITY BADGE ── */}
+      <div className="flex items-center justify-center gap-1.5 text-xs text-[#765C67] pt-3 select-none">
+        <ShieldCheck className="w-3.5 h-3.5 text-[#765C67]" />
+        <span>Secure &amp; Trusted</span>
+        <span className="text-[#E5D4DA]">|</span>
+        <span>Enterprise Grade Security</span>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -195,7 +213,7 @@ export default function VerifyEmailPage() {
     <Suspense
       fallback={
         <div className="min-h-[300px] flex items-center justify-center">
-          <LogoLoader size="md" text="Mercora Deal OS" subtext="Checking verification state..." dark={false} />
+          <Loader2 className="w-6 h-6 text-[#7F1D3F] animate-spin" />
         </div>
       }
     >

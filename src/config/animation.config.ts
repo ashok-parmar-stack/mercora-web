@@ -1,15 +1,18 @@
 /**
  * Centralized Animation Configuration
- * Controlled, Subtle, Lightweight SaaS Motion Standards
+ * Controlled, Subtle, Lightweight SaaS Motion Standards (Motion & CSS Transitions)
  */
 
 export const animationConfig = {
   durations: {
-    instant: '100ms',
-    fast: '150ms',
-    normal: '200ms',
-    slow: '250ms',
-    shimmer: '1.5s',
+    tooltip: '120ms',
+    buttonHover: '140ms',
+    inputTransition: '150ms',
+    dropdown: '160ms',
+    cardHover: '180ms',
+    dialog: '200ms',
+    toast: '200ms',
+    sidebar: '220ms',
   },
 
   easings: {
@@ -28,7 +31,7 @@ export const animationConfig = {
       exit: { opacity: 0, y: -4 },
     },
     modal: {
-      duration: 0.18,
+      duration: 0.2,
       ease: [0.16, 1, 0.3, 1],
       overlay: {
         initial: { opacity: 0 },
@@ -36,24 +39,26 @@ export const animationConfig = {
         exit: { opacity: 0 },
       },
       content: {
-        initial: { opacity: 0, scale: 0.97, y: 6 },
+        initial: { opacity: 0, scale: 0.98, y: 8 },
         animate: { opacity: 1, scale: 1, y: 0 },
         exit: { opacity: 0, scale: 0.98, y: 4 },
       },
     },
     dropdown: {
-      duration: 0.14,
+      duration: 0.16,
       ease: [0.16, 1, 0.3, 1],
       initial: { opacity: 0, y: -4, scale: 0.98 },
       animate: { opacity: 1, y: 0, scale: 1 },
       exit: { opacity: 0, y: -2, scale: 0.98 },
     },
     buttonHover: {
-      tapScale: 0.98,
-      duration: 0.12,
+      tapScale: 0.985,
+      lift: '-1px',
+      duration: 0.14,
     },
     cardHover: {
-      duration: 0.16,
+      lift: '-2px',
+      duration: 0.18,
     },
     sidebar: {
       duration: 0.22,

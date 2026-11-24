@@ -8,6 +8,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "link";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
+  loading?: boolean;
   loadingText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
@@ -21,6 +22,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant = "primary",
       size = "md",
       isLoading = false,
+      loading = false,
       loadingText,
       leftIcon,
       rightIcon,
@@ -31,30 +33,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const isDisabled = disabled || isLoading;
+    const isBusy = isLoading || loading;
+    const isDisabled = disabled || isBusy;
 
     const baseStyles =
-      "inline-flex items-center justify-center font-medium transition-all duration-150 select-none outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] cursor-pointer";
+      "relative inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none active:scale-[0.985] cursor-pointer group";
 
     const variantStyles = {
       primary:
-        "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active shadow-xs border border-primary/20",
+        "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active border border-transparent shadow-xs hover:shadow-sm",
       secondary:
-        "bg-secondary text-secondary-foreground hover:bg-surface-hover border border-border shadow-2xs",
+        "bg-surface text-foreground border border-border shadow-2xs hover:bg-surface-hover hover:border-border-hover hover:text-foreground",
       outline:
-        "border border-border bg-surface text-foreground hover:bg-surface-hover hover:border-border-hover shadow-2xs",
+        "border border-border bg-transparent text-foreground hover:bg-surface-hover hover:border-border-hover hover:text-foreground",
       ghost:
-        "text-foreground hover:bg-surface-hover active:bg-surface-active",
+        "text-foreground hover:bg-surface-hover hover:text-primary active:bg-surface-active",
       danger:
-        "bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/95 shadow-xs border border-destructive/20",
+        "bg-destructive text-destructive-foreground hover:bg-destructive-hover active:bg-destructive-hover shadow-xs border border-transparent",
       link:
-        "text-primary underline-offset-4 hover:underline p-0 h-auto active:scale-100",
+        "text-primary underline-offset-4 hover:underline p-0 h-auto hover:text-primary-hover",
     };
 
     const sizeStyles = {
-      sm: "h-8 px-2.5 text-xs rounded-md gap-1.5",
-      md: "h-9 px-3.5 text-sm rounded-lg gap-2",
-      lg: "h-10 px-4 text-sm rounded-lg gap-2.5",
+      sm: "h-8.5 px-3 text-xs rounded-lg gap-1.5",
+      md: "h-10 px-4 text-sm rounded-lg gap-2 font-medium",
+      lg: "h-11.5 px-5 text-sm sm:text-base rounded-xl gap-2.5 font-semibold",
     };
 
     const combinedClassName = cn(
@@ -83,15 +86,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={combinedClassName}
         {...props}
       >
-        {isLoading && (
-          <Loader2 className="w-3.5 h-3.5 animate-spin flex-shrink-0" />
+        {isBusy && (
+          <Loader2 className="w-4 h-4 animate-spin flex-shrink-0" />
         )}
-        {!isLoading && leftIcon && (
-          <span className="flex-shrink-0 flex items-center">{leftIcon}</span>
+        {!isBusy && leftIcon && (
+          <span className="flex-shrink-0 flex items-center transition-transform duration-200">
+            {leftIcon}
+          </span>
         )}
-        <span>{isLoading && loadingText ? loadingText : children}</span>
-        {!isLoading && rightIcon && (
-          <span className="flex-shrink-0 flex items-center">{rightIcon}</span>
+        <span className="relative z-10">
+          {isBusy && loadingText ? loadingText : children}
+        </span>
+        {!isBusy && rightIcon && (
+          <span className="flex-shrink-0 flex items-center transition-transform duration-200 relative z-10">
+            {rightIcon}
+          </span>
         )}
       </button>
     );

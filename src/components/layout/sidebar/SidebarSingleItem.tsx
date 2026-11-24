@@ -25,13 +25,13 @@ export function SidebarSingleItem({ entry, pathname, isCollapsed }: SidebarSingl
         isCollapsed
           ? `justify-center p-2 ${
               isActive
-                ? "bg-primary text-white shadow-xs"
-                : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] shadow-xs"
+                : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10"
             }`
           : `gap-2.5 px-2.5 py-1.5 text-xs transition-all duration-150 ${
               isActive
-                ? "bg-primary/10 text-primary font-semibold border border-primary/20 dark:bg-primary/20 dark:text-brand-burgundy-light dark:border-primary/30"
-                : "text-text-secondary hover:text-text-primary hover:bg-surface-hover border border-transparent font-medium"
+                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-semibold shadow-xs"
+                : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
             }`
       }`}
     >
@@ -39,8 +39,8 @@ export function SidebarSingleItem({ entry, pathname, isCollapsed }: SidebarSingl
         <span
           className={`absolute left-0 top-1/2 -translate-y-1/2 w-0.5 rounded-r-full transition-all duration-150 ${
             isActive
-              ? "h-4 bg-primary"
-              : "h-0 bg-primary/40 group-hover:h-2.5 opacity-0 group-hover:opacity-100"
+              ? "h-4 bg-white"
+              : "h-0 bg-white/40 group-hover:h-2.5 opacity-0 group-hover:opacity-100"
           }`}
         />
       )}
@@ -51,8 +51,8 @@ export function SidebarSingleItem({ entry, pathname, isCollapsed }: SidebarSingl
             ? "w-6 h-6"
             : `w-6 h-6 rounded-md ${
                 isActive
-                  ? "bg-primary text-white"
-                  : "bg-surface-hover text-text-secondary group-hover:text-primary group-hover:bg-surface"
+                  ? "bg-white/20 text-white"
+                  : "bg-white/5 text-[var(--sidebar-text)] group-hover:text-white group-hover:bg-white/10"
               }`
         }`}
       >
@@ -72,7 +72,7 @@ export function SidebarSingleItem({ entry, pathname, isCollapsed }: SidebarSingl
       )}
 
       {!isCollapsed && !isActive && !entry.badge && (
-        <ChevronRight className="w-3 h-3 text-text-muted/0 group-hover:text-text-muted -translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-150 ml-auto flex-shrink-0" />
+        <ChevronRight className="w-3 h-3 text-white/20 group-hover:text-white/60 -translate-x-1 group-hover:translate-x-0 opacity-0 group-hover:opacity-100 transition-all duration-150 ml-auto flex-shrink-0" />
       )}
 
       {isCollapsed && (

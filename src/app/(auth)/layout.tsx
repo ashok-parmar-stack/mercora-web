@@ -1,152 +1,286 @@
 import React from 'react';
-import Link from 'next/link';
 import type { Metadata } from 'next';
-import { Logo } from '@/components/Logo';
+import { redirect } from 'next/navigation';
+import { Building2, Users2 } from 'lucide-react';
+import { RotatingGlobe } from './login/components/RotatingGlobe';
+import { getServerAuth } from '@/lib/server-auth';
+import { AuthRouteGuard } from './components/AuthRouteGuard';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Authentication — Mercora',
+  title: 'Sign In — Mercora',
   description: 'Enterprise B2B Business Intelligence & Data Engine Authentication.',
 };
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const auth = await getServerAuth();
+  if (auth.isAuthenticated) {
+    redirect('/admin');
+  }
   return (
-    <div className="h-screen w-screen max-h-screen overflow-hidden flex flex-col lg:flex-row relative font-sans select-none bg-[var(--background)] text-[var(--text-primary)] transition-colors duration-200">
-      {/* ── LEFT COLUMN: Form ───────────────────────────────────────────────── */}
-      <div className="flex-1 h-full overflow-y-auto lg:overflow-hidden flex flex-col justify-center px-6 sm:px-10 lg:px-12 xl:px-16 py-4 sm:py-6 lg:py-6 z-10 relative">
+    <div className="min-h-screen md:h-screen md:max-h-screen w-full flex flex-col md:flex-row font-sans relative overflow-x-hidden md:overflow-hidden bg-[#FAF3F5] text-[#2B1220] selection:bg-[#7F1D3F]/20 selection:text-[#7F1D3F]">
+      {/* ── CSS KEYFRAME ANIMATIONS & RESPONSIVE SCROLL OPTIMIZATION ── */}
+      <style>{`
+        /* Lock HTML and BODY on desktop/tablet to prevent dual window scrollbars, allow natural flow on mobile */
+        @media (min-width: 768px) {
+          html, body {
+            height: 100% !important;
+            max-height: 100% !important;
+            overflow: hidden !important;
+          }
+        }
+        @media (max-width: 767px) {
+          html, body {
+            min-height: 100% !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+          }
+        }
 
-        {/* Subtle red radial glow bottom-left */}
-        <div
-          className="absolute -bottom-48 -left-48 w-[560px] h-[560px] rounded-full pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(238,49,53,0.07) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-          }}
-        />
+        /* Prevent browser autofill from turning inputs light blue */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus, 
+        input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+          -webkit-text-fill-color: #2b1220 !important;
+          caret-color: #2b1220 !important;
+          transition: background-color 5000s ease-in-out 0s;
+        }
 
-        <div className="w-full max-w-[420px] mx-auto relative my-auto">
-          {/* Centered Logo */}
-          <div className="flex justify-center mb-4 sm:mb-5">
-            <Link href="/" className="inline-flex items-center justify-center transition-transform hover:scale-105 duration-200">
-              <Logo height={32} />
-            </Link>
-          </div>
+        @keyframes sine-wave-float {
+          0%, 100% { transform: translateY(0px) scaleY(1); }
+          50% { transform: translateY(-6px) scaleY(1.02); }
+        }
+        @keyframes ambient-pulse {
+          0%, 100% { opacity: 0.35; transform: scale(1); }
+          50% { opacity: 0.55; transform: scale(1.04); }
+        }
+      `}</style>
 
-          {/* Page Content */}
-          {children}
+      {/* ── SMOOTH AMBIENT CANVAS BACKGROUND ── */}
+      <div
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{
+          background: `
+            radial-gradient(circle at 10% 12%, rgba(242, 217, 223, 0.75) 0%, transparent 45%),
+            radial-gradient(circle at 35% 88%, rgba(229, 212, 218, 0.45) 0%, transparent 42%),
+            radial-gradient(circle at 80% 15%, rgba(127, 29, 63, 0.06) 0%, transparent 50%),
+            #FAF3F5
+          `,
+        }}
+      />
+
+      {/* ── LUXURY ORGANIC SILK FLUID CURVES (Exact match to Canva reference) ── */}
+      {/* 1. Top-Left Silk Flow (Soft rosy blush ribbons curving down) */}
+      <div className="absolute top-0 left-0 w-[240px] sm:w-[320px] md:w-[420px] h-[200px] sm:h-[260px] md:h-[360px] pointer-events-none z-0 overflow-hidden">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 420 360"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M -40,-40 C 80,60 180,110 260,80 C 340,50 390,140 420,240 L 420,-40 Z"
+            fill="url(#silk-top-1)"
+            opacity="0.55"
+          />
+          <path
+            d="M -40,-40 C 60,110 140,160 210,130 C 290,100 310,210 340,300 L -40,300 Z"
+            fill="url(#silk-top-2)"
+            opacity="0.35"
+          />
+          <defs>
+            <linearGradient id="silk-top-1" x1="0" y1="0" x2="380" y2="240" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#F6DFE7" />
+              <stop offset="0.6" stopColor="#FBF0F4" />
+              <stop offset="1" stopColor="#FAF3F5" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="silk-top-2" x1="-40" y1="-40" x2="300" y2="300" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#ECD3DC" />
+              <stop offset="0.7" stopColor="#F8E8EE" />
+              <stop offset="1" stopColor="#FAF3F5" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      {/* 2. Bottom-Left Silk Flow (Soft blush ribbons curving up) */}
+      <div className="absolute bottom-0 left-0 w-[220px] sm:w-[280px] md:w-[380px] h-[180px] sm:h-[240px] md:h-[320px] pointer-events-none z-0 overflow-hidden">
+        <svg
+          className="w-full h-full"
+          viewBox="0 0 380 320"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M -40,360 C 90,260 160,280 240,210 C 320,140 340,60 380,0 L -40,0 Z"
+            fill="url(#silk-btm-1)"
+            opacity="0.4"
+          />
+          <defs>
+            <linearGradient id="silk-btm-1" x1="-40" y1="360" x2="340" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stopColor="#F2D7E0" />
+              <stop offset="0.6" stopColor="#F9ECF1" />
+              <stop offset="1" stopColor="#FAF3F5" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      {/* ── LEFT COLUMN: Login Form Area (Responsive 50% split on desktop, full width on mobile) ── */}
+      <div className="w-full md:w-1/2 lg:w-[50%] xl:w-[48%] 2xl:w-[46%] h-full min-h-0 min-w-0 flex-1 flex flex-col items-center justify-start md:justify-center px-4 sm:px-6 md:px-8 xl:px-12 py-6 sm:py-8 md:py-4 z-10 relative overflow-y-auto overflow-x-hidden">
+        {/* Soft Ambient Silk Ribbon for Left Corner (strictly tucked at top right, non-overlapping) */}
+        <div className="hidden md:block absolute top-0 right-0 w-[180px] h-[90px] pointer-events-none z-0 overflow-hidden">
+          <svg className="w-full h-full" viewBox="0 0 180 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 180,0 C 130,12 85,35 45,90 L 180,90 Z" fill="url(#berry-top-corner)" opacity="0.2" />
+            <defs>
+              <linearGradient id="berry-top-corner" x1="180" y1="0" x2="45" y2="90" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#A63D5A" />
+                <stop offset="1" stopColor="#7F1D3F" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div className="w-full max-w-[400px] sm:max-w-[420px] xl:max-w-[440px] mx-auto my-auto flex flex-col justify-center relative z-10">
+          <AuthRouteGuard>{children}</AuthRouteGuard>
         </div>
       </div>
 
-      {/* ── RIGHT COLUMN: Dark animated panel ──────────────────────────────── */}
-      <div className="hidden lg:flex lg:w-[48%] xl:w-[50%] h-full p-4 lg:p-5 shrink-0">
-        <div
-          className="relative w-full h-full rounded-[28px] overflow-hidden flex flex-col justify-between p-10 xl:p-12 bg-[#090d16] border border-white/10 shadow-2xl"
-        >
-          {/* Animated SVG mesh background */}
-          <svg
-            className="absolute inset-0 w-full h-full"
-            viewBox="0 0 800 900"
-            xmlns="http://www.w3.org/2000/svg"
-            preserveAspectRatio="xMidYMid slice"
+      {/* ── RIGHT COLUMN: Dark Hero Card with 3D Rotating Globe (Clean 50% split on desktop) ── */}
+      <div className="hidden md:flex md:w-1/2 lg:w-[50%] xl:w-[52%] 2xl:w-[54%] h-full min-h-0 min-w-0 p-2.5 sm:p-3 md:p-3.5 lg:p-4 xl:p-5 shrink-0">
+        <div className="relative w-full h-full rounded-[24px] xl:rounded-[30px] overflow-hidden flex flex-col justify-between p-5 md:p-6 lg:p-8 2xl:p-10 bg-gradient-to-br from-[#12040E] via-[#200B1A] to-[#0E030B] border border-white/10 shadow-2xl text-white">
+          {/* Ambient Lighting Gradients */}
+          <div
+            className="absolute top-1/2 -translate-y-1/2 right-4 w-[360px] md:w-[400px] lg:w-[460px] h-[360px] md:h-[400px] lg:h-[460px] rounded-full pointer-events-none opacity-50 blur-3xl"
+            style={{
+              background: 'radial-gradient(circle, #A63D5A 0%, #7F1D3F 45%, transparent 75%)',
+              animation: 'ambient-pulse 7s ease-in-out infinite',
+            }}
+          />
+          <div
+            className="absolute -bottom-16 -left-16 w-80 h-80 rounded-full pointer-events-none opacity-30 blur-3xl"
+            style={{ background: 'radial-gradient(circle, #7F1D3F 0%, transparent 70%)' }}
+          />
+
+          {/* ── 3D ROTATING GLOBE (Responsive sizing & placement) ── */}
+          <div className="absolute top-1/2 -translate-y-1/2 -right-12 md:-right-8 lg:-right-4 xl:right-2 2xl:right-6 w-[320px] md:w-[360px] lg:w-[420px] xl:w-[480px] 2xl:w-[510px] h-[320px] md:h-[360px] lg:h-[420px] xl:h-[480px] 2xl:h-[510px] pointer-events-none select-none z-0">
+            <RotatingGlobe />
+          </div>
+
+          {/* ── BOTTOM LUMINOUS SILK RIBBON WAVES ── */}
+          <div
+            className="absolute -bottom-2 -left-10 -right-10 h-32 md:h-36 pointer-events-none z-0 overflow-hidden"
+            style={{ animation: 'sine-wave-float 6s ease-in-out infinite' }}
           >
-            <defs>
-              <radialGradient id="glow1" cx="70%" cy="20%" r="50%">
-                <stop offset="0%" stopColor="#ee3135" stopOpacity="0.18" />
-                <stop offset="100%" stopColor="#ee3135" stopOpacity="0" />
-              </radialGradient>
-              <radialGradient id="glow2" cx="20%" cy="80%" r="45%">
-                <stop offset="0%" stopColor="#ee3135" stopOpacity="0.12" />
-                <stop offset="100%" stopColor="#ee3135" stopOpacity="0" />
-              </radialGradient>
-            </defs>
+            <svg
+              className="w-full h-full"
+              viewBox="0 0 900 240"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient id="silk-wave-1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#7F1D3F" stopOpacity="0" />
+                  <stop offset="35%" stopColor="#A63D5A" stopOpacity="0.45" />
+                  <stop offset="65%" stopColor="#E85D75" stopOpacity="0.65" />
+                  <stop offset="100%" stopColor="#7F1D3F" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="silk-wave-2" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#E85D75" stopOpacity="0" />
+                  <stop offset="50%" stopColor="#FF85A1" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#7F1D3F" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="silk-wave-3" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#641631" stopOpacity="0" />
+                  <stop offset="60%" stopColor="#C08497" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#180814" stopOpacity="0" />
+                </linearGradient>
+              </defs>
 
-            {/* Glow blobs */}
-            <ellipse cx="560" cy="180" rx="320" ry="280" fill="url(#glow1)" />
-            <ellipse cx="160" cy="720" rx="280" ry="240" fill="url(#glow2)" />
-
-            {/* Geometric mesh lines */}
-            {[
-              'M 0,200 L 200,80 L 400,200 L 600,60 L 800,180',
-              'M 0,350 L 150,250 L 350,380 L 550,220 L 800,320',
-              'M 0,520 L 250,420 L 450,540 L 700,380 L 800,480',
-              'M 0,680 L 200,580 L 400,700 L 650,560 L 800,640',
-              'M 200,0 L 300,200 L 200,400 L 350,600 L 280,800',
-              'M 450,0 L 520,180 L 420,380 L 580,560 L 500,800',
-              'M 700,0 L 650,200 L 750,400 L 680,600 L 730,800',
-            ].map((d, i) => (
               <path
-                key={i}
-                d={d}
+                d="M 0,165 Q 240,95 480,155 T 900,135 L 900,240 L 0,240 Z"
+                fill="url(#silk-wave-1)"
+                opacity="0.45"
+              />
+              <path
+                d="M 0,185 Q 320,125 620,185 T 900,155"
                 fill="none"
-                stroke="#ee3135"
-                strokeWidth="0.7"
-                strokeOpacity={0.18 + (i % 3) * 0.04}
+                stroke="url(#silk-wave-2)"
+                strokeWidth="2.2"
+                opacity="0.75"
               />
-            ))}
-
-            {/* Connector dots at intersections */}
-            {[
-              [200, 80], [400, 200], [600, 60],
-              [150, 250], [350, 380], [550, 220],
-              [250, 420], [450, 540], [700, 380],
-              [200, 580], [400, 700], [650, 560],
-              [300, 200], [520, 180], [650, 200],
-              [420, 380], [350, 600], [580, 560],
-            ].map(([cx, cy], i) => (
-              <circle
-                key={i}
-                cx={cx}
-                cy={cy}
-                r={i % 4 === 0 ? 3.5 : i % 3 === 0 ? 2.5 : 1.8}
-                fill="#ee3135"
-                fillOpacity={i % 4 === 0 ? 0.65 : 0.35}
+              <path
+                d="M 0,205 Q 260,155 520,200 T 900,175"
+                fill="none"
+                stroke="url(#silk-wave-3)"
+                strokeWidth="1.6"
+                opacity="0.6"
               />
-            ))}
-          </svg>
+            </svg>
+          </div>
 
-          {/* Top badge */}
+          {/* ── TOP BADGE: ENTERPRISE PLATFORM ── */}
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--theme-red)] animate-pulse" />
-              <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-white/60 font-rethink">
-                Enterprise Platform
+            <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-3.5 py-1 md:py-1.5 rounded-full border border-white/15 bg-white/[0.06] backdrop-blur-md shadow-sm">
+              <span className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-[#FF3366] shadow-[0_0_8px_#FF3366] animate-pulse" />
+              <span className="text-[10px] md:text-[11px] font-bold tracking-[0.14em] uppercase text-white/90">
+                ENTERPRISE PLATFORM
               </span>
             </div>
           </div>
 
-          {/* Center quote */}
-          <div className="relative z-10 space-y-6">
-            <div
-              className="w-10 h-[3px] rounded-full"
-              style={{ background: 'var(--theme-red)' }}
-            />
-            <blockquote className="text-white text-2xl xl:text-[28px] font-bold leading-snug tracking-tight font-jakarta">
-              "Empowering global trade decisions with{' '}
-              <span style={{ color: 'var(--theme-red)' }}>predictive intelligence</span>{' '}
-              and actionable insights."
-            </blockquote>
-            <p className="text-white/40 text-sm leading-relaxed max-w-xs font-work">
+          {/* ── CENTER HEADLINE & CONTENT (Responsive font scaling) ── */}
+          <div className="relative z-10 space-y-2.5 md:space-y-3.5 my-auto max-w-xs md:max-w-sm xl:max-w-md">
+            <h2 className="text-xl md:text-2xl lg:text-3xl 2xl:text-[34px] font-extrabold text-white leading-[1.22] tracking-tight">
+              Empowering global<br />
+              trade decisions with<br />
+              <span className="text-[#FF4D79] drop-shadow-[0_0_16px_rgba(255,77,121,0.5)]">
+                predictive intelligence
+              </span><br />
+              and actionable insights.
+            </h2>
+
+            <p className="text-[11px] md:text-xs xl:text-[13px] text-[#A898A2] leading-relaxed max-w-xs xl:max-w-sm mt-2 md:mt-3">
               The definitive platform for enterprise B2B network analysis, supplier discovery, and deal intelligence.
             </p>
+
+            <div className="w-7 md:w-8 h-1 rounded-full bg-[#FF4D79] shadow-[0_0_8px_rgba(255,77,121,0.6)] mt-2.5 md:mt-3.5" />
           </div>
 
-          {/* Bottom stats */}
-          <div className="relative z-10 grid grid-cols-3 gap-4 pt-6 border-t border-white/10">
-            {[
-              { value: '50K+', label: 'Enterprises' },
-              { value: '2M+', label: 'Suppliers' },
-              { value: '120+', label: 'Countries' },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <div className="text-xl font-extrabold text-white tracking-tight font-instrument">{value}</div>
-                <div className="text-[11px] text-white/40 font-medium mt-0.5 font-rethink">{label}</div>
+          {/* ── BOTTOM STATS ROW (Responsive glass cards) ── */}
+          <div className="relative z-10 flex flex-wrap sm:flex-nowrap items-center gap-2.5 md:gap-3 lg:gap-4 xl:gap-5 pt-2">
+            {/* Stat 1: 50K+ Enterprises */}
+            <div className="flex items-center gap-2 md:gap-2.5 lg:gap-3 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-sm shadow-sm">
+              <Building2 className="w-4 h-4 md:w-4.5 md:h-4.5 lg:w-5 lg:h-5 text-white/80 shrink-0" />
+              <div>
+                <div className="text-base sm:text-lg xl:text-xl font-extrabold text-white tracking-tight leading-none">
+                  50K+
+                </div>
+                <div className="text-[10px] lg:text-[11px] text-[#A898A2] font-medium mt-0.5 lg:mt-1">
+                  Enterprises
+                </div>
               </div>
-            ))}
+            </div>
+
+            {/* Stat 2: 2M+ Suppliers */}
+            <div className="flex items-center gap-2 md:gap-2.5 lg:gap-3 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-sm shadow-sm">
+              <Users2 className="w-4 h-4 md:w-4.5 md:h-4.5 lg:w-5 lg:h-5 text-white/80 shrink-0" />
+              <div>
+                <div className="text-base sm:text-lg xl:text-xl font-extrabold text-white tracking-tight leading-none">
+                  2M+
+                </div>
+                <div className="text-[10px] lg:text-[11px] text-[#A898A2] font-medium mt-0.5 lg:mt-1">
+                  Suppliers
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

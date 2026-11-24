@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useStatuses } from "../../../lib/hooks/useStatuses";
 import { Status } from "../../../lib/admin-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
+import { Button } from "@/components/common";
 import { DataTable, Column } from "../../../components/data-table/DataTable";
 import { StatusBadge } from "../../../components/status/StatusBadge";
 import { Tooltip } from "../../../components/ui/Tooltip";
@@ -99,14 +100,16 @@ export default function StatusesListPage() {
           icon: <Plus className="w-4 h-4" />,
         }}
         extraActions={
-          <button
+          <Button
+            variant="outline"
+            size="md"
             onClick={() => refetch()}
-            className="p-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.05] hover:bg-gray-50 dark:hover:bg-white/[0.1] text-gray-600 dark:text-gray-300 transition-colors"
+            className="w-10 h-10 p-0"
             title="Refresh"
             aria-label="Refresh"
           >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
-          </button>
+            <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin text-primary" : ""}`} />
+          </Button>
         }
       />
 

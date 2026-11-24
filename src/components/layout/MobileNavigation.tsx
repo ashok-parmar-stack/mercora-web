@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Heart, LogIn, UserPlus, User, LogOut } from "lucide-react";
+import { X, Heart, LogIn, UserPlus, ShieldCheck, LogOut } from "lucide-react";
 import { APP_HEADERS } from "@/config/headers.config";
 import { useAuthStore } from "@/lib/store/auth-store";
 
@@ -88,16 +88,16 @@ export function MobileNavigation({
         <div className="flex flex-col gap-2 pt-4 border-t border-border">
           {isAuth ? (
             <>
-              <div className="px-1 text-xs text-slate-500 truncate">
-                Signed in as <span className="font-semibold text-slate-800 dark:text-slate-200">{user?.name || user?.email}</span>
+              <div className="px-1 text-xs text-text-muted truncate">
+                Signed in as <span className="font-semibold text-text-primary">{user?.name || user?.email}</span>
               </div>
               <Link
-                href="/dashboard"
+                href="/admin"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 shadow-sm"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-brand-wine text-white text-sm font-semibold hover:bg-brand-darkWine shadow-sm transition-colors"
               >
-                <User className="w-4 h-4" />
-                <span>My Dashboard</span>
+                <ShieldCheck className="w-4 h-4" />
+                <span>Admin Console</span>
               </Link>
               <button
                 type="button"
@@ -105,7 +105,7 @@ export function MobileNavigation({
                   logout();
                   onClose();
                 }}
-                className="flex items-center justify-center gap-2 w-full py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
+                className="flex items-center justify-center gap-2 w-full py-2 rounded-xl border border-border text-text-secondary text-xs font-semibold hover:bg-surface-hover cursor-pointer transition-colors"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>
@@ -116,7 +116,7 @@ export function MobileNavigation({
               <Link
                 href="/login"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-border text-text-primary text-sm font-medium hover:bg-surface-hover transition-colors"
               >
                 <LogIn className="w-4 h-4" />
                 <span>{APP_HEADERS.navigation.auth.login}</span>
@@ -124,7 +124,7 @@ export function MobileNavigation({
               <Link
                 href="/register"
                 onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 shadow-sm"
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-brand-wine text-white text-sm font-semibold hover:bg-brand-darkWine shadow-sm transition-colors"
               >
                 <UserPlus className="w-4 h-4" />
                 <span>{APP_HEADERS.navigation.auth.register}</span>

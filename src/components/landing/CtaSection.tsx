@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Sparkles, CheckCircle2 } from "lucide-react";
+import { Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { DemoRequestModal } from "./DemoRequestModal";
+import { Button } from "@/components/common";
 
-interface CtaSectionProps {}
-
-export default function CtaSection({}: CtaSectionProps) {
+export default function CtaSection() {
   const [mounted, setMounted] = useState(false);
   const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
@@ -18,92 +17,75 @@ export default function CtaSection({}: CtaSectionProps) {
   }, []);
 
   const isAuth = mounted && isAuthenticated;
+
   return (
-    <section className="py-20 relative overflow-hidden" style={{ background: "var(--theme-canvas)" }}>
-      <div className="container relative z-10">
-        <div
-          className="rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden border transition-all"
-          style={{
-            background: "var(--landing-banner-bg)",
-            borderColor: "var(--landing-banner-border)",
-            boxShadow: "var(--landing-banner-shadow)",
-          }}
-        >
-          {/* Configurable Dynamic Radial Glow */}
+    <section className="py-20 relative overflow-hidden bg-[var(--background)] transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Linear Deep Plum Banner Container */}
+        <div className="rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden border border-[#3D1B2E] bg-[var(--nav-dark,#2B1220)] text-white shadow-xl">
+          {/* Subtle Wine & Berry Ambient Radial Mesh Glow */}
           <div
-            className="pointer-events-none absolute inset-0 opacity-40"
+            className="pointer-events-none absolute inset-0 opacity-35"
             style={{
-              background: "var(--landing-banner-radial)",
+              background:
+                "radial-gradient(ellipse at 50% 15%, #7F1D3F 0%, #A63D5A 30%, transparent 70%)",
             }}
+            aria-hidden="true"
           />
 
           <div className="relative z-10 max-w-2xl mx-auto">
-            {/* Pill Badge */}
-            <div
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-6 uppercase tracking-wider"
-              style={{
-                background: "var(--theme-blush)",
-                color: "var(--theme-red)",
-                border: "1px solid var(--landing-banner-border)",
-              }}
-            >
-              <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--theme-red)" }} />
+            {/* Linear Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold mb-6 uppercase tracking-wider bg-white/10 text-[#F2D9DF] border border-white/15 shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#C08497]" />
               <span>Scale With Deterministic Precision</span>
             </div>
 
-            <h2
-              className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-5 leading-tight"
-              style={{ color: "#ffffff" }}
-            >
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-5 leading-tight text-white">
               Ready to Upgrade Your Enterprise Master Data?
             </h2>
 
-            <p
-              className="text-base sm:text-lg leading-relaxed mb-8"
-              style={{ color: "var(--theme-gray-300)" }}
-            >
+            <p className="text-base sm:text-lg leading-relaxed mb-8 text-[#E5D4DA]/80 font-normal">
               Eliminate address ambiguity, catalog chaos, and credential leakage. Experience Mercora Deal OS in action right now.
             </p>
 
             {/* CTAs - Matching Exact START FREE & BOOK A DEMO design */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-              <Link
-                href="/register"
-                className="btn-primary-bold px-8 py-4 shadow-xl"
-                style={{ textDecoration: "none" }}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+              <Button
+                variant="primary"
+                size="lg"
+                className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs bg-brand-wine hover:bg-brand-darkWine text-white shadow-md border border-brand-rose/30 transition-all hover:scale-[1.01]"
+                asChild
               >
-                <span>START FREE</span>
-              </Link>
+                <Link href={isAuth ? "/admin" : "/register"}>
+                  <span>{isAuth ? "ENTER CONSOLE" : "START FREE"}</span>
+                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                </Link>
+              </Button>
 
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="lg"
                 onClick={() => setIsDemoModalOpen(true)}
-                className="btn-black px-8 py-4 shadow-xl border border-slate-700"
+                className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs bg-white/10 hover:bg-white/20 text-white border border-white/25 shadow-sm transition-all hover:scale-[1.01]"
               >
-                <span>BOOK A DEMO</span>
-              </button>
+                <span className="text-white font-bold">BOOK A DEMO</span>
+              </Button>
             </div>
 
-            {/* Proof Points */}
-            <div
-              className="flex flex-wrap items-center justify-center gap-6 text-xs font-medium pt-6 border-t"
-              style={{
-                borderColor: "rgba(255, 255, 255, 0.12)",
-                color: "var(--theme-gray-400)",
-              }}
-            >
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "var(--theme-success, #10b981)" }} />
-                <span>Zero Drift Across 8 Geographic Tiers</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "var(--theme-success, #10b981)" }} />
-                <span>Dynamic Cascading Postal Resolution</span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: "var(--theme-success, #10b981)" }} />
-                <span>1 User = 1 Device Session Security</span>
-              </span>
+            {/* Proof Points with Emerald Status Indicators in Clean 3-Column Layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10 text-xs font-medium text-white/80">
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Zero Drift in 8 Tiers</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Dynamic Postal Resolution</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>1 User = 1 Device Security</span>
+              </div>
             </div>
           </div>
         </div>
