@@ -86,11 +86,11 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 px-3 rounded-lg border-border bg-surface text-foreground hover:bg-surface-hover hover:text-primary hover:border-primary/40 text-xs font-semibold shadow-2xs transition-all gap-1.5"
+                  className="h-9 px-3 rounded-xl border-border bg-surface text-text-primary hover:bg-surface-hover hover:text-primary hover:border-primary/40 text-xs font-semibold shadow-2xs transition-all gap-1.5"
                   asChild
                 >
                   <Link href="/admin">
-                    <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
                     <span>Admin Console</span>
                   </Link>
                 </Button>
@@ -99,8 +99,8 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                 <DropdownMenu
                   align="right"
                   trigger={
-                    <div className="flex items-center gap-2 h-9 px-2.5 rounded-lg border border-border bg-surface hover:bg-surface-hover transition-colors select-none shadow-2xs cursor-pointer">
-                      <div className="w-6 h-6 rounded-md bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shadow-xs">
+                    <div className="flex items-center gap-2 h-9 px-2.5 rounded-xl border border-border bg-surface hover:bg-surface-hover transition-colors select-none shadow-2xs cursor-pointer">
+                      <div className="w-6 h-6 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shadow-xs">
                         {avatarInitials}
                       </div>
                       <span className="text-xs font-semibold text-text-primary max-w-[110px] truncate hidden md:inline-block">

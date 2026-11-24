@@ -104,7 +104,7 @@ export const Sidebar: React.FC = () => {
       <aside
         id="admin-sidebar"
         aria-label="Admin Navigation Sidebar"
-        className={`fixed top-0 bottom-0 left-0 z-40 bg-[var(--sidebar-bg,var(--surface))] text-[var(--text-secondary)] border-r border-[var(--sidebar-border,var(--border))] transition-all duration-300 flex flex-col select-none shadow-xs ${isCollapsed
+        className={`fixed top-0 bottom-0 left-0 z-40 bg-[var(--sidebar-bg,var(--surface))] text-[var(--text-secondary)] border-r border-[#E5D4DA]/80 dark:border-white/10 shadow-[2px_0_8px_rgba(43,18,32,0.06)] transition-all duration-300 flex flex-col select-none ${isCollapsed
             ? "-translate-x-full w-64 lg:translate-x-0 lg:w-16"
             : "translate-x-0 w-64"
           }`}

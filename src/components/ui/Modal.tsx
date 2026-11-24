@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "./Dialog";
+} from "@/components/common/Dialog";
 
 export interface ModalProps {
   isOpen: boolean;

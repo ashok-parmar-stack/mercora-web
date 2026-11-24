@@ -151,3 +151,28 @@ export function DialogFooter({
     />
   );
 }
+
+export function DialogTrigger({
+  children,
+  className,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button type="button" className={className} {...props}>
+      {children}
+    </button>
+  );
+}
+
+export function DialogClose({
+  children,
+  className,
+  onClick,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button type="button" onClick={onClick} className={className} {...props}>
+      {children}
+    </button>
+  );
+}
