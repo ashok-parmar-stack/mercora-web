@@ -2,47 +2,17 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff, AlertCircle, CheckCircle2, AlertTriangle, ArrowRight, User, Mail, Lock, ShieldCheck } from 'lucide-react';
-import { z } from 'zod';
+import { Eye, EyeOff, AlertTriangle, ArrowRight, User, Mail, Lock, ShieldCheck } from 'lucide-react';
 import { registerServerAction } from '@/app/actions/auth-actions';
 import { Logo } from '@/components/Logo';
 import { Input, Button, Card } from '@/components/common';
-
-/* ── Zod Validation Schema ────────────────────────────────────────────── */
-const registerSchema = z
-  .object({
-    name: z.string().min(1, 'Full name is required').min(2, 'Name must be at least 2 characters'),
-    email: z.string().min(1, 'Email address is required').email('Please enter a valid email address'),
-    password: z.string().min(1, 'Password is required').min(8, 'Password must be at least 8 characters long'),
-    confirmPassword: z.string().min(1, 'Please confirm your password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type RegisterFieldErrors = {
-  name?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-};
-
-/* ── Password strength helper ─────────────────────────────────────────── */
-function getPasswordStrength(pwd: string): { score: number; label: string; color: string } {
-  if (!pwd) return { score: 0, label: '', color: '#E5D4DA' };
-  let score = 0;
-  if (pwd.length >= 8) score++;
-  if (pwd.length >= 12) score++;
-  if (/[A-Z]/.test(pwd)) score++;
-  if (/[0-9]/.test(pwd)) score++;
-  if (/[^A-Za-z0-9]/.test(pwd)) score++;
-
-  if (score <= 1) return { score: 1, label: 'Weak', color: '#E11D48' };
-  if (score <= 2) return { score: 2, label: 'Fair', color: '#F59E0B' };
-  if (score <= 3) return { score: 3, label: 'Good', color: '#3B82F6' };
-  return { score: 4, label: 'Strong', color: '#10B981' };
-}
+import {
+  registerSchema,
+  getPasswordStrength,
+  RegisterFieldErrors,
+} from './register.schema';
+import { RegisterSuccessView } from './components/RegisterSuccessView';
+import { PasswordStrengthIndicator } from './components/PasswordStrengthIndicator';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -142,27 +112,7 @@ export default function RegisterPage() {
 
         {/* Success State */}
         {successEmail ? (
-          <div className="space-y-4">
-            <div className="p-4 rounded-xl flex items-start gap-3 text-xs leading-relaxed bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D]">
-              <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
-              <div>
-                <strong className="font-bold block mb-1">Activation link sent!</strong>
-                We sent a verification link to{' '}
-                <strong className="text-[#2B1220]">{successEmail}</strong>.
-                Please check your inbox to activate your account.
-              </div>
-            </div>
-
-            <Button
-              variant="primary"
-              size="lg"
-              asChild
-              className="w-full h-11 sm:h-[46px] text-sm font-bold rounded-xl"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-            >
-              <Link href="/login">Return to Sign In</Link>
-            </Button>
-          </div>
+          <RegisterSuccessView email={successEmail} />
         ) : (
           <form className="space-y-2.5 sm:space-y-3" onSubmit={handleSubmit} noValidate>
             {/* Full Name */}
@@ -255,22 +205,11 @@ export default function RegisterPage() {
 
               {/* Password Strength Indicator */}
               {password && (
-                <div className="pt-0.5 space-y-0.5">
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div
-                        key={i}
-                        className="h-1 flex-1 rounded-full transition-all duration-300"
-                        style={{
-                          background: i <= strength.score ? strength.color : '#E5D4DA',
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-[10px] font-semibold" style={{ color: strength.color }}>
-                    {strength.label} password
-                  </p>
-                </div>
+                <PasswordStrengthIndicator
+                  score={strength.score}
+                  label={strength.label}
+                  color={strength.color}
+                />
               )}
             </div>
 

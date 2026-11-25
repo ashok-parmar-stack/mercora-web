@@ -92,6 +92,7 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
           { href: "/admin/sub-districts", label: "Sub-districts (Tehsils)", icon: Navigation },
         ],
       },
+      { href: "/admin/pincodes", label: "Pincode Master", icon: Mail, badge: "Govt Sync" },
     ],
   },
   {

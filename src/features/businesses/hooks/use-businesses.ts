@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Business, BusinessFiltersState, ViewMode } from "../types/business.types";
 import { fetchBusinesses } from "../api/business-api";
 import { useDebounce } from "@/hooks/use-debounce";
-import { filterBusinesses, sortBusinesses } from "../utils/business-filters";
 
 export interface UseBusinessesOptions {
   initialBusinesses?: Business[];
@@ -14,6 +13,8 @@ export interface UseBusinessesOptions {
 export function useBusinesses(options: UseBusinessesOptions = {}) {
   const pageSize = options.pageSize || 12;
   const [businesses, setBusinesses] = useState<Business[]>(options.initialBusinesses || []);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(!options.initialBusinesses?.length);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("card");
@@ -36,8 +37,9 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
     try {
       const res = await fetchBusinesses({
         query: debouncedQuery,
-        category: filters.category,
-        businessType: filters.businessType,
+        category: filters.category !== "all" ? filters.category : undefined,
+        state: filters.location !== "all" ? filters.location : undefined,
+        businessType: filters.businessType !== "all" ? filters.businessType : undefined,
         verifiedOnly: filters.verifiedOnly,
         sortBy: filters.sortBy,
         page,
@@ -45,33 +47,21 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
       });
 
       setBusinesses(res.data || []);
+      setTotalCount(res.total ?? 0);
+      setTotalPages(res.totalPages || Math.max(1, Math.ceil((res.total ?? 0) / pageSize)));
     } catch (err: any) {
       setBusinesses([]);
+      setTotalCount(0);
+      setTotalPages(1);
       setError(err?.message || "Failed to load businesses");
     } finally {
       setIsLoading(false);
     }
-  }, [debouncedQuery, filters.category, filters.businessType, filters.verifiedOnly, filters.sortBy, page, pageSize]);
+  }, [debouncedQuery, filters.category, filters.location, filters.businessType, filters.verifiedOnly, filters.sortBy, page, pageSize]);
 
   useEffect(() => {
     loadBusinesses();
   }, [loadBusinesses]);
-
-  const filteredBusinesses = useMemo(() => {
-    const list = filterBusinesses(businesses, {
-      query: debouncedQuery,
-      category: filters.category,
-      businessType: filters.businessType,
-      verifiedOnly: filters.verifiedOnly,
-    });
-    return sortBusinesses(list, filters.sortBy);
-  }, [businesses, debouncedQuery, filters.category, filters.businessType, filters.verifiedOnly, filters.sortBy]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredBusinesses.length / pageSize));
-  const paginatedBusinesses = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filteredBusinesses.slice(start, start + pageSize);
-  }, [filteredBusinesses, page, pageSize]);
 
   const resetFilters = useCallback(() => {
     setFilters({
@@ -86,8 +76,8 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
   }, []);
 
   return {
-    businesses: paginatedBusinesses,
-    totalCount: filteredBusinesses.length,
+    businesses,
+    totalCount,
     isLoading,
     error,
     viewMode,

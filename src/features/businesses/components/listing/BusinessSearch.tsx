@@ -10,10 +10,12 @@ import {
   Layers,
   Wrench,
   Shield,
+  LucideIcon,
 } from "lucide-react";
 import { APP_HEADERS } from "@/config/headers.config";
 import { APP_MESSAGES } from "@/config/messages.config";
 import { Button } from "@/components/common";
+import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
 
 export interface BusinessSearchProps {
   query: string;
@@ -24,14 +26,15 @@ export interface BusinessSearchProps {
   totalFound?: number;
 }
 
-const BUSINESS_TYPE_PILLS = [
-  { name: "Distributor", icon: Truck },
-  { name: "Exporter", icon: Shield },
-  { name: "Manufacturer", icon: Factory },
-  { name: "Seller / Supplier", icon: Layers },
-  { name: "Service Provider", icon: Wrench },
-  { name: "Wholesaler", icon: Building2 },
-];
+const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
+  manufacturer: Factory,
+  exporter: Shield,
+  distributor: Truck,
+  wholesaler: Building2,
+  "service provider": Wrench,
+  "seller / supplier": Layers,
+  supplier: Layers,
+};
 
 export function BusinessSearch({
   query,
@@ -40,6 +43,8 @@ export function BusinessSearch({
   onCategoryChange,
   onSubmit,
 }: BusinessSearchProps) {
+  const { categories: dynamicCategories } = useBusinessCategories();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (onSubmit) onSubmit();
@@ -90,9 +95,9 @@ export function BusinessSearch({
           </div>
 
           {/* Location divider & picker */}
-          <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 border-l border-border text-text-secondary text-sm font-semibold">
+          <div className="hidden sm:flex items-center gap-2 px-4 py-1.5 border-l border-border text-text-secondary text-sm font-semibold select-none">
             <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
-            <span>Gujarat, India</span>
+            <span>Pan-India</span>
           </div>
 
           {/* Search Button */}
@@ -130,16 +135,15 @@ export function BusinessSearch({
           </button>
 
           {/* Business Type Pills */}
-          {BUSINESS_TYPE_PILLS.map((chip) => {
-            const Icon = chip.icon;
+          {dynamicCategories.map((chip) => {
+            const Icon = CATEGORY_ICON_MAP[chip.name.toLowerCase()] || CATEGORY_ICON_MAP[chip.slug] || Building2;
             const isSelected =
               selectedCategory?.toLowerCase() === chip.name.toLowerCase() ||
-              selectedCategory?.toLowerCase().replace(/\s+/g, "") ===
-                chip.name.toLowerCase().replace(/\s+/g, "");
+              selectedCategory?.toLowerCase() === chip.slug.toLowerCase();
 
             return (
               <button
-                key={chip.name}
+                key={chip.id || chip.slug}
                 type="button"
                 onClick={() => onCategoryChange(chip.name)}
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer border ${

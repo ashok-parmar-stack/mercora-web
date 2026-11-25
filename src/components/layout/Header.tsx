@@ -49,9 +49,9 @@ export function Header({ savedCount = 0 }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-[var(--header-bg)] backdrop-blur-md transition-colors shadow-2xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {/* Brand / Logo */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 min-w-0">
           <Link href="/" className="inline-flex items-center shrink-0" aria-label="Mercora Home">
             <Logo height={30} />
           </Link>
@@ -61,12 +61,12 @@ export function Header({ savedCount = 0 }: HeaderProps) {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           {/* Saved Businesses Heart shortcut */}
           <Link
             href="/saved-businesses"
             aria-label="Saved businesses"
-            className="relative p-2 text-text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+            className="relative p-2 text-text-secondary hover:text-primary hover:bg-surface-hover rounded-xl transition-colors shrink-0"
           >
             <Heart className="w-5 h-5" />
             {savedCount > 0 && (
@@ -76,27 +76,32 @@ export function Header({ savedCount = 0 }: HeaderProps) {
             )}
           </Link>
 
-          <ThemeToggle />
+          <div className="shrink-0">
+            <ThemeToggle />
+          </div>
 
           {/* Auth Zone: Clean profile dropdown or login/register buttons */}
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
             {isAuth ? (
-              <div className="flex items-center gap-2.5">
-                {/* Clean, subtle Admin Console shortcut */}
-                <Link
-                  href="/admin"
-                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold text-text-secondary hover:text-primary hover:bg-surface-hover border border-border transition-colors shadow-2xs select-none"
-                  title="Open Admin Console"
+              <div className="flex items-center gap-2">
+                {/* Standardized Design System Admin Console Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border-border bg-surface text-text-secondary hover:text-primary hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-2xs select-none"
+                  asChild
                 >
-                  <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                  <span>Admin Console</span>
-                </Link>
+                  <Link href="/admin" title="Open Admin Console">
+                    <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                    <span>Admin Console</span>
+                  </Link>
+                </Button>
 
                 {/* Proper User Profile Dropdown Menu */}
                 <DropdownMenu
                   align="right"
                   trigger={
-                    <div className="flex items-center gap-2 h-9 px-2.5 rounded-xl border border-border bg-surface hover:bg-surface-hover transition-colors select-none shadow-2xs cursor-pointer">
+                    <div className="flex items-center gap-2 h-9 px-2.5 rounded-xl border border-border bg-surface hover:bg-surface-hover hover:border-primary/30 transition-colors select-none shadow-2xs cursor-pointer">
                       <div className="w-6 h-6 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shadow-xs">
                         {avatarInitials}
                       </div>
@@ -175,7 +180,7 @@ export function Header({ savedCount = 0 }: HeaderProps) {
             type="button"
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open navigation menu"
-            className="md:hidden p-2 text-text-secondary hover:bg-surface-hover rounded-lg cursor-pointer"
+            className="md:hidden p-2 text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-xl cursor-pointer shrink-0 transition-colors"
           >
             <Menu className="w-5 h-5" />
           </button>

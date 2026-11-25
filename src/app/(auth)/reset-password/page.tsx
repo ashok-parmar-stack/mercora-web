@@ -4,28 +4,10 @@ import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Eye, EyeOff, CheckCircle2, AlertTriangle, ShieldCheck, ArrowLeft, ArrowRight, Lock, Loader2 } from 'lucide-react';
-import { z } from 'zod';
 import { resetPasswordServerAction } from '@/app/actions/auth-actions';
 import { Logo } from '@/components/Logo';
 import { Input, Button, Card } from '@/components/common';
-
-const resetPasswordSchema = z
-  .object({
-    password: z
-      .string()
-      .min(1, 'Password is required')
-      .min(8, 'Password must be at least 8 characters long'),
-    confirmPassword: z.string().min(1, 'Please confirm your new password'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  });
-
-type ResetFieldErrors = {
-  password?: string;
-  confirmPassword?: string;
-};
+import { resetPasswordSchema, ResetFieldErrors } from './reset-password.schema';
 
 function ResetPasswordForm() {
   const router = useRouter();

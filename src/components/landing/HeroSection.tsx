@@ -19,10 +19,10 @@ export function HeroSection() {
   const isAuth = mounted && isAuthenticated;
 
   return (
-    <section className="relative overflow-hidden pt-12 pb-20 md:pt-18 md:pb-28 bg-[var(--background)] transition-colors">
+    <section className="relative overflow-x-clip overflow-y-visible pt-10 pb-16 md:pt-18 md:pb-28 bg-[var(--background)] transition-colors max-w-full">
       {/* Linear-Style Radial Mesh Ambient Glow (Deep Plum & Wine) */}
       <div
-        className="pointer-events-none absolute -top-44 left-1/2 -translate-x-1/2 w-[760px] h-[520px] rounded-full opacity-20 blur-[130px]"
+        className="pointer-events-none absolute -top-44 left-1/2 -translate-x-1/2 w-[760px] max-w-[100vw] h-[520px] rounded-full opacity-20 blur-[130px] overflow-hidden"
         style={{
           background:
             "radial-gradient(circle, #7F1D3F 0%, #2B1220 50%, rgba(43, 18, 32, 0) 80%)",
@@ -30,19 +30,19 @@ export function HeroSection() {
         aria-hidden="true"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-3xl flex flex-col items-start text-left">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full overflow-hidden">
+        <div className="max-w-3xl flex flex-col items-start text-left w-full">
           {/* Announcement Pill with Pulsing Status Indicator */}
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 text-xs font-semibold tracking-wide bg-brand-blush text-brand-wine border border-brand-rose/30 shadow-2xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6 text-[10.5px] sm:text-xs font-semibold tracking-wide bg-brand-blush text-brand-wine border border-brand-rose/30 shadow-2xs max-w-full">
             <span
               className="w-2 h-2 rounded-full bg-brand-wine shrink-0 shadow-[0_0_8px_rgba(127,29,63,0.8)] animate-pulse"
               aria-hidden="true"
             />
-            <span>OFFICIAL LGD &amp; INDIA POST SYNCED · ZERO DRIFT</span>
+            <span className="truncate">OFFICIAL LGD &amp; INDIA POST SYNCED · ZERO DRIFT</span>
           </div>
 
           {/* Main Display Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.08] mb-6">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-text-primary leading-[1.12] mb-6 break-words max-w-full">
             Deterministic Master Data &amp;{" "}
             <span className="bg-gradient-to-r from-brand-wine via-brand-berry to-brand-darkWine bg-clip-text text-transparent">
               Deal OS

@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Heart, LogIn, UserPlus, ShieldCheck, LogOut } from "lucide-react";
-import { APP_HEADERS } from "@/config/headers.config";
+import { X, Heart, ChevronRight } from "lucide-react";
+import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { PRIMARY_NAV_ITEMS } from "./mobile-nav/mobile-nav.data";
+import { MobileNavAuthSection } from "./mobile-nav/MobileNavAuthSection";
 
 export interface MobileNavigationProps {
   isOpen: boolean;
@@ -26,113 +30,190 @@ export function MobileNavigation({
     setMounted(true);
   }, []);
 
-  const isAuth = mounted && isAuthenticated;
-  if (!isOpen) return null;
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
-  return (
-    <div className="fixed inset-0 z-50 md:hidden bg-black/60 backdrop-blur-xs transition-opacity">
-      <div className="fixed inset-y-0 right-0 w-full max-w-xs bg-surface-raised border-l border-border shadow-2xl p-6 flex flex-col justify-between">
-        <div>
-          <div className="flex items-center justify-between pb-4 border-b border-border">
-            <span className="font-semibold text-text-primary">Menu</span>
-            <button
-              onClick={onClose}
-              className="p-2 text-text-muted hover:text-text-primary rounded-lg"
-              aria-label="Close menu"
-            >
-              <X className="w-5 h-5" />
-            </button>
+  // Escape key listener to close menu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !mounted) return null;
+
+  const isAuth = isAuthenticated;
+  const avatarInitials = user?.name
+    ? user.name
+        .split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "AP";
+
+  const roleLabel =
+    typeof user?.role === "object" && user.role !== null
+      ? user.role.name || user.role.code
+      : user?.role || "SUPER_ADMIN";
+
+  const menuContent = (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Mobile Navigation Menu"
+      className="fixed inset-0 z-[9999] md:hidden flex flex-col bg-[#FFF7F5] dark:bg-[#1A0B14] text-text-primary h-[100dvh] w-full max-w-full overflow-hidden select-none"
+      style={{
+        backgroundColor: "var(--background, #FFF7F5)",
+        zIndex: 99999,
+        opacity: 1,
+      }}
+    >
+      {/* ── Top Bar ── */}
+      <div className="h-16 px-4 sm:px-6 flex items-center justify-between border-b border-border bg-surface shrink-0 shadow-2xs">
+        <Link href="/" onClick={onClose} className="inline-flex items-center">
+          <Logo height={28} />
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-hover/80 text-text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer"
+            aria-label="Close navigation menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* ── Scrollable Menu Content ── */}
+      <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5 flex flex-col justify-between gap-6">
+        {/* Navigation Links Group */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
+              Navigation
+            </span>
+            <span className="text-[11px] font-semibold text-primary">
+              Deal OS v2.4
+            </span>
           </div>
 
-          <nav className="flex flex-col gap-1.5 mt-4">
-            {APP_HEADERS.navigation.links.map((link) => {
+          <nav className="flex flex-col gap-2">
+            {PRIMARY_NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
               const isActive =
-                link.href === "/"
+                item.href === "/"
                   ? pathname === "/"
-                  : pathname.startsWith(link.href);
+                  : pathname.startsWith(item.href);
 
               return (
                 <Link
-                  key={link.href}
-                  href={link.href}
+                  key={item.href}
+                  href={item.href}
                   onClick={onClose}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`group flex items-center justify-between p-3 rounded-2xl border transition-all ${
                     isActive
-                      ? "text-primary bg-primary/10 dark:bg-primary/20 font-semibold"
-                      : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+                      ? "bg-surface text-primary border-primary/40 shadow-xs ring-1 ring-primary/20 font-bold"
+                      : "bg-surface/90 text-text-primary border-border hover:bg-surface hover:border-primary/30"
                   }`}
                 >
-                  {link.label}
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
+                        isActive
+                          ? "bg-primary text-white shadow-2xs"
+                          : "bg-primary/10 text-primary"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex flex-col min-w-0 text-left">
+                      <span className="text-sm font-bold truncate">
+                        {item.label}
+                      </span>
+                      <span className="text-[11px] text-text-muted font-normal truncate mt-0.5">
+                        {item.description}
+                      </span>
+                    </div>
+                  </div>
+
+                  <ChevronRight
+                    className={`w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 ${
+                      isActive ? "text-primary" : "text-text-muted"
+                    }`}
+                  />
                 </Link>
               );
             })}
 
+            {/* Saved Businesses Card */}
             <Link
               href="/saved-businesses"
               onClick={onClose}
-              className="flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-surface-hover mt-2 border-t border-border pt-3"
+              className={`group flex items-center justify-between p-3 rounded-2xl border transition-all mt-1 ${
+                pathname === "/saved-businesses"
+                  ? "bg-surface text-primary border-primary/40 shadow-xs ring-1 ring-primary/20 font-bold"
+                  : "bg-surface/90 text-text-primary border-border hover:bg-surface hover:border-primary/30"
+              }`}
             >
-              <span className="flex items-center gap-2">
-                <Heart className="w-4 h-4 text-primary" />
-                <span>Saved Businesses</span>
-              </span>
-              {savedCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">
-                  {savedCount}
-                </span>
-              )}
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                  <Heart className="w-5 h-5" />
+                </div>
+                <div className="flex flex-col min-w-0 text-left">
+                  <span className="text-sm font-bold truncate">
+                    Saved Businesses
+                  </span>
+                  <span className="text-[11px] text-text-muted font-normal truncate mt-0.5">
+                    Your bookmarked suppliers &amp; partners
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {savedCount > 0 ? (
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-white shadow-2xs">
+                    {savedCount}
+                  </span>
+                ) : (
+                  <ChevronRight className="w-4 h-4 text-text-muted group-hover:translate-x-0.5 transition-transform" />
+                )}
+              </div>
             </Link>
           </nav>
         </div>
 
-        <div className="flex flex-col gap-2 pt-4 border-t border-border">
-          {isAuth ? (
-            <>
-              <div className="px-1 text-xs text-text-muted truncate">
-                Signed in as <span className="font-semibold text-text-primary">{user?.name || user?.email}</span>
-              </div>
-              <Link
-                href="/admin"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary-hover shadow-sm transition-colors"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>Admin Console</span>
-              </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  logout();
-                  onClose();
-                }}
-                className="flex items-center justify-center gap-2 w-full py-2 rounded-xl border border-border text-text-secondary text-xs font-semibold hover:bg-surface-hover cursor-pointer transition-colors"
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-border text-text-primary text-sm font-medium hover:bg-surface-hover transition-colors"
-              >
-                <LogIn className="w-4 h-4" />
-                <span>{APP_HEADERS.navigation.auth.login}</span>
-              </Link>
-              <Link
-                href="/register"
-                onClick={onClose}
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary-hover shadow-sm transition-colors"
-              >
-                <UserPlus className="w-4 h-4" />
-                <span>{APP_HEADERS.navigation.auth.register}</span>
-              </Link>
-            </>
-          )}
-        </div>
+        {/* User Identity & Actions Section */}
+        <MobileNavAuthSection
+          isAuth={isAuth}
+          user={user}
+          avatarInitials={avatarInitials}
+          roleLabel={roleLabel}
+          onClose={onClose}
+          onLogout={() => {
+            logout();
+            onClose();
+          }}
+        />
       </div>
     </div>
   );
+
+  return createPortal(menuContent, document.body);
 }
+
+export default MobileNavigation;

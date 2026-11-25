@@ -76,7 +76,9 @@ export default function BusinessesDiscoveryPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
           <div>
             <h2 className="text-xl font-extrabold text-text-primary tracking-tight flex items-center gap-2">
-              <span>{totalCount.toLocaleString()} {APP_HEADERS.directory.resultsHeading}</span>
+              <span>
+                {isLoading ? "Searching Verified Directory..." : `${totalCount.toLocaleString()} ${APP_HEADERS.directory.resultsHeading}`}
+              </span>
             </h2>
             <p className="text-xs text-text-muted mt-0.5">
               Verified suppliers and certified manufacturers across India.

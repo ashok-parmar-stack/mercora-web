@@ -58,19 +58,40 @@ export function AdminHeader() {
 
   return (
     <header className="sticky top-0 z-40 h-16 w-full border-b border-[var(--header-border)] bg-[var(--header-bg)] backdrop-blur-md transition-colors flex items-center justify-between px-4 sm:px-6 shadow-2xs">
-      {/* Left: Sidebar Toggle (Shown ONLY when sidebar is collapsed) */}
-      <div className="flex items-center gap-3">
+      {/* Left: Sidebar Toggle & Console Workspace Indicator */}
+      <div className="flex items-center gap-2.5">
+        {/* Mobile Sidebar Toggle (Always accessible on mobile & tablet) */}
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          aria-label="Toggle navigation menu"
+          className="lg:hidden h-9 w-9 flex items-center justify-center rounded-xl text-text-secondary hover:text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer shadow-2xs shrink-0"
+        >
+          <PanelLeft className="w-4 h-4 text-primary" />
+        </button>
+
+        {/* Desktop Expand Sidebar Toggle */}
         {isCollapsed && (
           <button
             type="button"
             onClick={toggleSidebar}
             aria-label="Expand sidebar"
             title="Expand sidebar"
-            className="h-9 w-9 flex items-center justify-center rounded-lg text-text-secondary hover:text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer shadow-2xs group"
+            className="hidden lg:flex h-9 w-9 items-center justify-center rounded-xl text-text-secondary hover:text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer shadow-2xs shrink-0 group"
           >
             <PanelLeft className="w-4 h-4 text-primary group-hover:scale-105 transition-transform" />
           </button>
         )}
+
+        {/* Console Workspace Indicator */}
+        <div className="hidden sm:flex items-center gap-2 select-none">
+          <span className="text-xs font-bold text-text-primary tracking-tight">
+            Deal OS
+          </span>
+          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
+            Console
+          </span>
+        </div>
       </div>
 
       {/* Right: Quick actions, Live directory shortcut, System Telemetry & Admin User */}

@@ -1,32 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRoles } from "../../../lib/hooks/useRoles";
 import { useStatuses } from "../../../lib/hooks/useStatuses";
 import { useUIStore } from "../../../lib/store/ui-store";
 import { Role } from "../../../lib/admin-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
-import { DataTable, Column, BulkAction } from "../../../components/data-table/DataTable";
-import { StatusBadge } from "../../../components/status/StatusBadge";
+import { DataTable, BulkAction } from "../../../components/data-table/DataTable";
 import {
-  ConfirmDialog,
   DeleteConfirmDialog,
   StatusConfirmDialog,
 } from "../../../components/common/ConfirmDialog";
-import { Badge, Select, Button, Tooltip } from "@/components/common";
+import { Select, Button } from "@/components/common";
 import {
-  Shield,
   Plus,
-  Pencil,
   Trash2,
-  RotateCcw,
-  Key,
-  Eye,
   RefreshCw,
   CheckCircle2,
   XCircle,
 } from "lucide-react";
+import { getRoleTableColumns, renderRoleActions } from "./components/role-table-columns";
 
 export default function RolesListPage() {
   const [mounted, setMounted] = useState(false);
@@ -56,10 +50,7 @@ export default function RolesListPage() {
   const {
     roles,
     total,
-    page: serverPage,
-    limit: serverLimit,
     isLoading,
-    error,
     refetch,
     deleteRole,
     restoreRole,
@@ -83,138 +74,10 @@ export default function RolesListPage() {
   const [bulkDeletingIds, setBulkDeletingIds] = useState<string[] | null>(null);
   const [bulkStatusConfirm, setBulkStatusConfirm] = useState<{ ids: string[]; targetStatus: string } | null>(null);
 
-  // Table Columns (Exact match to Canva reference: Role Definition, Description / Scope, Priority, Status, Actions)
-  const columns: Column<Role>[] = [
-    {
-      key: "name",
-      header: "Role Definition",
-      sortable: true,
-      sortAccessor: (role) => role.name?.toLowerCase(),
-      minWidth: "200px",
-      render: (role) => (
-        <div className="flex items-center gap-3">
-          <div
-            className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${role.deletedAt
-              ? "bg-red-100 text-red-700"
-              : role.isSystem
-                ? "bg-purple-100 text-purple-700"
-                : "bg-brand-50 text-brand-600"
-              }`}
-          >
-            <Shield className="w-4 h-4" />
-          </div>
-          <div>
-            <div className="font-extrabold text-gray-900 flex items-center gap-1.5">
-              <span>{role.name}</span>
-              {role.isSystem && (
-                <Badge variant="purple" size="sm">
-                  System
-                </Badge>
-              )}
-            </div>
-            <code className="text-[11px] text-gray-500 font-mono">{role.code}</code>
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: "description",
-      header: "Description / Scope",
-      sortable: true,
-      sortAccessor: (role) => role.description?.toLowerCase() ?? "",
-      render: (role) => (
-        <span className="text-xs text-gray-600 line-clamp-1 max-w-sm">
-          {role.description || <span className="text-gray-400 italic">No description</span>}
-        </span>
-      ),
-    },
-    {
-      key: "priority",
-      header: "Priority",
-      align: "center",
-      sortable: true,
-      sortAccessor: (role) => role.priority ?? 10,
-      width: "100px",
-      render: (role) => (
-        <span className="inline-flex font-extrabold text-xs text-gray-800 bg-gray-100 px-2 py-0.5 rounded">
-          {role.priority || 10}
-        </span>
-      ),
-    },
-    {
-      key: "status",
-      header: "Status",
-      sortable: true,
-      sortAccessor: (role) => role.status?.code ?? (role.deletedAt ? "DELETED" : "ACTIVE"),
-      width: "120px",
-      render: (role) => (
-        <StatusBadge
-          status={role.status?.code || (role.statusId ? "ACTIVE" : undefined)}
-          isDeleted={Boolean(role.deletedAt)}
-        />
-      ),
-    },
-  ];
+  const columns = useMemo(() => getRoleTableColumns(), []);
 
-  // Action Icons with Tooltips
-  const renderActions = (role: Role) => {
-    const isDeleted = Boolean(role.deletedAt);
-
-    if (isDeleted) {
-      return (
-        <Tooltip content="Restore Role to Active">
-          <button
-            onClick={() => restoreRole(role.code || role.id)}
-            disabled={!activePersona.canEdit}
-            className="p-1.5 rounded-lg text-green-600 hover:bg-green-50 disabled:opacity-40 transition-colors"
-            aria-label="Restore role"
-          >
-            <RotateCcw className="w-4 h-4" />
-          </button>
-        </Tooltip>
-      );
-    }
-
-    return (
-      <div className="flex items-center gap-1">
-        {/* Permission Matrix */}
-        <Tooltip content="Configure Permission Matrix">
-          <Link
-            href={`/admin/roles/${encodeURIComponent(role.code || role.id)}/permissions`}
-            className={`p-1.5 rounded-lg text-gray-500 hover:text-brand-600 hover:bg-gray-100 transition-colors ${!activePersona.canManagePermissions ? "pointer-events-none opacity-40" : ""
-              }`}
-            aria-label="Manage permissions"
-          >
-            <Key className="w-4 h-4" />
-          </Link>
-        </Tooltip>
-
-        {/* Edit Role Page */}
-        <Tooltip content="Edit Role Details">
-          <Link
-            href={`/admin/roles/${encodeURIComponent(role.code || role.id)}/edit`}
-            className={`p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors ${!activePersona.canEdit ? "pointer-events-none opacity-40" : ""
-              }`}
-            aria-label="Edit role"
-          >
-            <Pencil className="w-4 h-4" />
-          </Link>
-        </Tooltip>
-
-        {/* Delete Role */}
-        <Tooltip content={role.isSystem ? "System roles cannot be deleted" : "Soft-Delete Role"}>
-          <button
-            onClick={() => setDeletingRole(role)}
-            disabled={role.isSystem || !activePersona.canDelete}
-            className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-            aria-label="Delete role"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </Tooltip>
-      </div>
-    );
-  };
+  const handleRenderActions = (role: Role) =>
+    renderRoleActions(role, { activePersona, restoreRole, setDeletingRole });
 
   // Bulk Actions
   const bulkActions: BulkAction<Role>[] = [
@@ -244,6 +107,34 @@ export default function RolesListPage() {
       onClick: async (selectedIds) => {
         setBulkDeletingIds(selectedIds);
       },
+    },
+  ];
+  {
+    label: "Activate Selected",
+      variant: "primary",
+        icon: <CheckCircle2 className="w-3.5 h-3.5" />,
+          disabled: !activePersona.canEdit,
+            onClick: async (selectedIds) => {
+              setBulkStatusConfirm({ ids: selectedIds, targetStatus: "ACTIVE" });
+            },
+    },
+  {
+    label: "Deactivate Selected",
+      variant: "secondary",
+        icon: <XCircle className="w-3.5 h-3.5" />,
+          disabled: !activePersona.canEdit,
+            onClick: async (selectedIds) => {
+              setBulkStatusConfirm({ ids: selectedIds, targetStatus: "INACTIVE" });
+            },
+    },
+  {
+    label: "Delete Selected",
+      variant: "danger",
+        icon: <Trash2 className="w-3.5 h-3.5" />,
+          disabled: !activePersona.canDelete,
+            onClick: async (selectedIds) => {
+              setBulkDeletingIds(selectedIds);
+            },
     },
   ];
 
@@ -286,7 +177,7 @@ export default function RolesListPage() {
         emptyTitle="No roles found"
         emptyDescription="Create your first role to start managing RBAC access policies."
         isItemSoftDeleted={(r) => Boolean(r.deletedAt)}
-        renderActions={renderActions}
+        renderActions={handleRenderActions}
         bulkActions={bulkActions}
         showColumnPicker={false}
         totalCount={total}

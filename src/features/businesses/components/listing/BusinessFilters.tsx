@@ -7,6 +7,7 @@ import { APP_HEADERS } from "@/config/headers.config";
 import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
 import { fetchCategories } from "@/features/categories/category-api";
 import { CategoryItem } from "@/features/categories/types";
+import { fetchStates, State } from "@/lib/geography-api";
 import { Select, Button } from "@/components/common";
 
 export interface BusinessFiltersProps {
@@ -22,11 +23,18 @@ export function BusinessFilters({
 }: BusinessFiltersProps) {
   const { categories: businessCategories } = useBusinessCategories();
   const [masterCategories, setMasterCategories] = useState<CategoryItem[]>([]);
+  const [states, setStates] = useState<State[]>([]);
 
   useEffect(() => {
     fetchCategories()
       .then((cats) => setMasterCategories(cats || []))
       .catch((err) => console.error("Failed to load master categories for filter:", err));
+
+    fetchStates({ limit: 100 })
+      .then((res) => {
+        if (res?.items) setStates(res.items);
+      })
+      .catch((err) => console.error("Failed to load states for filter:", err));
   }, []);
 
   const toggleBusinessType = (type: string) => {
@@ -97,13 +105,12 @@ export function BusinessFilters({
             value={filters.location}
             onChange={(e) => onFilterChange({ location: e.target.value })}
           >
-            <option value="all">All States</option>
-            <option value="Gujarat">Gujarat</option>
-            <option value="Maharashtra">Maharashtra</option>
-            <option value="Rajasthan">Rajasthan</option>
-            <option value="Delhi">Delhi NCR</option>
-            <option value="Karnataka">Karnataka</option>
-            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="all">All States & Territories</option>
+            {states.map((st) => (
+              <option key={st.id || st.code} value={st.name}>
+                {st.name}
+              </option>
+            ))}
           </Select>
         </div>
       </div>

@@ -87,7 +87,8 @@ export function Logo({
       className={`select-none flex-shrink-0 ${className}`}
       style={{
         height: `${height}px`,
-        width: 'auto',
+        width: `${width}px`,
+        maxWidth: '100%',
         display: 'inline-block',
         ...style,
       }}

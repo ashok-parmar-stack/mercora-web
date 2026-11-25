@@ -7,13 +7,10 @@ import { CategoryTreeNode, ProductCategory } from "@mercora/shared-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { Button } from "@/components/common";
 import { DataTable, BulkAction } from "../../../components/data-table/DataTable";
-import { DeleteConfirmDialog, StatusConfirmDialog } from "../../../components/common/ConfirmDialog";
-import { Select } from "../../../components/ui/Select";
 import { CategoryStatsCards } from "../../../components/categories/CategoryStatsCards";
 import { CategoryTreeView } from "../../../components/categories/CategoryTreeView";
-import { CategoryMoveModal } from "../../../components/categories/CategoryMoveModal";
-import { CategoryMapHsnModal } from "../../../components/categories/CategoryMapHsnModal";
-import { CategoryDetailsModal } from "../../../components/categories/CategoryDetailsModal";
+import { CategoryModalsContainer } from "../../../components/categories/CategoryModalsContainer";
+import { CategoryFilterSlot } from "../../../components/categories/CategoryFilterSlot";
 import {
   getCategoryColumns,
   renderCategoryRowActions,
@@ -270,35 +267,12 @@ export default function ProductCategoriesAdminPage() {
           showColumnPicker={true}
           defaultPageSize={10}
           filterSlot={
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <div className="w-36">
-                <Select
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
-                  dropdownPosition="bottom"
-                  aria-label="Filter by status"
-                >
-                  <option value="ALL">All Statuses</option>
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
-                </Select>
-              </div>
-
-              <div className="w-40">
-                <Select
-                  value={levelFilter}
-                  onChange={(e) => setLevelFilter(e.target.value)}
-                  dropdownPosition="bottom"
-                  aria-label="Filter by level"
-                >
-                  <option value="ALL">All Hierarchy Levels</option>
-                  <option value="L1">Level 1 (Roots)</option>
-                  <option value="L2">Level 2 (Categories)</option>
-                  <option value="L3">Level 3 (Subcategories)</option>
-                  <option value="L4_PLUS">Level 4+ (Leaf Items)</option>
-                </Select>
-              </div>
-            </div>
+            <CategoryFilterSlot
+              statusFilter={statusFilter}
+              onStatusChange={setStatusFilter}
+              levelFilter={levelFilter}
+              onLevelChange={setLevelFilter}
+            />
           }
         />
       ) : (
@@ -318,71 +292,8 @@ export default function ProductCategoriesAdminPage() {
         />
       )}
 
-      {/* ── MOVE / REPARENT CATEGORY MODAL ── */}
-      <CategoryMoveModal
-        isOpen={ops.isMoveModalOpen}
-        onClose={() => ops.setIsMoveModalOpen(false)}
-        selectedCategory={ops.selectedCategory}
-        categories={categories}
-        targetParentId={ops.targetParentId}
-        setTargetParentId={ops.setTargetParentId}
-        formError={ops.formError}
-        isSubmitting={ops.isSubmitting}
-        onSubmit={ops.handleSaveMove}
-      />
-
-      {/* ── MAP HSN CODES MODAL ── */}
-      <CategoryMapHsnModal
-        isOpen={ops.isMapHsnModalOpen}
-        onClose={() => ops.setIsMapHsnModalOpen(false)}
-        selectedCategory={ops.selectedCategory}
-        availableHsns={ops.availableHsns}
-        mappedHsns={ops.mappedHsns}
-        selectedHsnToMap={ops.selectedHsnToMap}
-        setSelectedHsnToMap={ops.setSelectedHsnToMap}
-        isPrimaryMapping={ops.isPrimaryMapping}
-        setIsPrimaryMapping={ops.setIsPrimaryMapping}
-        isLoadingMappings={ops.isLoadingMappings}
-        onAddMapping={ops.handleAddHsnMapping}
-        onRemoveMapping={ops.handleRemoveHsnMapping}
-      />
-
-      {/* ── VIEW CATEGORY DETAILS MODAL ── */}
-      <CategoryDetailsModal
-        category={ops.viewingCategory}
-        categories={categories}
-        onClose={() => ops.setViewingCategory(null)}
-      />
-
-      {/* ── Single Delete Confirmation Dialog ── */}
-      <DeleteConfirmDialog
-        isOpen={Boolean(ops.deleteConfirmCategory)}
-        onClose={() => ops.setDeleteConfirmCategory(null)}
-        entityName={ops.deleteConfirmCategory?.name}
-        entityType="product category"
-        onConfirm={ops.handleDeleteCategory}
-      />
-
-      {/* ── Bulk Delete Confirmation Dialog ── */}
-      <DeleteConfirmDialog
-        isOpen={Boolean(ops.bulkDeletingIds && ops.bulkDeletingIds.length > 0)}
-        onClose={() => ops.setBulkDeletingIds(null)}
-        isBulk={true}
-        count={ops.bulkDeletingIds?.length || 0}
-        entityType="product category"
-        onConfirm={ops.handleBulkDelete}
-      />
-
-      {/* ── Bulk Status Confirmation Dialog ── */}
-      <StatusConfirmDialog
-        isOpen={Boolean(ops.bulkStatusConfirm)}
-        onClose={() => ops.setBulkStatusConfirm(null)}
-        isBulk={true}
-        count={ops.bulkStatusConfirm?.ids.length || 0}
-        entityType="product category"
-        targetStatus={ops.bulkStatusConfirm?.targetStatus || "ACTIVE"}
-        onConfirm={ops.handleBulkStatusUpdate}
-      />
+      {/* ── Category Dialogs and Modals ── */}
+      <CategoryModalsContainer ops={ops} categories={categories} />
     </div>
   );
 }

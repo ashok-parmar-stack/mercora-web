@@ -21,6 +21,8 @@ import {
   PaginatedSubDistrictsResponse,
   GeographicDashboardMetrics,
 } from '@mercora/shared-types';
+
+export type { State, Country, District, SubDistrict };
 import axios from 'axios';
 import { AbortableRequestOptions, isAbortError } from './api-abort';
 

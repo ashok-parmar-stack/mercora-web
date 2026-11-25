@@ -20,10 +20,7 @@ export const Sidebar: React.FC = () => {
   const isCollapsed = useUIStore((s) => s.isSidebarCollapsed);
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
 
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
-    "geographic-master": true,
-    "catalog-master": true,
-  });
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
 
   const toggleGroup = (groupId: string) => {
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));

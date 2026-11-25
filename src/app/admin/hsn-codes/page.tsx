@@ -7,7 +7,6 @@ import { HsnCode, HsnCodeCategoryMapping, ProductCategory } from "@mercora/share
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { DataTable, BulkAction } from "../../../components/data-table/DataTable";
 import { DeleteConfirmDialog } from "../../../components/common/ConfirmDialog";
-import { Select } from "../../../components/ui/Select";
 import { useUIStore } from "../../../lib/store/ui-store";
 import {
   fetchCategoriesForHsn,
@@ -22,6 +21,8 @@ import {
 } from "../../../components/hsn/HsnTableColumns";
 import { HsnDetailsModal } from "../../../components/hsn/HsnDetailsModal";
 import { HsnMappingModal } from "../../../components/hsn/HsnMappingModal";
+import { HsnKpiCards } from "../../../components/hsn/HsnKpiCards";
+import { HsnFilterSlot } from "../../../components/hsn/HsnFilterSlot";
 
 export default function HsnCodesAdminPage() {
   const addToast = useUIStore((s) => s.addToast);
@@ -167,53 +168,7 @@ export default function HsnCodesAdminPage() {
       />
 
       {/* ── KPI Metric Summary Cards ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <div className="text-xs text-gray-500 font-medium">Total HSN Codes</div>
-            <div className="text-xl font-black text-gray-900 mt-1">{total}</div>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-            <Hash className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <div className="text-xs text-gray-500 font-medium">Chapters (2-Digit)</div>
-            <div className="text-xl font-black text-indigo-600 mt-1">
-              {hsnCodes.filter((h) => h.level === "CHAPTER_2").length}
-            </div>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-            <Layers className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <div className="text-xs text-gray-500 font-medium">Headings (4-Digit)</div>
-            <div className="text-xl font-black text-purple-600 mt-1">
-              {hsnCodes.filter((h) => h.level === "HEADING_4").length}
-            </div>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-            <Layers className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex items-center justify-between">
-          <div>
-            <div className="text-xs text-gray-500 font-medium">Tariff Items (8-Digit)</div>
-            <div className="text-xl font-black text-emerald-600 mt-1">
-              {hsnCodes.filter((h) => h.level === "TARIFF_8").length}
-            </div>
-          </div>
-          <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-            <Hash className="w-5 h-5" />
-          </div>
-        </div>
-      </div>
+      <HsnKpiCards total={total} hsnCodes={hsnCodes} />
 
       {/* ── Main Data Table ── */}
       <DataTable<HsnCode>
@@ -238,35 +193,12 @@ export default function HsnCodesAdminPage() {
         showColumnPicker={true}
         defaultPageSize={10}
         filterSlot={
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="w-40">
-              <Select
-                value={selectedLevel}
-                onChange={(e) => setSelectedLevel(e.target.value)}
-                dropdownPosition="bottom"
-                aria-label="Filter by level"
-              >
-                <option value="ALL">All Levels</option>
-                <option value="CHAPTER_2">2-Digit Chapter</option>
-                <option value="HEADING_4">4-Digit Heading</option>
-                <option value="SUBHEADING_6">6-Digit Subheading</option>
-                <option value="TARIFF_ITEM_8">8-Digit Tariff Item</option>
-              </Select>
-            </div>
-
-            <div className="w-36">
-              <Select
-                value={selectedSource}
-                onChange={(e) => setSelectedSource(e.target.value)}
-                dropdownPosition="bottom"
-                aria-label="Filter by source"
-              >
-                <option value="ALL">All Sources</option>
-                <option value="ICEGATE">ICEGATE</option>
-                <option value="MANUAL">Manual</option>
-              </Select>
-            </div>
-          </div>
+          <HsnFilterSlot
+            selectedLevel={selectedLevel}
+            onLevelChange={setSelectedLevel}
+            selectedSource={selectedSource}
+            onSourceChange={setSelectedSource}
+          />
         }
       />
 
