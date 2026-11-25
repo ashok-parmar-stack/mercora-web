@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Heart, ArrowLeft } from "lucide-react";
+import { Bookmark, ArrowLeft } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BusinessCard } from "@/features/businesses/components/listing/BusinessCard";
@@ -33,7 +33,7 @@ export default function CustomerSavedBusinessesPage() {
       <div className="bg-surface border-b border-border shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
-            <Heart className="w-5 h-5 text-primary fill-primary shrink-0" />
+            <Bookmark className="w-5 h-5 text-primary fill-primary shrink-0" />
             <h1 className="text-sm sm:text-base font-bold text-text-primary truncate">
               Saved Businesses ({savedList.length})
             </h1>

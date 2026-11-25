@@ -86,7 +86,7 @@ function VerifyEmailContent() {
           Email <span className="text-[#7F1D3F]">Verification</span>
         </h1>
         <p className="text-xs sm:text-[13px] text-[#765C67] mt-0.5 leading-normal font-normal">
-          Confirming your credentials for Mercora Enterprise Deal OS.
+          Confirming your credentials for Mercora Enterprise Platform.
         </p>
       </div>
 

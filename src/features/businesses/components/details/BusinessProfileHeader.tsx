@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Star, Building2, Calendar, Users, Briefcase, Heart, Share2, Mail } from "lucide-react";
+import { Star, Building2, Calendar, Users, Briefcase, Bookmark, Share2, Mail } from "lucide-react";
 import { Business } from "../../types/business.types";
 import { BusinessBadge } from "../shared/BusinessBadge";
 import { Button } from "@/components/common";
@@ -109,7 +109,7 @@ export function BusinessProfileHeader({
               variant={isSaved ? "primary" : "outline"}
               size="md"
               onClick={onToggleSave}
-              leftIcon={<Heart className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />}
+              leftIcon={<Bookmark className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />}
             >
               {isSaved ? APP_HEADERS.businessDetails.actions.saved : APP_HEADERS.businessDetails.actions.saveBusiness}
             </Button>

@@ -5,12 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Menu,
-  Heart,
+  Bookmark,
   User,
   ShieldCheck,
   Settings,
   LogOut,
   ChevronDown,
+  ArrowRight,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { MainNavigation } from "./MainNavigation";
@@ -28,9 +29,10 @@ import {
 
 export interface HeaderProps {
   savedCount?: number;
+  onRequestDemo?: () => void;
 }
 
-export function Header({ savedCount = 0 }: HeaderProps) {
+export function Header({ savedCount = 0, onRequestDemo }: HeaderProps) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -62,13 +64,14 @@ export function Header({ savedCount = 0 }: HeaderProps) {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Saved Businesses Heart shortcut */}
+          {/* Saved Businesses Instagram-style Bookmark shortcut */}
           <Link
             href="/saved-businesses"
             aria-label="Saved businesses"
+            title="Saved Businesses"
             className="relative p-2 text-text-secondary hover:text-primary hover:bg-surface-hover rounded-xl transition-colors shrink-0"
           >
-            <Heart className="w-5 h-5" />
+            <Bookmark className={`w-5 h-5 ${savedCount > 0 ? "text-primary fill-primary/20" : ""}`} />
             {savedCount > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
                 {savedCount > 9 ? "9+" : savedCount}
@@ -82,6 +85,18 @@ export function Header({ savedCount = 0 }: HeaderProps) {
 
           {/* Auth Zone: Clean profile dropdown or login/register buttons */}
           <div className="hidden sm:flex items-center gap-2 shrink-0">
+            {onRequestDemo && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={onRequestDemo}
+                className="hidden md:inline-flex items-center gap-1.5 h-9 px-4 rounded-full text-xs font-bold bg-[#7F1D3F] hover:bg-[#99224B] text-white shadow-xs transition-all active:scale-[0.99] cursor-pointer"
+              >
+                <span>Request a demo</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            )}
+
             {isAuth ? (
               <div className="flex items-center gap-2">
                 {/* Standardized Design System Admin Console Button */}
@@ -161,16 +176,18 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                     {APP_HEADERS.navigation.auth.login}
                   </Link>
                 </Button>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  className="shadow-xs font-semibold"
-                  asChild
-                >
-                  <Link href="/register">
-                    {APP_HEADERS.navigation.auth.register}
-                  </Link>
-                </Button>
+                {!onRequestDemo && (
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    className="shadow-xs font-semibold"
+                    asChild
+                  >
+                    <Link href="/register">
+                      {APP_HEADERS.navigation.auth.register}
+                    </Link>
+                  </Button>
+                )}
               </>
             )}
           </div>

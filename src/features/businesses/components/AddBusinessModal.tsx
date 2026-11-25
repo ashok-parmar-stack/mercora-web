@@ -131,7 +131,7 @@ export function AddBusinessModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Register Verified Business"
-      description="Add your company profile to the official Mercora B2B Directory & Deal OS."
+      description="Add your company profile to the official Mercora B2B Directory."
       maxWidth="2xl"
     >
       <form onSubmit={handleSubmit} className="space-y-6 pt-2 pb-1">

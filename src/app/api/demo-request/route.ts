@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   try {
     const body: DemoRequestBody = await req.json();
 
-    const { fullName, email, company, countryCode = "+91", phoneNumber = "", interest = "Full Deal OS Suite" } = body;
+    const { fullName, email, company, countryCode = "+91", phoneNumber = "", interest = "Full Enterprise B2B Suite" } = body;
 
     // Server-side validation
     if (!fullName || typeof fullName !== "string" || fullName.trim().length < 2) {
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
     };
 
     // Log the received lead for enterprise CRM ingestion & audit trail
-    console.log("[Mercora Deal OS] New Demo Lead Ingested:", leadRecord);
+    console.log("[Mercora] New Demo Lead Ingested:", leadRecord);
 
     return NextResponse.json(
       {
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error: any) {
-    console.error("[Mercora Deal OS] Demo Request Ingestion Error:", error);
+    console.error("[Mercora] Demo Request Ingestion Error:", error);
     return NextResponse.json(
       { success: false, message: "Internal server error processing demo request." },
       { status: 500 }

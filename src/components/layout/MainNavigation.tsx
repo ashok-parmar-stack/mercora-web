@@ -11,10 +11,11 @@ export function MainNavigation() {
   return (
     <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
       {APP_HEADERS.navigation.links.map((link) => {
+        const hrefStr: string = link.href;
         const isActive =
-          link.href === "/"
+          hrefStr === "/"
             ? pathname === "/"
-            : pathname.startsWith(link.href);
+            : !hrefStr.startsWith("/#") && pathname.startsWith(hrefStr);
 
         return (
           <Link

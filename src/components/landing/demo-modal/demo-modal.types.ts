@@ -27,5 +27,5 @@ export const INTEREST_AREAS = [
   "8-Tier Geography Hierarchy",
   "Product Taxonomy & Category Tree",
   "Zero-Trust RBAC & Session Guard",
-  "Full Deal OS Suite",
+  "Full Enterprise B2B Suite",
 ];

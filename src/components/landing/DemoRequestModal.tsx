@@ -11,7 +11,7 @@ import { DemoRequestForm } from "./demo-modal/DemoRequestForm";
 export function DemoRequestModal({
   isOpen,
   onClose,
-  initialInterest = "Full Deal OS Suite",
+  initialInterest = "Full Enterprise B2B Suite",
 }: DemoRequestModalProps) {
   const addToast = useUIStore((s) => s.addToast);
 
@@ -142,7 +142,7 @@ export function DemoRequestModal({
                 Request Enterprise Demo
               </h2>
               <p className="text-xs text-text-muted">
-                Experience Mercora Deal OS tailored to your trade data workflows
+                Experience Mercora tailored to your trade data workflows
               </p>
             </div>
           </div>

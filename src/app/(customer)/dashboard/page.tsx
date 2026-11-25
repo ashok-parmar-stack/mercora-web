@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, MessageSquare, Building2, User, ArrowRight, ShieldCheck } from "lucide-react";
+import { Bookmark, MessageSquare, Building2, User, ArrowRight, ShieldCheck } from "lucide-react";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/common";
@@ -35,7 +35,7 @@ export default function CustomerDashboardPage() {
             className="p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all group"
           >
             <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-              <Heart className="w-5 h-5 fill-primary/30" />
+              <Bookmark className="w-5 h-5 fill-primary/30" />
             </div>
             <h2 className="text-base font-semibold text-text-primary group-hover:text-primary transition-colors">
               Saved Businesses

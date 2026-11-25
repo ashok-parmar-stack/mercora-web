@@ -57,7 +57,7 @@ export function ProfileSessionsTab({ onTerminateCurrentSession }: ProfileSession
             Single Active Session Policy Enforced
           </strong>
           <p className="text-[var(--text-secondary)]">
-            Mercora Deal OS automatically invalidates prior active tokens whenever a new login is initiated on another machine. Your session is protected against concurrent token hijacking.
+            Mercora automatically invalidates prior active tokens whenever a new login is initiated on another machine. Your session is protected against concurrent token hijacking.
           </p>
         </div>
       </div>

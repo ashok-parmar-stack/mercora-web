@@ -54,7 +54,7 @@ export default function AboutPage() {
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-border">
             <p className="text-xs text-text-muted">
-              Deterministic Master Data &amp; Deal OS for Modern B2B Commerce.
+              Deterministic Master Data &amp; B2B Intelligence for Modern Commerce.
             </p>
             <Button variant="primary" size="sm" asChild>
               <Link href="/businesses" className="inline-flex items-center gap-1.5">

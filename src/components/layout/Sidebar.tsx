@@ -130,10 +130,11 @@ export const Sidebar: React.FC = () => {
       <aside
         id="admin-sidebar"
         aria-label="Admin Navigation Sidebar"
-        className={`fixed top-0 bottom-0 left-0 z-40 bg-[var(--sidebar-bg,var(--surface))] text-[var(--text-secondary)] border-r border-[#E5D4DA] dark:border-white/10 shadow-[1px_0_0_0_#E5D4DA] dark:shadow-none transition-all duration-300 flex flex-col select-none ${isCollapsed
+        className={`fixed top-0 bottom-0 left-0 z-40 bg-[var(--sidebar-bg,var(--surface))] text-[var(--text-secondary)] border-r border-[#E5D4DA] dark:border-white/10 shadow-[1px_0_0_0_#E5D4DA] dark:shadow-none transition-all duration-300 flex flex-col select-none ${
+          isCollapsed
             ? "-translate-x-full w-64 lg:translate-x-0 lg:w-16"
             : "translate-x-0 w-64"
-          }`}
+        }`}
       >
         <div
           className={`h-16 flex items-center border-b border-white/10 flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-4 ${
@@ -144,8 +145,8 @@ export const Sidebar: React.FC = () => {
             <Link
               href="/admin"
               className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 transition-colors mx-auto group"
-              title="Mercora Deal OS"
-              aria-label="Mercora Deal OS"
+              title="Mercora Admin"
+              aria-label="Mercora Admin"
             >
               <LogoIcon size={30} dark={true} className="group-hover:scale-105 transition-transform" />
             </Link>
@@ -154,7 +155,7 @@ export const Sidebar: React.FC = () => {
               <Link
                 href="/admin"
                 className="flex items-center gap-2.5 min-w-0"
-                title="Mercora Deal OS"
+                title="Mercora Admin"
               >
                 <Logo height={24} dark={true} className="max-w-[140px]" />
               </Link>
@@ -241,3 +242,5 @@ export const Sidebar: React.FC = () => {
     </>
   );
 };
+
+export default Sidebar;

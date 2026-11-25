@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, ExternalLink, Trash2 } from "lucide-react";
+import { Bookmark, ExternalLink, Trash2 } from "lucide-react";
 import { Business } from "../../businesses/types/business.types";
 import { EmptyState } from "@/components/common/EmptyState";
 import { APP_MESSAGES } from "@/config/messages.config";
@@ -32,7 +32,7 @@ export function SavedBusinessesDrawer({
         <div>
           <SheetHeader className="pb-4 border-b border-slate-100 dark:border-slate-800">
             <div className="flex items-center gap-2">
-              <Heart className="w-5 h-5 text-red-600 fill-current" />
+              <Bookmark className="w-5 h-5 text-primary fill-current" />
               <SheetTitle className="font-bold text-slate-900 dark:text-white text-base">
                 Saved Businesses ({savedBusinesses.length})
               </SheetTitle>

@@ -116,7 +116,7 @@ export function AddPincodeModal({
             </div>
             <div>
               <h3 className="text-sm font-bold text-text-primary">Add Postal PIN Code</h3>
-              <p className="text-[11px] text-text-muted">Register postal master records in Deal OS</p>
+              <p className="text-[11px] text-text-muted">Register postal master records in master directory</p>
             </div>
           </div>
           <button

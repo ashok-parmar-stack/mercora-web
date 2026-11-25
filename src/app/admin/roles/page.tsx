@@ -109,34 +109,6 @@ export default function RolesListPage() {
       },
     },
   ];
-  {
-    label: "Activate Selected",
-      variant: "primary",
-        icon: <CheckCircle2 className="w-3.5 h-3.5" />,
-          disabled: !activePersona.canEdit,
-            onClick: async (selectedIds) => {
-              setBulkStatusConfirm({ ids: selectedIds, targetStatus: "ACTIVE" });
-            },
-    },
-  {
-    label: "Deactivate Selected",
-      variant: "secondary",
-        icon: <XCircle className="w-3.5 h-3.5" />,
-          disabled: !activePersona.canEdit,
-            onClick: async (selectedIds) => {
-              setBulkStatusConfirm({ ids: selectedIds, targetStatus: "INACTIVE" });
-            },
-    },
-  {
-    label: "Delete Selected",
-      variant: "danger",
-        icon: <Trash2 className="w-3.5 h-3.5" />,
-          disabled: !activePersona.canDelete,
-            onClick: async (selectedIds) => {
-              setBulkDeletingIds(selectedIds);
-            },
-    },
-  ];
 
   return (
     <div className="flex flex-col gap-6">

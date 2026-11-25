@@ -8,7 +8,7 @@ import {
   Star,
   MapPin,
   Calendar,
-  Heart,
+  Bookmark,
   ArrowRight,
   Phone,
   Mail,
@@ -108,14 +108,15 @@ export function BusinessCard({
         <button
           type="button"
           onClick={handleSaveClick}
-          aria-label={saved ? "Remove from bookmarks" : "Save business"}
+          aria-label={saved ? "Remove from saved" : "Save business (Instagram bookmark)"}
+          title={saved ? "Saved" : "Save to collection"}
           className={`absolute top-3 left-3 p-2 rounded-xl backdrop-blur-md transition-all z-30 pointer-events-auto cursor-pointer shadow-xs border ${
             saved
               ? "bg-primary text-white border-primary shadow-sm ring-2 ring-white/40"
               : "bg-surface/90 text-text-secondary hover:text-primary border-border"
           }`}
         >
-          <Heart className={`w-4 h-4 ${saved ? "fill-current" : ""}`} />
+          <Bookmark className={`w-4 h-4 ${saved ? "fill-current text-white" : ""}`} />
         </button>
 
         {/* Location pill over image */}

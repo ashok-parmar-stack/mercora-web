@@ -1,100 +1,90 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
-import { useAuthStore } from "@/lib/store/auth-store";
+import { ArrowRight } from "lucide-react";
 import { DemoRequestModal } from "./DemoRequestModal";
-import { Button } from "@/components/common";
 
-export default function CtaSection() {
-  const [mounted, setMounted] = useState(false);
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const { isAuthenticated } = useAuthStore();
+interface CtaSectionProps {
+  onRequestDemo?: () => void;
+}
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export function CtaSection({ onRequestDemo }: CtaSectionProps) {
+  const [internalDemoOpen, setInternalDemoOpen] = useState(false);
 
-  const isAuth = mounted && isAuthenticated;
+  const handleOpenDemo = () => {
+    if (onRequestDemo) {
+      onRequestDemo();
+    } else {
+      setInternalDemoOpen(true);
+    }
+  };
 
   return (
-    <section className="py-20 relative overflow-hidden bg-[var(--background)] transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Linear Deep Plum Banner Container */}
-        <div className="rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden border border-[#3D1B2E] bg-[var(--nav-dark,#2B1220)] text-white shadow-xl">
-          {/* Subtle Wine & Berry Ambient Radial Mesh Glow */}
-          <div
-            className="pointer-events-none absolute inset-0 opacity-35"
-            style={{
-              background:
-                "radial-gradient(ellipse at 50% 15%, #7F1D3F 0%, #A63D5A 30%, transparent 70%)",
-            }}
-            aria-hidden="true"
-          />
+    <section
+      className="py-20 sm:py-28 text-white relative overflow-hidden select-none transition-colors"
+      style={{
+        background:
+          "radial-gradient(ellipse at 50% 20%, #351322 0%, #200B17 55%, #13050F 100%)",
+      }}
+    >
+      {/* Subtle background ambient glow */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-20"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, #7F1D3F 0%, transparent 60%)",
+        }}
+        aria-hidden="true"
+      />
 
-          <div className="relative z-10 max-w-2xl mx-auto">
-            {/* Linear Pill Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold mb-6 uppercase tracking-wider bg-white/10 text-[#F2D9DF] border border-white/15 shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-[#C08497]" />
-              <span>Scale With Deterministic Precision</span>
-            </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        {/* Kicker */}
+        <div className="inline-flex items-center gap-2 mb-4 text-xs font-semibold tracking-widest text-[#E5A8BA] uppercase">
+          <span className="w-4 h-[1.5px] bg-[#E5A8BA]" />
+          <span>LET'S MOVE FORWARD</span>
+        </div>
 
-            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight mb-5 leading-tight text-white">
-              Ready to Upgrade Your Enterprise Master Data?
-            </h2>
+        {/* Display Headline */}
+        <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-5 leading-tight">
+          Make every business connection count.
+        </h2>
 
-            <p className="text-base sm:text-lg leading-relaxed mb-8 text-[#E5D4DA]/80 font-normal">
-              Eliminate address ambiguity, catalog chaos, and credential leakage. Experience Mercora Deal OS in action right now.
-            </p>
+        {/* Subtitle */}
+        <p className="text-base sm:text-lg text-white/75 max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
+          See how a more connected approach to business information and deal
+          operations could work for your team.
+        </p>
 
-            {/* CTAs - Matching Exact START FREE & BOOK A DEMO design */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
-              <Button
-                variant="primary"
-                size="lg"
-                className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs shadow-md transition-all hover:scale-[1.01]"
-                asChild
-              >
-                <Link href={isAuth ? "/admin" : "/register"}>
-                  <span>{isAuth ? "ENTER CONSOLE" : "START FREE"}</span>
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
-                </Link>
-              </Button>
+        {/* Action Buttons: Unified with Hero and Header button styling */}
+        <div className="flex flex-wrap items-center justify-center gap-3.5">
+          <button
+            type="button"
+            onClick={handleOpenDemo}
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-bold bg-[#7F1D3F] hover:bg-[#99224B] text-white shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer"
+          >
+            <span>Request a demo</span>
+            <ArrowRight className="w-4 h-4 text-white" />
+          </button>
 
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => setIsDemoModalOpen(true)}
-                className="px-8 py-3.5 font-bold tracking-wide uppercase text-xs bg-white/10 hover:bg-white/20 text-white border border-white/25 shadow-sm transition-all hover:scale-[1.01]"
-              >
-                <span className="text-white font-bold">BOOK A DEMO</span>
-              </Button>
-            </div>
-
-            {/* Proof Points with Emerald Status Indicators in Clean 3-Column Layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-white/10 text-xs font-medium text-white/80">
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Zero Drift in 8 Tiers</span>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>Dynamic Postal Resolution</span>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>1 User = 1 Device Security</span>
-              </div>
-            </div>
-          </div>
+          <Link
+            href="/businesses"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full text-xs sm:text-sm font-semibold bg-white hover:bg-white/90 text-[#2B1220] shadow-sm transition-all active:scale-[0.99]"
+          >
+            Explore businesses
+          </Link>
         </div>
       </div>
 
-      <DemoRequestModal
-        isOpen={isDemoModalOpen}
-        onClose={() => setIsDemoModalOpen(false)}
-      />
+      {/* Internal Modal fallback */}
+      {!onRequestDemo && (
+        <DemoRequestModal
+          isOpen={internalDemoOpen}
+          onClose={() => setInternalDemoOpen(false)}
+        />
+      )}
     </section>
   );
 }
+
+export default CtaSection;

@@ -86,7 +86,7 @@ export function AdminHeader() {
         {/* Console Workspace Indicator */}
         <div className="hidden sm:flex items-center gap-2 select-none">
           <span className="text-xs font-bold text-text-primary tracking-tight">
-            Deal OS
+            Mercora
           </span>
           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
             Console
@@ -136,27 +136,11 @@ export function AdminHeader() {
                   <ChevronDown className="w-3.5 h-3.5 text-text-muted hidden sm:block group-hover:text-text-primary transition-colors" />
                 </div>
               }
-              className="w-72 p-2 rounded-2xl shadow-2xl border border-border bg-surface-raised"
+              className="w-56 p-1.5 rounded-2xl shadow-2xl border border-border bg-surface-raised"
             >
-              {/* Profile Card Header */}
-              <div className="p-3 rounded-xl bg-surface-hover/80 border border-border/60 mb-2 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold shadow-xs flex-shrink-0">
-                  {avatarInitials}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-foreground truncate leading-tight">
-                    {user?.name || "Ashok Parmar"}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground truncate mt-0.5 leading-tight">
-                    {user?.email || "admin@mercora.com"}
-                  </p>
-                  <div className="mt-1.5 flex items-center gap-1.5">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9.5px] font-bold uppercase tracking-wider bg-primary/10 text-primary border border-primary/20">
-                      <Shield className="w-2.5 h-2.5" />
-                      {roleLabel}
-                    </span>
-                  </div>
-                </div>
+              {/* Clean non-redundant account email line (no duplicate avatar or name) */}
+              <div className="px-3 py-2 text-[11px] text-muted-foreground truncate border-b border-border/60 mb-1">
+                <span className="font-medium text-foreground">{user?.email || "admin@mercora.com"}</span>
               </div>
 
               {/* Action List */}

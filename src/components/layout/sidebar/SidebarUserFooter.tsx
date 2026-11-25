@@ -13,7 +13,7 @@ interface SidebarUserFooterProps {
 export function SidebarUserFooter({ isCollapsed }: SidebarUserFooterProps) {
   if (isCollapsed) {
     return (
-      <div className="flex flex-col items-center py-2" title="Mercora Deal OS · System Online">
+      <div className="flex flex-col items-center py-2" title="Mercora · System Online">
         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-[#2B1220] animate-pulse" />
       </div>
     );
@@ -25,7 +25,7 @@ export function SidebarUserFooter({ isCollapsed }: SidebarUserFooterProps) {
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0 animate-pulse" />
           <span className="text-[11px] font-semibold text-white/90 truncate">
-            Deal OS Engine
+            Enterprise Engine
           </span>
         </div>
         <span className="font-mono text-[10px] text-white/50 flex-shrink-0">
@@ -40,7 +40,7 @@ export function SidebarUserFooter({ isCollapsed }: SidebarUserFooterProps) {
         className="flex items-center justify-between px-2.5 py-1 text-[11px] font-medium text-white/60 hover:text-white transition-colors"
       >
         <span>Live Directory</span>
-        <ExternalLink className="w-3 h-3 text-white/40" />
+        <ExternalLink className="w-3.5 h-3.5 text-white/40" />
       </Link>
     </div>
   );

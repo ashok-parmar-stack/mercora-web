@@ -1,7 +1,7 @@
 export const NAVIGATION_CONFIG = {
   brand: {
     name: "Mercora",
-    tagline: "Deterministic Master Data & Deal OS",
+    tagline: "Deterministic Master Data & B2B Intelligence",
     logoText: "Mercora",
     homeHref: "/",
   },

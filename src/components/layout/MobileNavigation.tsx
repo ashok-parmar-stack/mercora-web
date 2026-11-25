@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { X, Heart, ChevronRight } from "lucide-react";
+import { X, Bookmark, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuthStore } from "@/lib/store/auth-store";
@@ -56,11 +56,11 @@ export function MobileNavigation({
   const isAuth = isAuthenticated;
   const avatarInitials = user?.name
     ? user.name
-        .split(" ")
-        .map((n: string) => n[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase()
+      .split(" ")
+      .map((n: string) => n[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase()
     : "AP";
 
   const roleLabel =
@@ -110,7 +110,7 @@ export function MobileNavigation({
               Navigation
             </span>
             <span className="text-[11px] font-semibold text-primary">
-              Deal OS v2.4
+              v2.4 Enterprise
             </span>
           </div>
 
@@ -127,19 +127,17 @@ export function MobileNavigation({
                   key={item.href}
                   href={item.href}
                   onClick={onClose}
-                  className={`group flex items-center justify-between p-3 rounded-2xl border transition-all ${
-                    isActive
-                      ? "bg-surface text-primary border-primary/40 shadow-xs ring-1 ring-primary/20 font-bold"
-                      : "bg-surface/90 text-text-primary border-border hover:bg-surface hover:border-primary/30"
-                  }`}
+                  className={`group flex items-center justify-between p-3 rounded-2xl border transition-all ${isActive
+                    ? "bg-surface text-primary border-primary/40 shadow-xs ring-1 ring-primary/20 font-bold"
+                    : "bg-surface/90 text-text-primary border-border hover:bg-surface hover:border-primary/30"
+                    }`}
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${
-                        isActive
-                          ? "bg-primary text-white shadow-2xs"
-                          : "bg-primary/10 text-primary"
-                      }`}
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${isActive
+                        ? "bg-primary text-white shadow-2xs"
+                        : "bg-primary/10 text-primary"
+                        }`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
@@ -154,9 +152,8 @@ export function MobileNavigation({
                   </div>
 
                   <ChevronRight
-                    className={`w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 ${
-                      isActive ? "text-primary" : "text-text-muted"
-                    }`}
+                    className={`w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 ${isActive ? "text-primary" : "text-text-muted"
+                      }`}
                   />
                 </Link>
               );
@@ -166,15 +163,14 @@ export function MobileNavigation({
             <Link
               href="/saved-businesses"
               onClick={onClose}
-              className={`group flex items-center justify-between p-3 rounded-2xl border transition-all mt-1 ${
-                pathname === "/saved-businesses"
-                  ? "bg-surface text-primary border-primary/40 shadow-xs ring-1 ring-primary/20 font-bold"
-                  : "bg-surface/90 text-text-primary border-border hover:bg-surface hover:border-primary/30"
-              }`}
+              className={`group flex items-center justify-between p-3 rounded-2xl border transition-all mt-1 ${pathname === "/saved-businesses"
+                ? "bg-surface text-primary border-primary/40 shadow-xs ring-1 ring-primary/20 font-bold"
+                : "bg-surface/90 text-text-primary border-border hover:bg-surface hover:border-primary/30"
+                }`}
             >
               <div className="flex items-center gap-3.5 min-w-0">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                  <Heart className="w-5 h-5" />
+                  <Bookmark className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col min-w-0 text-left">
                   <span className="text-sm font-bold truncate">

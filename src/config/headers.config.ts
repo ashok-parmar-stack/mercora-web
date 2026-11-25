@@ -49,13 +49,11 @@ export const APP_HEADERS = {
 
   navigation: {
     brandName: "Mercora",
-    brandTagline: "Deterministic Master Data & Deal OS",
+    brandTagline: "Deterministic Master Data & B2B Intelligence",
     links: [
-      { label: "Home", href: "/" },
+      { label: "Platform", href: "/#platform" },
+      { label: "How it works", href: "/#how-it-works" },
       { label: "Businesses", href: "/businesses" },
-      { label: "Categories", href: "/categories" },
-      { label: "Locations", href: "/locations" },
-      { label: "About", href: "/about" },
     ],
     customerLinks: [
       { label: "Dashboard", href: "/dashboard" },
