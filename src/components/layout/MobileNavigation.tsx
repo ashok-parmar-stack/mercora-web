@@ -73,7 +73,7 @@ export function MobileNavigation({
       role="dialog"
       aria-modal="true"
       aria-label="Mobile Navigation Menu"
-      className="fixed inset-0 z-[9999] md:hidden flex flex-col bg-[#FFF7F5] dark:bg-[#1A0B14] text-text-primary h-[100dvh] w-full max-w-full overflow-hidden select-none"
+      className="fixed inset-0 z-[9999] lg:hidden flex flex-col bg-[#FFF7F5] dark:bg-[#1A0B14] text-text-primary h-[100dvh] w-full max-w-full overflow-hidden select-none"
       style={{
         backgroundColor: "var(--background, #FFF7F5)",
         zIndex: 99999,
@@ -81,26 +81,28 @@ export function MobileNavigation({
       }}
     >
       {/* ── Top Bar ── */}
-      <div className="h-16 px-4 sm:px-6 flex items-center justify-between border-b border-border bg-surface shrink-0 shadow-2xs">
-        <Link href="/" onClick={onClose} className="inline-flex items-center">
-          <Logo height={28} />
-        </Link>
+      <div className="h-16 border-b border-border bg-surface shrink-0 shadow-2xs">
+        <div className="max-w-3xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+          <Link href="/" onClick={onClose} className="inline-flex items-center">
+            <Logo height={28} />
+          </Link>
 
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-hover/80 text-text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer"
-            aria-label="Close navigation menu"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-hover/80 text-text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer"
+              aria-label="Close navigation menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* ── Scrollable Menu Content ── */}
-      <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5 flex flex-col justify-between gap-6">
+      <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5 flex flex-col justify-between gap-6 max-w-3xl mx-auto w-full">
         {/* Navigation Links Group */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between px-1">

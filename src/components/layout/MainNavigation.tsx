@@ -9,7 +9,7 @@ export function MainNavigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+    <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
       {APP_HEADERS.navigation.links.map((link) => {
         const isActive =
           link.href === "/"

@@ -19,8 +19,28 @@ export const Sidebar: React.FC = () => {
   const pathname = usePathname();
   const isCollapsed = useUIStore((s) => s.isSidebarCollapsed);
   const toggleSidebar = useUIStore((s) => s.toggleSidebar);
+  const setSidebarCollapsed = useUIStore((s) => s.setSidebarCollapsed);
 
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+
+  // Auto-collapse sidebar on mobile and tablet (< 1024px)
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== "undefined" && window.innerWidth < 1024) {
+        setSidebarCollapsed(true);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setSidebarCollapsed]);
+
+  // Close sidebar on mobile/tablet after navigating
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setSidebarCollapsed(true);
+    }
+  }, [pathname, setSidebarCollapsed]);
 
   const toggleGroup = (groupId: string) => {
     setOpenGroups((prev) => ({ ...prev, [groupId]: !prev[groupId] }));
@@ -87,6 +107,15 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
+      {/* Mobile & Tablet backdrop scrim when sidebar is open */}
+      {!isCollapsed && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-xs lg:hidden transition-opacity"
+          onClick={() => setSidebarCollapsed(true)}
+          aria-label="Close sidebar backdrop"
+        />
+      )}
+
       {isCollapsed && pinnedGroup && (
         <div
           className="fixed inset-0 z-30 bg-transparent cursor-default"

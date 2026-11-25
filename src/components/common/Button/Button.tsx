@@ -37,7 +37,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || isBusy;
 
     const baseStyles =
-      "relative inline-flex items-center justify-center font-medium transition-all duration-150 ease-out select-none outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none active:scale-[0.985] cursor-pointer group";
+      "relative inline-flex items-center justify-center font-medium whitespace-nowrap transition-all duration-150 ease-out select-none outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none active:scale-[0.985] cursor-pointer group";
 
     const variantStyles = {
       primary:

@@ -88,7 +88,7 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="hidden sm:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border-border bg-surface text-text-secondary hover:text-primary hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-2xs select-none"
+                  className="hidden xl:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border-border bg-surface text-text-secondary hover:text-primary hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-2xs select-none"
                   asChild
                 >
                   <Link href="/admin" title="Open Admin Console">
@@ -105,7 +105,7 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                       <div className="w-6 h-6 rounded-lg bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold shadow-xs">
                         {avatarInitials}
                       </div>
-                      <span className="text-xs font-semibold text-text-primary max-w-[110px] truncate hidden md:inline-block">
+                      <span className="text-xs font-semibold text-text-primary max-w-[110px] truncate hidden xl:inline-block">
                         {user?.name || "Admin"}
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
@@ -175,12 +175,12 @@ export function Header({ savedCount = 0 }: HeaderProps) {
             )}
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile & Tablet hamburger */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open navigation menu"
-            className="md:hidden p-2 text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-xl cursor-pointer shrink-0 transition-colors"
+            className="lg:hidden p-2 text-text-secondary hover:text-text-primary hover:bg-surface-hover rounded-xl cursor-pointer shrink-0 transition-colors"
           >
             <Menu className="w-5 h-5" />
           </button>
