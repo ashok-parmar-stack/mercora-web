@@ -69,7 +69,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+      <div className="flex items-center gap-2 sm:gap-3 flex-wrap shrink-0">
         {extraActions}
         {actionButton &&
           (actionButton.href ? (
