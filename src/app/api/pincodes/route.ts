@@ -250,21 +250,76 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function PATCH(req: NextRequest) {
+  try {
+    const body = await req.json();
+    const ids: string[] = Array.isArray(body?.ids) ? body.ids : [];
+    const deliveryStatus = body?.deliveryStatus === "Non-Delivery" ? "Non-Delivery" : "Delivery";
+
+    if (ids.length === 0) {
+      return NextResponse.json(
+        { success: false, message: "At least one PIN code ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const idSet = new Set(ids);
+    let updatedCount = 0;
+    PINCODE_DATABASE = PINCODE_DATABASE.map((p) => {
+      if (idSet.has(p.id)) {
+        updatedCount++;
+        return { ...p, deliveryStatus, lastSyncedAt: new Date().toISOString() };
+      }
+      return p;
+    });
+
+    return NextResponse.json({
+      success: true,
+      updatedCount,
+      message: `${updatedCount} PIN code(s) updated to ${deliveryStatus}.`,
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, message: err.message || "Failed to update PIN codes" },
+      { status: 400 }
+    );
+  }
+}
+
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
+  const idsParam = searchParams.get("ids");
 
-  if (!id) {
+  let idsToDelete: string[] = [];
+  if (idsParam) {
+    idsToDelete = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+  } else if (id) {
+    idsToDelete = [id];
+  } else {
+    try {
+      const body = await req.json();
+      if (Array.isArray(body?.ids)) {
+        idsToDelete = body.ids;
+      }
+    } catch {}
+  }
+
+  if (idsToDelete.length === 0) {
     return NextResponse.json(
-      { success: false, message: "ID is required" },
+      { success: false, message: "ID or IDs are required" },
       { status: 400 }
     );
   }
 
-  PINCODE_DATABASE = PINCODE_DATABASE.filter((p) => p.id !== id);
+  const removeSet = new Set(idsToDelete);
+  const beforeLen = PINCODE_DATABASE.length;
+  PINCODE_DATABASE = PINCODE_DATABASE.filter((p) => !removeSet.has(p.id));
+  const deletedCount = beforeLen - PINCODE_DATABASE.length;
 
   return NextResponse.json({
     success: true,
-    message: "PIN code entry removed.",
+    deletedCount,
+    message: `${deletedCount} PIN code entry removed.`,
   });
 }

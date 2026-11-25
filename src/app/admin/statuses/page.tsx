@@ -6,12 +6,12 @@ import { useStatuses } from "../../../lib/hooks/useStatuses";
 import { Status } from "../../../lib/admin-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { Button } from "@/components/common";
-import { DataTable, Column } from "../../../components/data-table/DataTable";
+import { DataTable, Column, BulkAction } from "../../../components/data-table/DataTable";
 import { StatusBadge } from "../../../components/status/StatusBadge";
 import { Tooltip } from "../../../components/ui/Tooltip";
 import { Badge } from "../../../components/ui/Badge";
 import { Select } from "../../../components/ui/Select";
-import { Plus, Pencil, RefreshCw, Layers } from "lucide-react";
+import { Plus, Pencil, RefreshCw, Download } from "lucide-react";
 
 export default function StatusesListPage() {
   const [search, setSearch] = useState("");
@@ -124,6 +124,27 @@ export default function StatusesListPage() {
         searchPlaceholder="Search by type, code, or name..."
         emptyTitle="No statuses defined"
         emptyDescription="No status entries found for the selected type filter."
+        enableSelection={true}
+        showColumnPicker={true}
+        bulkActions={[
+          {
+            label: "Export Selected CSV",
+            variant: "outline",
+            icon: <Download className="w-3.5 h-3.5" />,
+            onClick: (_ids, items) => {
+              const csv = [
+                "Type,Code,Name",
+                ...items.map((i) => `"${i.type}","${i.code}","${i.name}"`),
+              ].join("\n");
+              const link = document.createElement("a");
+              link.href = encodeURI("data:text/csv;charset=utf-8," + csv);
+              link.download = `statuses_export_${Date.now()}.csv`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            },
+          },
+        ] satisfies BulkAction<Status>[]}
         renderActions={renderActions}
         filterSlot={
           <div className="w-48">

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Phone, Mail, Globe } from "lucide-react";
-import { Input } from "@/components/common";
+import { Input, Select, Textarea } from "@/components/common";
 import { ImageUploadDropzone } from "@/components/ui/ImageUploadDropzone";
 
 interface AddBusinessDetailsSectionProps {
@@ -111,35 +111,27 @@ export function AddBusinessDetailsSection({
           onChange={(e) => setEstablishedYear(Number(e.target.value))}
           placeholder="2018"
         />
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-            Employee Count
-          </label>
-          <select
-            value={employeeCount}
-            onChange={(e) => setEmployeeCount(e.target.value)}
-            className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-surface text-text-primary focus:outline-none"
-          >
-            <option value="1-10">1 - 10</option>
-            <option value="10-50">10 - 50</option>
-            <option value="50-200">50 - 200</option>
-            <option value="200-500">200 - 500</option>
-            <option value="500+">500+</option>
-          </select>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-            Verification Tier
-          </label>
-          <select
-            value={verificationStatus}
-            onChange={(e) => setVerificationStatus(e.target.value)}
-            className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-surface text-text-primary focus:outline-none"
-          >
-            <option value="Verified">Verified Vendor</option>
-            <option value="Premium">Premium Gold Supplier</option>
-          </select>
-        </div>
+        <Select
+          label="Employee Count"
+          value={employeeCount}
+          onChange={(e) => setEmployeeCount(e.target.value)}
+          options={[
+            { value: "1-10", label: "1 - 10" },
+            { value: "10-50", label: "10 - 50" },
+            { value: "50-200", label: "50 - 200" },
+            { value: "200-500", label: "200 - 500" },
+            { value: "500+", label: "500+" },
+          ]}
+        />
+        <Select
+          label="Verification Tier"
+          value={verificationStatus}
+          onChange={(e) => setVerificationStatus(e.target.value)}
+          options={[
+            { value: "Verified", label: "Verified Vendor" },
+            { value: "Premium", label: "Premium Gold Supplier" },
+          ]}
+        />
       </div>
 
       {/* Logo & Facility Photo */}
@@ -176,31 +168,21 @@ export function AddBusinessDetailsSection({
       </div>
 
       {/* Descriptions */}
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-          Short Description / Tagline
-        </label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={2}
-          placeholder="Brief 1-2 sentence overview for directory listings..."
-          className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-        />
-      </div>
+      <Textarea
+        label="Short Description / Tagline"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        rows={2}
+        placeholder="Brief 1-2 sentence overview for directory listings..."
+      />
 
-      <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-          Full Commercial Overview
-        </label>
-        <textarea
-          value={fullOverview}
-          onChange={(e) => setFullOverview(e.target.value)}
-          rows={3}
-          placeholder="Detailed capabilities, machinery, international export certificates..."
-          className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-        />
-      </div>
+      <Textarea
+        label="Full Commercial Overview"
+        value={fullOverview}
+        onChange={(e) => setFullOverview(e.target.value)}
+        rows={3}
+        placeholder="Detailed capabilities, machinery, international export certificates..."
+      />
     </div>
   );
 }

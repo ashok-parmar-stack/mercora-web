@@ -12,26 +12,22 @@ import {
   Globe,
   Ship,
   Truck,
-  Factory,
   Building2,
-  Briefcase,
-  Layers,
   Check,
   Cog,
   BarChart2,
   Package,
-  LucideIcon,
 } from "lucide-react";
 import { Business } from "../../types/business.types";
 
 const CATEGORY_IMAGES: Record<string, string> = {
-  export: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80", // Cargo port & ship
-  importer: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80", // Cargo ship on sea
-  logistics: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80", // Yellow/Orange cargo truck
-  "freight-forwarder": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80", // Logistics warehouse / freight
-  manufacture: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80", // Industrial manufacturing plant
-  wholesaler: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80", // Warehouse racking
-  "trading-company": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80", // Business handshake
+  export: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80",
+  importer: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80",
+  logistics: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80",
+  "freight-forwarder": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80",
+  manufacture: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80",
+  wholesaler: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80",
+  "trading-company": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80",
   distributor: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80",
   default: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
 };
@@ -54,7 +50,6 @@ export function BusinessCard({
   const router = useRouter();
   const [internalSaved, setInternalSaved] = useState(Boolean(controlledIsSaved));
 
-  // Determine appropriate category slug & image
   const categoryType = (business.businessType || business.category || "").toLowerCase();
   const matchedKey =
     Object.keys(CATEGORY_IMAGES).find((k) => categoryType.includes(k)) || "default";
@@ -99,16 +94,15 @@ export function BusinessCard({
     }
   };
 
-  // Avatar Icon Resolver
   const getAvatarIcon = () => {
-    if (categoryType.includes("export")) return { Icon: Globe, bg: "bg-cyan-50 text-cyan-600" };
-    if (categoryType.includes("logistics")) return { Icon: Truck, bg: "bg-blue-50 text-blue-600" };
-    if (categoryType.includes("manufactur")) return { Icon: Cog, bg: "bg-blue-50 text-blue-600" };
-    if (categoryType.includes("import")) return { Icon: Ship, bg: "bg-cyan-50 text-cyan-600" };
+    if (categoryType.includes("export")) return { Icon: Globe, bg: "bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400" };
+    if (categoryType.includes("logistics")) return { Icon: Truck, bg: "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400" };
+    if (categoryType.includes("manufactur")) return { Icon: Cog, bg: "bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400" };
+    if (categoryType.includes("import")) return { Icon: Ship, bg: "bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400" };
     if (categoryType.includes("distribut") || categoryType.includes("wholesale"))
-      return { Icon: Package, bg: "bg-indigo-50 text-indigo-600" };
-    if (categoryType.includes("trading")) return { Icon: BarChart2, bg: "bg-emerald-50 text-emerald-600" };
-    return { Icon: Building2, bg: "bg-pink-50 text-[#7F1D3F]" };
+      return { Icon: Package, bg: "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400" };
+    if (categoryType.includes("trading")) return { Icon: BarChart2, bg: "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400" };
+    return { Icon: Building2, bg: "bg-primary-soft text-primary" };
   };
 
   const { Icon: AvatarIcon, bg: avatarBg } = getAvatarIcon();
@@ -118,27 +112,31 @@ export function BusinessCard({
       role="article"
       tabIndex={0}
       onClick={handleCardClick}
-      className="group relative flex flex-col bg-white rounded-2xl border border-gray-200 hover:border-[#7F1D3F]/40 shadow-xs hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer"
+      className="group relative flex flex-col bg-surface rounded-2xl border border-border hover:border-primary/40 shadow-xs hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer"
     >
       {/* 1. Cover Image Banner */}
-      <div className="relative h-44 w-full bg-gray-100 overflow-hidden">
+      <div className="relative h-44 w-full bg-background-secondary overflow-hidden">
         <Image
           src={imgSrc}
           alt={business.name}
           fill
+          unoptimized
+          loading="eager"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          onError={() => setImgSrc(CATEGORY_IMAGES.default)}
+          onError={() => setImgSrc(defaultImage)}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
 
         {/* Top-Left: Verified Pill Badge */}
-        <div className="absolute top-3 left-3 z-10">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-xs text-emerald-600 text-[11px] font-bold shadow-xs">
-            <Check className="w-3 h-3 stroke-[3]" />
-            <span>Verified</span>
+        {business.isVerified !== false && (
+          <div className="absolute top-3 left-3 z-10">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-xs text-emerald-600 text-[11px] font-bold shadow-xs">
+              <Check className="w-3 h-3 stroke-[3]" />
+              <span>Verified</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Top-Right: Instagram Bookmark Button */}
         <button
@@ -157,13 +155,14 @@ export function BusinessCard({
       </div>
 
       {/* 2. Overlapping Circular Avatar */}
-      <div className="relative -mt-7 ml-4 z-10 w-14 h-14 rounded-full bg-white p-1 border-2 border-white shadow-md flex items-center justify-center">
+      <div className="relative -mt-7 ml-4 z-10 w-14 h-14 rounded-full bg-surface p-1 border-2 border-surface shadow-md flex items-center justify-center">
         {business.logoUrl ? (
           <Image
             src={business.logoUrl}
             alt={business.name}
             width={48}
             height={48}
+            unoptimized
             className="w-full h-full rounded-full object-cover"
           />
         ) : (
@@ -176,29 +175,25 @@ export function BusinessCard({
       {/* 3. Card Body Content */}
       <div className="p-4 pt-2 flex-1 flex flex-col justify-between space-y-3">
         <div className="space-y-1.5">
-          {/* Business Name */}
-          <h3 className="font-extrabold text-base text-gray-900 group-hover:text-[#7F1D3F] transition-colors line-clamp-1">
+          <h3 className="font-extrabold text-base text-text-primary group-hover:text-primary transition-colors line-clamp-1">
             {business.name}
           </h3>
 
-          {/* Category Badge */}
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FCECEE] text-[#7F1D3F]">
-              <span className="w-1.5 h-1.5 rounded-full border border-[#7F1D3F]" />
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FCECEE] dark:bg-primary-soft text-[#7F1D3F] dark:text-primary">
+              <span className="w-1.5 h-1.5 rounded-full border border-current" />
               <span>{business.businessType || business.category || "Verified Member"}</span>
             </span>
           </div>
 
-          {/* Location */}
-          <div className="flex items-center gap-1 text-xs text-gray-500 font-medium pt-0.5">
-            <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+          <div className="flex items-center gap-1 text-xs text-text-muted font-medium pt-0.5">
+            <MapPin className="w-3.5 h-3.5 text-text-muted shrink-0" />
             <span className="line-clamp-1">
               {[business.city, business.state, "India"].filter(Boolean).join(", ")}
             </span>
           </div>
 
-          {/* Short Description */}
-          <p className="text-xs text-gray-600 font-normal line-clamp-2 leading-relaxed pt-1">
+          <p className="text-xs text-text-secondary font-normal line-clamp-2 leading-relaxed pt-1">
             {business.description ||
               business.fullOverview ||
               "Verified enterprise supplier offering high-grade industrial capabilities, certified trade quality, and dedicated supply chain support."}
@@ -206,11 +201,11 @@ export function BusinessCard({
         </div>
 
         {/* 4. Card Footer */}
-        <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
+        <div className="pt-3 border-t border-border flex items-center justify-between">
           <Link
             href={`/businesses/${business.slug}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] hover:underline"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] dark:text-primary hover:underline"
           >
             <span>View Profile</span>
             <ArrowRight className="w-3 h-3" />

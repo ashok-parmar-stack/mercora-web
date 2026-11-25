@@ -9,7 +9,7 @@ import {
   LucideIcon,
   HelpCircle,
 } from "lucide-react";
-import { Input } from "@/components/common";
+import { Input, Select } from "@/components/common";
 import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
 import { CATEGORY_ICON_LOOKUP, COMMON_CATEGORIES } from "./add-business.types";
 
@@ -344,22 +344,12 @@ export function AddBusinessBasicSection({
           leftIcon={<Building2 className="w-4 h-4" />}
         />
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-            Master Industry Category
-          </label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 text-sm rounded-xl border border-border bg-surface text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-          >
-            {COMMON_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          label="Master Industry Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          options={COMMON_CATEGORIES.map((cat) => ({ value: cat, label: cat }))}
+        />
       </div>
 
       {/* Location */}

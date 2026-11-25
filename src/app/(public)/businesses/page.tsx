@@ -11,6 +11,7 @@ import { BusinessViewToggle } from "@/features/businesses/components/listing/Bus
 import { BusinessCardSkeleton } from "@/features/businesses/components/listing/BusinessCardSkeleton";
 import {
   Button,
+  Select,
   Pagination,
   EmptyState,
   ErrorState,
@@ -54,12 +55,11 @@ export default function BusinessesDiscoveryPage() {
 
   const savedList = businesses.filter((b) => savedIds.includes(b.id));
 
-  // Calculate slice range for toolbar: "Showing 1–12 of 515 businesses"
   const startItem = totalCount === 0 ? 0 : (page - 1) * 12 + 1;
   const endItem = Math.min(page * 12, totalCount);
 
   return (
-    <div className="min-h-screen bg-[#FFF8F6] text-gray-900 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans transition-colors">
       <Header savedCount={savedIds.length} />
 
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8">
@@ -90,9 +90,9 @@ export default function BusinessesDiscoveryPage() {
           {/* Right Column: Business Results */}
           <div className="flex-1 w-full space-y-6">
             {/* Results Toolbar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-border">
               <div>
-                <p className="text-sm font-bold text-gray-900 tracking-tight">
+                <p className="text-sm font-bold text-text-primary tracking-tight">
                   {isLoading
                     ? "Searching verified businesses..."
                     : `Showing ${startItem}–${endItem} of ${totalCount.toLocaleString()} businesses`}
@@ -107,24 +107,26 @@ export default function BusinessesDiscoveryPage() {
                   size="sm"
                   onClick={() => setShowMobileFilter(true)}
                   className="lg:hidden"
-                  leftIcon={<SlidersHorizontal className="w-4 h-4 text-[#7F1D3F]" />}
+                  leftIcon={<SlidersHorizontal className="w-4 h-4 text-primary" />}
                 >
                   Filters
                 </Button>
 
                 {/* Sort Selector Dropdown */}
-                <div className="relative">
-                  <select
+                <div className="w-48">
+                  <Select
                     value={filters.sortBy}
+                    selectSize="sm"
                     onChange={(e) =>
                       setFilters((prev) => ({ ...prev, sortBy: e.target.value as any }))
                     }
-                    className="px-3.5 py-1.5 text-xs font-bold rounded-xl border border-gray-200 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#7F1D3F]/20 cursor-pointer shadow-2xs"
-                  >
-                    <option value="relevance">Sort by: Most Relevant</option>
-                    <option value="rating">Sort by: Highest Rated</option>
-                    <option value="established">Sort by: Established Year</option>
-                  </select>
+                    aria-label="Sort businesses"
+                    options={[
+                      { value: "relevance", label: "Sort: Most Relevant" },
+                      { value: "rating", label: "Sort: Highest Rated" },
+                      { value: "established", label: "Sort: Established Year" },
+                    ]}
+                  />
                 </div>
 
                 {/* Grid / List View Toggle */}
@@ -173,7 +175,7 @@ export default function BusinessesDiscoveryPage() {
               />
             )}
 
-            {/* Centered Pagination: < 1 2 3 ... 43 > */}
+            {/* Centered Pagination */}
             {totalPages > 1 && (
               <div className="pt-6 pb-2 flex justify-center">
                 <Pagination
@@ -196,13 +198,13 @@ export default function BusinessesDiscoveryPage() {
             className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
             onClick={() => setShowMobileFilter(false)}
           />
-          <div className="relative ml-auto w-full max-w-xs h-full bg-white shadow-2xl p-5 overflow-y-auto flex flex-col gap-4">
-            <div className="flex items-center justify-between pb-3 border-b border-gray-100">
-              <span className="font-black text-base text-gray-900">Filters</span>
+          <div className="relative ml-auto w-full max-w-xs h-full bg-surface shadow-2xl p-5 overflow-y-auto flex flex-col gap-4">
+            <div className="flex items-center justify-between pb-3 border-b border-border">
+              <span className="font-black text-base text-text-primary">Filters</span>
               <button
                 type="button"
                 onClick={() => setShowMobileFilter(false)}
-                className="p-1 rounded-lg text-gray-400 hover:text-gray-900"
+                className="p-1 rounded-lg text-text-muted hover:text-text-primary"
               >
                 <X className="w-5 h-5" />
               </button>

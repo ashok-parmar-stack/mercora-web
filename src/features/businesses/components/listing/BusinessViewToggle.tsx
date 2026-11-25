@@ -11,7 +11,7 @@ export interface BusinessViewToggleProps {
 
 export function BusinessViewToggle({ viewMode, onViewModeChange }: BusinessViewToggleProps) {
   return (
-    <div className="flex items-center p-0.5 bg-gray-100 rounded-xl border border-gray-200">
+    <div className="flex items-center p-0.5 bg-background-secondary rounded-xl border border-border">
       <button
         type="button"
         onClick={() => onViewModeChange("card")}
@@ -19,7 +19,7 @@ export function BusinessViewToggle({ viewMode, onViewModeChange }: BusinessViewT
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
           viewMode === "card"
             ? "bg-[#7F1D3F] text-white shadow-xs"
-            : "text-gray-600 hover:text-gray-900"
+            : "text-text-secondary hover:text-text-primary"
         }`}
       >
         <LayoutGrid className="w-3.5 h-3.5" />
@@ -33,7 +33,7 @@ export function BusinessViewToggle({ viewMode, onViewModeChange }: BusinessViewT
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
           viewMode === "table"
             ? "bg-[#7F1D3F] text-white shadow-xs"
-            : "text-gray-600 hover:text-gray-900"
+            : "text-text-secondary hover:text-text-primary"
         }`}
       >
         <List className="w-3.5 h-3.5" />

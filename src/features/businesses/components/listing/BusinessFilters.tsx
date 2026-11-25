@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   Building2,
 } from "lucide-react";
+import { Select } from "@/components/common";
 import { BusinessFiltersState } from "../../types/business.types";
 import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
 import { fetchCategories } from "@/features/categories/category-api";
@@ -35,7 +36,6 @@ export function BusinessFilters({
   const [masterCategories, setMasterCategories] = useState<CategoryItem[]>([]);
   const [states, setStates] = useState<State[]>([]);
 
-  // Collapsible accordion state
   const [openSections, setOpenSections] = useState({
     businessCategory: true,
     location: true,
@@ -69,7 +69,6 @@ export function BusinessFilters({
     }
   };
 
-  // Only top-level active categories
   const rootCategories = businessCategories.filter(
     (c) => !c.parentId && c.isActive !== false
   );
@@ -79,17 +78,17 @@ export function BusinessFilters({
     : rootCategories.slice(0, 4);
 
   return (
-    <aside className="w-full bg-white rounded-2xl border border-gray-200 p-5 shadow-xs space-y-5">
+    <aside className="w-full bg-surface rounded-2xl border border-border p-5 shadow-xs space-y-5">
       {/* Title & Clear All */}
-      <div className="flex items-center justify-between pb-3.5 border-b border-gray-100">
-        <div className="flex items-center gap-2 font-black text-gray-900 text-base">
-          <Filter className="w-4 h-4 text-[#7F1D3F]" />
+      <div className="flex items-center justify-between pb-3.5 border-b border-border">
+        <div className="flex items-center gap-2 font-black text-text-primary text-base">
+          <Filter className="w-4 h-4 text-[#7F1D3F] dark:text-primary" />
           <span>Filters</span>
         </div>
         <button
           type="button"
           onClick={onReset}
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] hover:underline cursor-pointer"
+          className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] dark:text-primary hover:underline cursor-pointer"
         >
           <RotateCcw className="w-3 h-3" />
           <span>Clear All</span>
@@ -97,22 +96,22 @@ export function BusinessFilters({
       </div>
 
       {/* 1. Business Category */}
-      <div className="space-y-3 pb-4 border-b border-gray-100">
+      <div className="space-y-3 pb-4 border-b border-border">
         <button
           type="button"
           onClick={() => toggleSection("businessCategory")}
           className="w-full flex items-center justify-between text-left cursor-pointer group"
         >
           <div className="flex items-center gap-2">
-            <Building2 className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#7F1D3F]" />
-            <span className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+            <Building2 className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />
+            <span className="text-xs font-bold text-text-primary uppercase tracking-wider">
               Business Category
             </span>
           </div>
           {openSections.businessCategory ? (
-            <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronUp className="w-3.5 h-3.5 text-text-muted" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
           )}
         </button>
 
@@ -124,29 +123,29 @@ export function BusinessFilters({
                 filters.businessType === cat.slug ||
                 filters.businessType.toLowerCase() === cat.name.toLowerCase();
 
-              const count = cat.businessCount || 100;
+              const count = cat.businessCount ?? 0;
 
               return (
                 <label
                   key={cat.id || cat.slug}
                   onClick={() => toggleBusinessType(cat.name)}
-                  className="flex items-center justify-between py-1 px-1 rounded-lg text-xs font-medium cursor-pointer select-none hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between py-1 px-1 rounded-lg text-xs font-medium cursor-pointer select-none hover:bg-surface-hover transition-colors"
                 >
                   <div className="flex items-center gap-2.5">
                     <div
                       className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${
                         isChecked
                           ? "bg-[#7F1D3F] border-[#7F1D3F] text-white"
-                          : "border-gray-300 bg-white"
+                          : "border-border bg-surface"
                       }`}
                     >
                       {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
                     </div>
-                    <span className={isChecked ? "font-bold text-[#7F1D3F]" : "text-gray-700"}>
+                    <span className={isChecked ? "font-bold text-[#7F1D3F] dark:text-primary" : "text-text-secondary"}>
                       {cat.name}
                     </span>
                   </div>
-                  <span className="text-[11px] font-semibold text-gray-400">
+                  <span className="text-[11px] font-semibold text-text-muted">
                     ({count})
                   </span>
                 </label>
@@ -157,7 +156,7 @@ export function BusinessFilters({
               <button
                 type="button"
                 onClick={() => setShowAllCategories(!showAllCategories)}
-                className="text-xs font-bold text-[#7F1D3F] hover:underline pt-1 pl-1 cursor-pointer block"
+                className="text-xs font-bold text-[#7F1D3F] dark:text-primary hover:underline pt-1 pl-1 cursor-pointer block"
               >
                 {showAllCategories ? "− Show Less" : "+ Show More"}
               </button>
@@ -167,77 +166,73 @@ export function BusinessFilters({
       </div>
 
       {/* 2. Location */}
-      <div className="space-y-3 pb-4 border-b border-gray-100">
+      <div className="space-y-3 pb-4 border-b border-border">
         <button
           type="button"
           onClick={() => toggleSection("location")}
           className="w-full flex items-center justify-between text-left cursor-pointer group"
         >
           <div className="flex items-center gap-2">
-            <MapPin className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#7F1D3F]" />
-            <span className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+            <MapPin className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />
+            <span className="text-xs font-bold text-text-primary uppercase tracking-wider">
               Location
             </span>
           </div>
           {openSections.location ? (
-            <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronUp className="w-3.5 h-3.5 text-text-muted" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
           )}
         </button>
 
         {openSections.location && (
           <div className="pt-1">
-            <select
+            <Select
               value={filters.location}
+              selectSize="sm"
               onChange={(e) => onFilterChange({ location: e.target.value })}
-              className="w-full px-3 py-2 text-xs font-medium rounded-xl border border-gray-200 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#7F1D3F]/20 cursor-pointer"
-            >
-              <option value="all">Select Location</option>
-              {states.map((st) => (
-                <option key={st.id || st.code} value={st.name}>
-                  {st.name}
-                </option>
-              ))}
-            </select>
+              aria-label="Filter by location"
+              options={[
+                { value: "all", label: "Select Location" },
+                ...states.map((st) => ({ value: st.name, label: st.name })),
+              ]}
+            />
           </div>
         )}
       </div>
 
       {/* 3. Master Category */}
-      <div className="space-y-3 pb-4 border-b border-gray-100">
+      <div className="space-y-3 pb-4 border-b border-border">
         <button
           type="button"
           onClick={() => toggleSection("masterCategory")}
           className="w-full flex items-center justify-between text-left cursor-pointer group"
         >
           <div className="flex items-center gap-2">
-            <LayoutGrid className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#7F1D3F]" />
-            <span className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+            <LayoutGrid className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />
+            <span className="text-xs font-bold text-text-primary uppercase tracking-wider">
               Master Category
             </span>
           </div>
           {openSections.masterCategory ? (
-            <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronUp className="w-3.5 h-3.5 text-text-muted" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
           )}
         </button>
 
         {openSections.masterCategory && (
           <div className="pt-1">
-            <select
+            <Select
               value={filters.category}
+              selectSize="sm"
               onChange={(e) => onFilterChange({ category: e.target.value })}
-              className="w-full px-3 py-2 text-xs font-medium rounded-xl border border-gray-200 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#7F1D3F]/20 cursor-pointer"
-            >
-              <option value="all">Select Category</option>
-              {masterCategories.map((mc) => (
-                <option key={mc.id || mc.slug} value={mc.name}>
-                  {mc.name}
-                </option>
-              ))}
-            </select>
+              aria-label="Filter by master category"
+              options={[
+                { value: "all", label: "Select Category" },
+                ...masterCategories.map((mc) => ({ value: mc.name, label: mc.name })),
+              ]}
+            />
           </div>
         )}
       </div>
@@ -250,60 +245,58 @@ export function BusinessFilters({
           className="w-full flex items-center justify-between text-left cursor-pointer group"
         >
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#7F1D3F]" />
-            <span className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+            <ShieldCheck className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />
+            <span className="text-xs font-bold text-text-primary uppercase tracking-wider">
               Verification Status
             </span>
           </div>
           {openSections.verification ? (
-            <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronUp className="w-3.5 h-3.5 text-text-muted" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
           )}
         </button>
 
         {openSections.verification && (
           <div className="space-y-2 pt-1">
             <label
-              onClick={() => onFilterChange({ verifiedOnly: !filters.verifiedOnly })}
-              className="flex items-center justify-between py-1 px-1 rounded-lg text-xs font-medium cursor-pointer select-none hover:bg-gray-50 transition-colors"
+              onClick={() => onFilterChange({ verifiedOnly: true })}
+              className="flex items-center justify-between py-1 px-1 rounded-lg text-xs font-medium cursor-pointer select-none hover:bg-surface-hover transition-colors"
             >
               <div className="flex items-center gap-2.5">
                 <div
                   className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${
                     filters.verifiedOnly
                       ? "bg-[#7F1D3F] border-[#7F1D3F] text-white"
-                      : "border-gray-300 bg-white"
+                      : "border-border bg-surface"
                   }`}
                 >
                   {filters.verifiedOnly && <Check className="w-3 h-3 stroke-[3]" />}
                 </div>
-                <span className={filters.verifiedOnly ? "font-bold text-[#7F1D3F]" : "text-gray-700"}>
-                  Verified Businesses
+                <span className={filters.verifiedOnly ? "font-bold text-[#7F1D3F] dark:text-primary" : "text-text-secondary"}>
+                  Verified Only
                 </span>
               </div>
-              <span className="text-[11px] font-semibold text-gray-400">(420)</span>
             </label>
 
             <label
               onClick={() => onFilterChange({ verifiedOnly: false })}
-              className="flex items-center justify-between py-1 px-1 rounded-lg text-xs font-medium cursor-pointer select-none hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-between py-1 px-1 rounded-lg text-xs font-medium cursor-pointer select-none hover:bg-surface-hover transition-colors"
             >
               <div className="flex items-center gap-2.5">
                 <div
                   className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${
-                    filters.verifiedOnly === false
+                    !filters.verifiedOnly
                       ? "bg-[#7F1D3F] border-[#7F1D3F] text-white"
-                      : "border-gray-300 bg-white"
+                      : "border-border bg-surface"
                   }`}
                 >
                   {!filters.verifiedOnly && <Check className="w-3 h-3 stroke-[3]" />}
                 </div>
-                <span className={!filters.verifiedOnly ? "font-bold text-[#7F1D3F]" : "text-gray-700"}>
-                  Unverified
+                <span className={!filters.verifiedOnly ? "font-bold text-[#7F1D3F] dark:text-primary" : "text-text-secondary"}>
+                  All Businesses
                 </span>
               </div>
-              <span className="text-[11px] font-semibold text-gray-400">(95)</span>
             </label>
           </div>
         )}

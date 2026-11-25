@@ -9,7 +9,9 @@ import { useUIStore } from "../../lib/store/ui-store";
 const ROUTE_LABELS: Record<string, string> = {
   admin: "Home",
   businesses: "Businesses",
+  "business-categories": "Business Categories",
   categories: "Product Categories",
+  pincodes: "PIN Code Master",
   locations: "Locations",
   "saved-businesses": "Saved Businesses",
   enquiries: "My Inquiries",
