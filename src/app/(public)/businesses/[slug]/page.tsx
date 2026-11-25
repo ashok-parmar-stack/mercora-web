@@ -18,7 +18,7 @@ import { useBusinessDetails } from "@/features/businesses/hooks/use-business-det
 import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
 import { LoadingState } from "@/components/common/LoadingState";
 import { ErrorState } from "@/components/common/ErrorState";
-import { APP_MESSAGES } from "@/config/messages.config";
+import { APP_MESSAGES } from "@/config/messages";
 
 export default function BusinessProfileDetailPage() {
   const params = useParams();

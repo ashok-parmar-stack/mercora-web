@@ -1,51 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { User, ArrowLeft, Save, CheckCircle2 } from "lucide-react";
-import { Header } from "@/components/layout/Header";
-import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
+import React, { useState, useEffect } from "react";
+import { User, Save, CheckCircle2 } from "lucide-react";
+import { CustomerSubHeader } from "@/components/layout/CustomerSubHeader";
+import { useAuthStore } from "@/lib/store/auth-store";
 import { PAGE_METADATA } from "@/config/page-metadata";
 import { MESSAGES } from "@/config/messages";
 import { Input, Button } from "@/components/common";
 
 export default function CustomerProfilePage() {
-  const { savedCount } = useSavedBusinesses();
-  const [name, setName] = useState("Rajesh Sharma");
-  const [company, setCompany] = useState("Sharma Builders & Infra Ltd");
-  const [phone, setPhone] = useState("+91 98765 43210");
-  const [email, setEmail] = useState("rajesh@sharmabuilders.com");
-  const [city, setCity] = useState("Ahmedabad, Gujarat");
-  const [gstin, setGstin] = useState("24AABCS9988P1Z0");
+  const user = useAuthStore((s) => s.user);
+  const updateUser = useAuthStore((s) => s.updateUser);
+
+  const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [city, setCity] = useState("");
+  const [gstin, setGstin] = useState("");
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    setName(user.name || "");
+    setEmail(user.email || "");
+    setPhone(user.phone || "");
+  }, [user]);
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    if (name.trim()) {
+      updateUser({ name: name.trim(), phone: phone.trim() || undefined });
+    }
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 2500);
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
-      <Header savedCount={savedCount} />
-
-      <div className="bg-surface border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-primary" />
-            <h1 className="text-base font-bold text-text-primary">
-              {PAGE_METADATA.profile.title}
-            </h1>
-          </div>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Dashboard</span>
-          </Link>
-        </div>
-      </div>
+    <>
+      <CustomerSubHeader
+        icon={<User className="w-5 h-5 text-primary" />}
+        title={PAGE_METADATA.profile.title}
+      />
 
       <main className="flex-1 max-w-2xl w-full mx-auto px-4 sm:px-6 py-10">
         <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8 shadow-xs">
@@ -60,6 +56,7 @@ export default function CustomerProfilePage() {
             <Input
               label="Full Name"
               type="text"
+              placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -67,6 +64,7 @@ export default function CustomerProfilePage() {
             <Input
               label="Company / Organization"
               type="text"
+              placeholder="Your registered business entity"
               value={company}
               onChange={(e) => setCompany(e.target.value)}
             />
@@ -75,12 +73,14 @@ export default function CustomerProfilePage() {
               <Input
                 label="Phone Number"
                 type="text"
+                placeholder="+91 ..."
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
               <Input
                 label="Business Email"
                 type="email"
+                placeholder="you@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -90,14 +90,16 @@ export default function CustomerProfilePage() {
               <Input
                 label="City & State"
                 type="text"
+                placeholder="e.g. Ahmedabad, Gujarat"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
               />
               <Input
                 label="GSTIN Number"
                 type="text"
+                placeholder="e.g. 24AAB..."
                 value={gstin}
-                onChange={(e) => setGstin(e.target.value)}
+                onChange={(e) => setGstin(e.target.value.toUpperCase())}
               />
             </div>
 
@@ -113,6 +115,6 @@ export default function CustomerProfilePage() {
           </form>
         </div>
       </main>
-    </div>
+    </>
   );
 }

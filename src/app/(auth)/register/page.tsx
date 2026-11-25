@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { Eye, EyeOff, AlertTriangle, ArrowRight, User, Mail, Lock, ShieldCheck } from 'lucide-react';
-import { registerServerAction } from '@/app/actions/auth-actions';
-import { Logo } from '@/components/Logo';
-import { Input, Button, Card } from '@/components/common';
-import {
-  registerSchema,
-  getPasswordStrength,
-  RegisterFieldErrors,
-} from './register.schema';
-import { RegisterSuccessView } from './components/RegisterSuccessView';
-import { PasswordStrengthIndicator } from './components/PasswordStrengthIndicator';
+import React, { useState } from "react";
+import Link from "next/link";
+import { AlertTriangle, ArrowRight, Mail, ShieldCheck, User } from "lucide-react";
+import { registerServerAction } from "@/app/actions/auth-actions";
+import { Logo } from "@/components/Logo";
+import { Button, Card, Input } from "@/components/common";
+import { getPasswordStrength, RegisterFieldErrors, registerSchema } from "./register.schema";
+import { RegisterSuccessView } from "./components/RegisterSuccessView";
+import { PasswordStrengthIndicator } from "./components/PasswordStrengthIndicator";
+import { PasswordInputField } from "./components/PasswordInputField";
+
+const INPUT_CLASS =
+  "h-10 sm:h-11 rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]";
 
 export default function RegisterPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<RegisterFieldErrors>({});
@@ -29,11 +29,10 @@ export default function RegisterPage() {
   const strength = getPasswordStrength(password);
 
   const validateSingleField = (
-    field: 'name' | 'email' | 'password' | 'confirmPassword',
-    value: string,
+    field: "name" | "email" | "password" | "confirmPassword",
+    value: string
   ) => {
-    const draft = { name, email, password, confirmPassword, [field]: value };
-    const res = registerSchema.safeParse(draft);
+    const res = registerSchema.safeParse({ name, email, password, confirmPassword, [field]: value });
     if (!res.success) {
       const issues = res.error.flatten().fieldErrors;
       setFieldErrors((prev) => ({ ...prev, [field]: issues[field]?.[0] }));
@@ -67,11 +66,10 @@ export default function RegisterPage() {
         email: validation.data.email,
         password: validation.data.password,
       });
-
-      if (!res.success) throw new Error(res.error || 'Registration failed.');
+      if (!res.success) throw new Error(res.error || "Registration failed.");
       setSuccessEmail(res.data?.email || email);
     } catch (err: any) {
-      setError(err.message || 'Registration failed. Please try again.');
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -79,18 +77,12 @@ export default function RegisterPage() {
 
   return (
     <div className="w-full">
-      {/* ── LOGO (Clean placement matching login & Canva mockup) ── */}
       <div className="mb-3 sm:mb-3.5">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 transition-transform hover:scale-105 duration-200"
-          title="Mercora Home"
-        >
+        <Link href="/" className="inline-flex items-center gap-2 transition-transform hover:scale-105 duration-200" title="Mercora Home">
           <Logo height={28} />
         </Link>
       </div>
 
-      {/* ── HEADINGS (Create your in Charcoal Plum, "account" in Brand Wine #7F1D3F) ── */}
       <div className="mb-3 sm:mb-3.5">
         <h1 className="text-2xl sm:text-[28px] font-extrabold tracking-tight text-[#2B1220] leading-tight">
           Create an <span className="text-[#7F1D3F]">account</span>
@@ -100,9 +92,7 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      {/* ── ELEVATED WHITE CARD CONTAINER (Using Common Card component) ── */}
       <Card className="bg-white rounded-2xl sm:rounded-[22px] p-5 sm:p-6 md:p-7 shadow-[0_18px_50px_-10px_rgba(43,18,32,0.07),0_2px_8px_rgba(0,0,0,0.02)] border border-[#F0E4E8]">
-        {/* Server Error */}
         {error && (
           <div className="mb-3.5 p-2.5 rounded-xl flex items-start gap-2.5 text-xs leading-relaxed bg-[#FFF1F2] border border-[#FECDD3] text-[#BE123C] animate-in fade-in duration-200">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -110,12 +100,10 @@ export default function RegisterPage() {
           </div>
         )}
 
-        {/* Success State */}
         {successEmail ? (
           <RegisterSuccessView email={successEmail} />
         ) : (
           <form className="space-y-2.5 sm:space-y-3" onSubmit={handleSubmit} noValidate>
-            {/* Full Name */}
             <Input
               id="register-name"
               label={
@@ -129,18 +117,17 @@ export default function RegisterPage() {
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
-                if (fieldErrors.name) validateSingleField('name', e.target.value);
+                if (fieldErrors.name) validateSingleField("name", e.target.value);
               }}
-              onBlur={(e) => validateSingleField('name', e.target.value)}
+              onBlur={(e) => validateSingleField("name", e.target.value)}
               placeholder="Your full name"
               autoComplete="name"
               leftIcon={<User className="w-4 h-4 text-[#8A727D]" />}
               error={fieldErrors.name}
               inputSize="lg"
-              className="h-10 sm:h-11 rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              className={INPUT_CLASS}
             />
 
-            {/* Email Address */}
             <Input
               id="register-email"
               label={
@@ -154,110 +141,60 @@ export default function RegisterPage() {
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                if (fieldErrors.email) validateSingleField('email', e.target.value);
+                if (fieldErrors.email) validateSingleField("email", e.target.value);
               }}
-              onBlur={(e) => validateSingleField('email', e.target.value)}
+              onBlur={(e) => validateSingleField("email", e.target.value)}
               placeholder="you@company.com"
               autoComplete="email"
               leftIcon={<Mail className="w-4 h-4 text-[#8A727D]" />}
               error={fieldErrors.email}
               inputSize="lg"
-              className="h-10 sm:h-11 rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              className={INPUT_CLASS}
             />
 
-            {/* Password */}
             <div className="space-y-1">
-              <Input
+              <PasswordInputField
                 id="register-password"
-                label={
-                  <span className="flex items-center gap-1.5 text-xs font-semibold text-[#2B1220] select-none">
-                    <Lock className="w-3.5 h-3.5 text-[#765C67]" />
-                    <span>Password</span>
-                  </span>
-                }
-                type={showPassword ? 'text' : 'password'}
-                disabled={loading}
+                label="Password"
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (fieldErrors.password) validateSingleField('password', e.target.value);
-                }}
-                onBlur={(e) => validateSingleField('password', e.target.value)}
                 placeholder="Min 8 characters"
-                autoComplete="new-password"
-                leftIcon={<Lock className="w-4 h-4 text-[#8A727D]" />}
-                rightIcon={
-                  <button
-                    type="button"
-                    disabled={loading}
-                    onClick={() => setShowPassword((p) => !p)}
-                    className="p-1 rounded text-[#8A727D] hover:text-[#2B1220] transition-colors cursor-pointer disabled:opacity-50"
-                    title={showPassword ? 'Hide password' : 'Show password'}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                }
+                disabled={loading}
+                showPassword={showPassword}
                 error={fieldErrors.password}
-                inputSize="lg"
-                className="h-10 sm:h-11 rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+                onToggleShow={() => setShowPassword((p) => !p)}
+                onChange={(val) => {
+                  setPassword(val);
+                  if (fieldErrors.password) validateSingleField("password", val);
+                }}
+                onBlur={(val) => validateSingleField("password", val)}
               />
-
-              {/* Password Strength Indicator */}
               {password && (
-                <PasswordStrengthIndicator
-                  score={strength.score}
-                  label={strength.label}
-                  color={strength.color}
-                />
+                <PasswordStrengthIndicator score={strength.score} label={strength.label} color={strength.color} />
               )}
             </div>
 
-            {/* Confirm Password */}
-            <Input
+            <PasswordInputField
               id="register-confirm-password"
-              label={
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-[#2B1220] select-none">
-                  <Lock className="w-3.5 h-3.5 text-[#765C67]" />
-                  <span>Confirm Password</span>
-                </span>
-              }
-              type={showConfirmPassword ? 'text' : 'password'}
-              disabled={loading}
+              label="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value);
-                if (fieldErrors.confirmPassword) validateSingleField('confirmPassword', e.target.value);
-              }}
-              onBlur={(e) => validateSingleField('confirmPassword', e.target.value)}
               placeholder="Re-type your password"
-              autoComplete="new-password"
-              leftIcon={<Lock className="w-4 h-4 text-[#8A727D]" />}
-              rightIcon={
-                <button
-                  type="button"
-                  disabled={loading}
-                  onClick={() => setShowConfirmPassword((p) => !p)}
-                  className="p-1 rounded text-[#8A727D] hover:text-[#2B1220] transition-colors cursor-pointer disabled:opacity-50"
-                  title={showConfirmPassword ? 'Hide password' : 'Show password'}
-                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              }
+              disabled={loading}
+              showPassword={showConfirmPassword}
               error={fieldErrors.confirmPassword}
-              inputSize="lg"
-              className="h-10 sm:h-11 rounded-xl border-[#E5D4DA] hover:border-[#D5C0C8] focus:border-[#7F1D3F] focus:ring-4 focus:ring-[#7F1D3F]/10 text-sm text-[#2B1220] bg-white shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)]"
+              onToggleShow={() => setShowConfirmPassword((p) => !p)}
+              onChange={(val) => {
+                setConfirmPassword(val);
+                if (fieldErrors.confirmPassword) validateSingleField("confirmPassword", val);
+              }}
+              onBlur={(val) => validateSingleField("confirmPassword", val)}
             />
 
-            {/* Terms note */}
             <p className="text-[11px] leading-relaxed text-[#765C67] pt-0.5 select-none">
-              By registering, you agree to Mercora&apos;s{' '}
-              <span className="font-semibold text-[#2B1220]">Terms</span> and{' '}
+              By registering, you agree to Mercora&apos;s{" "}
+              <span className="font-semibold text-[#2B1220]">Terms</span> and{" "}
               <span className="font-semibold text-[#2B1220]">Privacy Policy</span>.
             </p>
 
-            {/* Create Account Submit Button using Common Button */}
             <div className="pt-1">
               <Button
                 id="register-submit"
@@ -273,16 +210,11 @@ export default function RegisterPage() {
               </Button>
             </div>
 
-            {/* Divider: or */}
             <div className="text-center text-xs text-[#8A727D] pt-0.5 select-none">or</div>
 
-            {/* Sign In Link */}
             <div className="text-center text-xs text-[#765C67]">
-              Already have an account?{' '}
-              <Link
-                href="/login"
-                className="font-bold text-[#7F1D3F] hover:underline transition-colors ml-0.5 inline-flex items-center gap-1 group"
-              >
+              Already have an account?{" "}
+              <Link href="/login" className="font-bold text-[#7F1D3F] hover:underline transition-colors ml-0.5 inline-flex items-center gap-1 group">
                 <span>Sign in</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </Link>
@@ -291,7 +223,6 @@ export default function RegisterPage() {
         )}
       </Card>
 
-      {/* ── BOTTOM SECURITY BADGE (Exact match to Canva mockup & Login) ── */}
       <div className="flex items-center justify-center gap-1.5 text-xs text-[#765C67] pt-3 select-none">
         <ShieldCheck className="w-3.5 h-3.5 text-[#765C67]" />
         <span>Secure &amp; Trusted</span>

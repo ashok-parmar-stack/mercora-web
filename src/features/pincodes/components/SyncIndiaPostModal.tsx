@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
+import { syncIndiaPostPincode } from "@/features/pincodes/api/pincode-api";
 import { Modal } from "@/components/ui/Modal";
 import { Button, Input } from "@/components/common";
 import { useUIStore } from "@/lib/store/ui-store";
@@ -36,8 +37,7 @@ export function SyncIndiaPostModal({
 
     setIsSyncing(true);
     try {
-      const res = await fetch(`/api/pincodes?syncPincode=${cleanPin}`);
-      const data = await res.json();
+      const data = await syncIndiaPostPincode(cleanPin);
 
       if (data.success) {
         const msg = data.message || `Synchronized ${cleanPin} from India Post.`;

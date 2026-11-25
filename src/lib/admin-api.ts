@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosError } from 'axios';
 import { AbortableRequestOptions } from './api-abort';
+import { attachSessionRefreshInterceptor } from './http/session-refresh';
 import {
   ApiResponse,
   User,
@@ -17,11 +18,14 @@ import {
 // Create a standardized Axios client
 export const apiClient: AxiosInstance = axios.create({
   baseURL: '/api',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 15000,
 });
+
+attachSessionRefreshInterceptor(apiClient);
 
 // Response interceptor for consistent error extraction
 apiClient.interceptors.response.use(

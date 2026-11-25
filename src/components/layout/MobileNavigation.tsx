@@ -8,6 +8,8 @@ import { X, Bookmark, ChevronRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { logoutServerAction } from "@/app/actions/auth-actions";
+import { getUserDisplayRole, getUserInitials } from "@/lib/auth-helpers";
 import { PRIMARY_NAV_ITEMS } from "./mobile-nav/mobile-nav.data";
 import { MobileNavAuthSection } from "./mobile-nav/MobileNavAuthSection";
 
@@ -54,19 +56,8 @@ export function MobileNavigation({
   if (!isOpen || !mounted) return null;
 
   const isAuth = isAuthenticated;
-  const avatarInitials = user?.name
-    ? user.name
-      .split(" ")
-      .map((n: string) => n[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase()
-    : "AP";
-
-  const roleLabel =
-    typeof user?.role === "object" && user.role !== null
-      ? user.role.name || user.role.code
-      : user?.role || "SUPER_ADMIN";
+  const avatarInitials = getUserInitials(user?.name, "U");
+  const roleLabel = getUserDisplayRole(user);
 
   const menuContent = (
     <div
@@ -202,9 +193,15 @@ export function MobileNavigation({
           avatarInitials={avatarInitials}
           roleLabel={roleLabel}
           onClose={onClose}
-          onLogout={() => {
+          onLogout={async () => {
+            try {
+              await logoutServerAction();
+            } catch {
+              // ignore
+            }
             logout();
             onClose();
+            window.location.replace("/login");
           }}
         />
       </div>

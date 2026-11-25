@@ -3,7 +3,7 @@
 import React from "react";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "./Button";
-import { APP_MESSAGES } from "@/config/messages.config";
+import { APP_MESSAGES } from "@/config/messages";
 import { cn } from "@/lib/utils";
 
 export interface ErrorStateProps {

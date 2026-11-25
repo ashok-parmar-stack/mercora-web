@@ -1,53 +1,46 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { PageHeader } from "../../../components/layout/PageHeader";
-import { DataTable, BulkAction } from "../../../components/data-table/DataTable";
-import { Tooltip } from "../../../components/ui/Tooltip";
-import { LoadingState } from "@/components/common/LoadingState";
-import { ErrorState } from "@/components/common/ErrorState";
-import {
-  DeleteConfirmDialog,
-  StatusConfirmDialog,
-} from "../../../components/common/ConfirmDialog";
-import { useUIStore } from "../../../lib/store/ui-store";
+import React, { useState } from "react";
 import { Plus, Pencil, Trash2, Send, CheckCircle2, XCircle } from "lucide-react";
+import {
+  BulkAction,
+  DataTable,
+  DeleteConfirmDialog,
+  ErrorState,
+  LoadingState,
+  PageHeader,
+  StatusConfirmDialog,
+  Tooltip,
+} from "@/components/common";
+import { useAbortableFetch } from "@/lib/hooks/useAbortableFetch";
+import { useTableState } from "@/lib/hooks/useTableState";
+import { adminV1Client } from "@/lib/http/client";
+import { useUIStore } from "../../../lib/store/ui-store";
 import { EmailTemplate, emailTemplateColumns } from "./email-template-columns";
 
 export default function EmailTemplatesPage() {
-  const [search, setSearch] = useState("");
+  const { search, setSearch } = useTableState({ defaultPageSize: 10 });
   const [data, setData] = useState<EmailTemplate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [deletingTemplate, setDeletingTemplate] = useState<EmailTemplate | null>(null);
   const [bulkDeletingIds, setBulkDeletingIds] = useState<string[] | null>(null);
-  const [bulkStatusConfirm, setBulkStatusConfirm] = useState<{ ids: string[]; targetStatus: "ACTIVE" | "INACTIVE" } | null>(null);
+  const [bulkStatusConfirm, setBulkStatusConfirm] = useState<{
+    ids: string[];
+    targetStatus: "ACTIVE" | "INACTIVE";
+  } | null>(null);
 
   const addToast = useUIStore((s) => s.addToast);
   const clearSelection = useUIStore((s) => s.clearSelection);
 
-  const loadTemplates = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/v1/admin/email-templates", { cache: "no-store" });
-      if (res.ok) {
-        const json = await res.json();
-        setData(json.data || []);
-      } else {
-        throw new Error(`Failed to load templates (HTTP ${res.status})`);
-      }
-    } catch (err: any) {
-      console.error("Error loading email templates:", err);
-      setError(err?.message || "Unable to connect to email template service.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadTemplates();
-  }, [loadTemplates]);
+  const { isLoading: loading, error, load: loadTemplates } = useAbortableFetch(
+    async (signal) => {
+      const res = await adminV1Client.get<{ data?: EmailTemplate[] }>(
+        "/email-templates",
+        { signal }
+      );
+      setData(res.data?.data || []);
+    },
+    []
+  );
 
   const filtered = data.filter((t) => {
     if (!search) return true;

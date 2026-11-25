@@ -25,6 +25,7 @@ import {
 export type { State, Country, District, SubDistrict };
 import axios from 'axios';
 import { AbortableRequestOptions, isAbortError } from './api-abort';
+import { attachSessionRefreshInterceptor } from './http/session-refresh';
 
 const API_BASE =
   typeof window !== 'undefined'
@@ -37,10 +38,13 @@ const API_BASE =
 
 export const apiClient = axios.create({
   baseURL: API_BASE,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
   },
 });
+
+attachSessionRefreshInterceptor(apiClient);
 
 // ==========================================
 // 1. COUNTRIES

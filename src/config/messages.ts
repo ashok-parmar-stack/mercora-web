@@ -109,6 +109,10 @@ export const APP_MESSAGES = {
     linkCopied: "Business profile URL copied to clipboard.",
     filtersCleared: "All directory filters have been reset.",
   },
+  confirmations: {
+    clearFilters: "Are you sure you want to reset all applied filters?",
+    removeBookmark: "Remove this business from your saved list?",
+  },
   placeholders: {
     searchKeyword: "Search business, product or service...",
     selectLocation: "Gujarat, India",
@@ -118,3 +122,5 @@ export const APP_MESSAGES = {
     inquiryMessage: "Describe your inquiry, quantity, or technical specifications...",
   },
 } as const;
+
+export type AppMessages = typeof APP_MESSAGES;

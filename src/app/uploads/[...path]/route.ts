@@ -22,23 +22,30 @@ export async function GET(
 ) {
   try {
     const { path: segments } = await params;
-    if (!segments || segments.length === 0) {
+    if (
+      !segments ||
+      segments.length === 0 ||
+      segments.some((seg) => !seg || seg === '.' || seg === '..' || seg.includes('..') || seg.includes('\\'))
+    ) {
       return new NextResponse('Bad Request', { status: 400 });
     }
 
     const subPath = path.join(...segments);
 
-    // Candidates locations for uploaded files
-    const candidatePaths = [
-      path.join(process.cwd(), 'apps', 'web', 'public', 'uploads', subPath),
-      path.join(process.cwd(), 'public', 'uploads', subPath),
-      path.join(process.cwd(), '..', 'apps', 'web', 'public', 'uploads', subPath),
+    // Candidate root directories for uploaded files
+    const candidateRoots = [
+      path.resolve(process.cwd(), 'public', 'uploads'),
+      path.resolve(process.cwd(), 'apps', 'web', 'public', 'uploads'),
     ];
 
     let foundPath: string | null = null;
-    for (const cand of candidatePaths) {
-      if (fs.existsSync(cand) && fs.statSync(cand).isFile()) {
-        foundPath = cand;
+    for (const rootDir of candidateRoots) {
+      const resolved = path.resolve(rootDir, subPath);
+      if (!resolved.startsWith(rootDir + path.sep)) {
+        return new NextResponse('Forbidden', { status: 403 });
+      }
+      if (fs.existsSync(resolved) && fs.statSync(resolved).isFile()) {
+        foundPath = resolved;
         break;
       }
     }
@@ -52,6 +59,8 @@ export async function GET(
         status: 200,
         headers: {
           'Content-Type': contentType,
+          'X-Content-Type-Options': 'nosniff',
+          ...(ext === '.svg' ? { 'Content-Security-Policy': 'sandbox' } : {}),
           'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
         },
       });

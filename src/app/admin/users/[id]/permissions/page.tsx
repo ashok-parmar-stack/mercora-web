@@ -3,29 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { PageHeader } from "../../../../../components/layout/PageHeader";
+import { Badge, Button, PageHeader } from "@/components/common";
 import { usePermissions } from "../../../../../lib/hooks/usePermissions";
 import { useRoles } from "../../../../../lib/hooks/useRoles";
 import { useUIStore } from "../../../../../lib/store/ui-store";
 import { adminApi } from "../../../../../lib/admin-api";
 import { User, Role, Permission } from "../../../../../lib/admin-types";
-import { Badge } from "../../../../../components/ui/Badge";
-import { Button } from "../../../../../components/ui/Button";
-import { Input } from "../../../../../components/ui/Input";
-import { Select } from "../../../../../components/ui/Select";
-import { Tooltip } from "../../../../../components/ui/Tooltip";
-import {
-  Shield,
-  KeyRound,
-  CheckCircle2,
-  XCircle,
-  Plus,
-  Trash2,
-  AlertTriangle,
-  Info,
-  RefreshCw,
-  ArrowRight,
-} from "lucide-react";
+import { UserPermissionOverridesList } from "@/features/users/components/UserPermissionOverridesList";
+import { AddPermissionOverrideCard } from "@/features/users/components/AddPermissionOverrideCard";
+import { EffectiveAccessPreviewCard } from "@/features/users/components/EffectiveAccessPreviewCard";
+import { Shield, RefreshCw, ArrowRight } from "lucide-react";
 
 interface UserPermissionOverride {
   id: string;
@@ -245,193 +232,27 @@ export default function UserPermissionsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Active Overrides Table & Add Rule */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-          {/* Active Overrides */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs flex flex-col gap-4">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <div>
-                <h3 className="font-extrabold text-sm text-gray-900">
-                  Active UBAC Overrides ({overrides.length})
-                </h3>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  Explicit access rules configured specifically for this user.
-                </p>
-              </div>
-            </div>
-
-            {overrides.length === 0 ? (
-              <div className="py-8 text-center text-gray-400 text-xs">
-                No user-specific overrides configured. This user inherits all standard permissions from their role.
-              </div>
-            ) : (
-              <div className="flex flex-col gap-2.5">
-                {overrides.map((ovr) => (
-                  <div
-                    key={ovr.id}
-                    className="p-3 rounded-lg border border-gray-200 bg-gray-50/50 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Badge
-                        variant={ovr.effect === "ALLOW" ? "green" : "red"}
-                        size="sm"
-                      >
-                        {ovr.effect}
-                      </Badge>
-                      <div>
-                        <div className="font-extrabold text-xs text-gray-900 flex items-center gap-1.5">
-                          <span>{ovr.permissionName}</span>
-                          <span className="text-gray-400">→</span>
-                          <code className="text-[11px] font-mono bg-white border border-gray-200 px-1 py-0.5 rounded text-gray-700">
-                            {ovr.actionCode}
-                          </code>
-                        </div>
-                        {ovr.reason && (
-                          <div className="text-[11px] text-gray-500 mt-0.5">
-                            {ovr.reason}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1">
-                      <Tooltip content="Remove Override">
-                        <button
-                          onClick={() => handleRemoveOverride(ovr.id)}
-                          className="p-1.5 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 transition-colors"
-                          aria-label="Remove override"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Add Override Form */}
-          <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs flex flex-col gap-4">
-            <div className="border-b border-gray-100 pb-3">
-              <h3 className="font-extrabold text-sm text-gray-900 flex items-center gap-2">
-                <Plus className="w-4 h-4 text-brand-600" />
-                Add Permission Override
-              </h3>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Specify a target module and action to grant or revoke explicitly.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <Select
-                label="Permission Module *"
-                value={selectedPermId}
-                onChange={(e) => {
-                  setSelectedPermId(e.target.value);
-                  setSelectedAction("VIEW");
-                }}
-              >
-                <option value="">Select module...</option>
-                {permissions.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </Select>
-
-              <Select
-                label="Action *"
-                value={selectedAction}
-                onChange={(e) => setSelectedAction(e.target.value)}
-              >
-                {availableActions.map((act) => (
-                  <option key={act} value={act}>
-                    {act}
-                  </option>
-                ))}
-              </Select>
-
-              <Select
-                label="Override Effect *"
-                value={selectedEffect}
-                onChange={(e) => setSelectedEffect(e.target.value as "ALLOW" | "DENY")}
-              >
-                <option value="ALLOW">ALLOW (Explicit Grant)</option>
-                <option value="DENY">DENY (Explicit Revoke)</option>
-              </Select>
-            </div>
-
-            <Input
-              label="Audit Reason / Justification"
-              placeholder="e.g. Special authorization from security officer..."
-              value={overrideReason}
-              onChange={(e) => setOverrideReason(e.target.value)}
-            />
-
-            <div className="flex justify-end pt-1">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleAddOverride}
-                leftIcon={<Plus className="w-4 h-4" />}
-              >
-                Apply Override Rule
-              </Button>
-            </div>
-          </div>
+          <UserPermissionOverridesList
+            overrides={overrides}
+            onRemove={handleRemoveOverride}
+          />
+          <AddPermissionOverrideCard
+            permissions={permissions}
+            availableActions={availableActions}
+            selectedPermId={selectedPermId}
+            selectedAction={selectedAction}
+            selectedEffect={selectedEffect}
+            overrideReason={overrideReason}
+            onPermChange={setSelectedPermId}
+            onActionChange={setSelectedAction}
+            onEffectChange={setSelectedEffect}
+            onReasonChange={setOverrideReason}
+            onAdd={handleAddOverride}
+          />
         </div>
 
-        {/* Right Column: Effective Permission Simulation Preview */}
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-xs flex flex-col gap-4 h-fit">
-          <div className="border-b border-gray-100 pb-3">
-            <h3 className="font-extrabold text-sm text-gray-900 flex items-center gap-2">
-              <KeyRound className="w-4 h-4 text-purple-600" />
-              Effective Access Simulation
-            </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Live evaluation of effective permissions for this user.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            {["Companies", "Trade Data", "Products", "Leads", "Users"].map((moduleName) => (
-              <div
-                key={moduleName}
-                className="border border-gray-100 rounded-lg p-3 bg-gray-50/40 flex flex-col gap-2"
-              >
-                <div className="font-extrabold text-xs text-gray-900">
-                  {moduleName}
-                </div>
-
-                <div className="grid grid-cols-2 gap-1.5 text-[11px]">
-                  {["VIEW", "CREATE", "UPDATE", "DELETE"].map((act) => {
-                    const status = resolveEffectiveStatus(moduleName, act);
-                    return (
-                      <div
-                        key={act}
-                        className={`flex items-center justify-between p-1.5 rounded border ${
-                          status.granted
-                            ? status.isOverride
-                              ? "bg-green-50/60 border-green-200 text-green-800"
-                              : "bg-white border-gray-200 text-gray-700"
-                            : "bg-red-50/60 border-red-200 text-red-800"
-                        }`}
-                      >
-                        <span className="font-mono font-bold text-[10px]">{act}</span>
-                        {status.granted ? (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
-                        ) : (
-                          <XCircle className="w-3.5 h-3.5 text-red-600 flex-shrink-0" />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <EffectiveAccessPreviewCard resolveEffectiveStatus={resolveEffectiveStatus} />
       </div>
     </div>
   );

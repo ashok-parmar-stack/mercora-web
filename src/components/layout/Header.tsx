@@ -19,6 +19,8 @@ import { MobileNavigation } from "./MobileNavigation";
 import { APP_HEADERS } from "@/config/headers.config";
 import { ThemeToggle } from "../theme/ThemeToggle";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { logoutServerAction } from "@/app/actions/auth-actions";
+import { getUserDisplayRole, getUserInitials, isAdminRole } from "@/lib/auth-helpers";
 import {
   Button,
   Badge,
@@ -42,11 +44,21 @@ export function Header({ savedCount = 0 }: HeaderProps) {
   }, []);
 
   const isAuth = mounted && isAuthenticated;
-  const avatarInitials = user?.name ? user.name.slice(0, 2).toUpperCase() : "AP";
-  const roleName =
-    typeof user?.role === "object" && user.role !== null
-      ? user.role.name || user.role.code
-      : user?.role || "SUPER_ADMIN";
+  const avatarInitials = getUserInitials(user?.name, "U");
+  const roleName = getUserDisplayRole(user);
+  const canAccessAdmin = isAdminRole(user);
+
+  const handleSignOut = async () => {
+    try {
+      await logoutServerAction();
+    } catch {
+      // Ignore network errors during logout cleanup
+    } finally {
+      logout();
+      router.push("/login");
+      router.refresh();
+    }
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-[var(--header-bg)] backdrop-blur-md transition-colors shadow-2xs">
@@ -86,18 +98,19 @@ export function Header({ savedCount = 0 }: HeaderProps) {
           <div className="hidden sm:flex items-center gap-2 shrink-0">
             {isAuth ? (
               <div className="flex items-center gap-2">
-                {/* Standardized Design System Admin Console Button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="hidden xl:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border-border bg-surface text-text-secondary hover:text-primary hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-2xs select-none"
-                  asChild
-                >
-                  <Link href="/admin" title="Open Admin Console">
-                    <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                    <span>Admin Console</span>
-                  </Link>
-                </Button>
+                {canAccessAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="hidden xl:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border-border bg-surface text-text-secondary hover:text-primary hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-2xs select-none"
+                    asChild
+                  >
+                    <Link href="/admin" title="Open Admin Console">
+                      <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
+                      <span>Admin Console</span>
+                    </Link>
+                  </Button>
+                )}
 
                 {/* Proper User Profile Dropdown Menu */}
                 <DropdownMenu
@@ -108,7 +121,7 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                         {avatarInitials}
                       </div>
                       <span className="text-xs font-semibold text-text-primary max-w-[110px] truncate hidden xl:inline-block">
-                        {user?.name || "Admin"}
+                        {user?.name || "Account"}
                       </span>
                       <ChevronDown className="w-3.5 h-3.5 text-text-muted" />
                     </div>
@@ -117,10 +130,10 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                 >
                   <div className="px-2.5 py-2 mb-1">
                     <p className="text-xs font-bold text-text-primary truncate">
-                      {user?.name || "Ashok Parmar"}
+                      {user?.name || "Authenticated User"}
                     </p>
                     <p className="text-[11px] text-text-muted truncate">
-                      {user?.email || "admin@mercora.com"}
+                      {user?.email || ""}
                     </p>
                     <div className="mt-1.5">
                       <Badge variant="brand" size="sm">
@@ -131,15 +144,24 @@ export function Header({ savedCount = 0 }: HeaderProps) {
 
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem
-                    onClick={() => router.push("/admin")}
-                    icon={<ShieldCheck className="w-3.5 h-3.5 text-primary" />}
-                  >
-                    Admin Console
-                  </DropdownMenuItem>
+                  {canAccessAdmin ? (
+                    <DropdownMenuItem
+                      onClick={() => router.push("/admin")}
+                      icon={<ShieldCheck className="w-3.5 h-3.5 text-primary" />}
+                    >
+                      Admin Console
+                    </DropdownMenuItem>
+                  ) : (
+                    <DropdownMenuItem
+                      onClick={() => router.push("/dashboard")}
+                      icon={<User className="w-3.5 h-3.5 text-primary" />}
+                    >
+                      Buyer Dashboard
+                    </DropdownMenuItem>
+                  )}
 
                   <DropdownMenuItem
-                    onClick={() => router.push("/admin/profile")}
+                    onClick={() => router.push(canAccessAdmin ? "/admin/profile" : "/profile")}
                     icon={<Settings className="w-3.5 h-3.5 text-text-muted" />}
                   >
                     Profile Settings
@@ -149,7 +171,7 @@ export function Header({ savedCount = 0 }: HeaderProps) {
 
                   <DropdownMenuItem
                     destructive
-                    onClick={() => logout()}
+                    onClick={handleSignOut}
                     icon={<LogOut className="w-3.5 h-3.5" />}
                   >
                     Sign Out

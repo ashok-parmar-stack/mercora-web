@@ -1,19 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { AlertCircle, ArrowLeft, Save, Sparkles } from "lucide-react";
-import { ProductCategory, CreateProductCategoryInput, UpdateProductCategoryInput } from "@mercora/shared-types";
-import { Input } from "../ui/Input";
-import { Select } from "../ui/Select";
-import { Button } from "../ui/Button";
-import { Badge } from "../ui/Badge";
-import { Textarea } from "../ui/Textarea";
-import { commonSchemas, VALIDATION_MESSAGES } from "../../lib/validation/messages";
+import { Sparkles } from "lucide-react";
+import {
+  CreateProductCategoryInput,
+  ProductCategory,
+  UpdateProductCategoryInput,
+} from "@mercora/shared-types";
+import { Input, MasterFormShell, Select, Textarea } from "@/components/common";
+import { commonSchemas, VALIDATION_MESSAGES } from "@/lib/validation/messages";
 
 const categorySchema = z.object({
   name: commonSchemas.name("Category Name", 2),
@@ -48,7 +46,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   error = null,
   cancelHref = "/admin/categories",
 }) => {
-  const router = useRouter();
   const [autoSlug, setAutoSlug] = useState(mode === "create");
   const [localError, setLocalError] = useState<string | null>(null);
 
@@ -56,7 +53,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     register,
     handleSubmit,
     setValue,
-    watch,
     reset,
     formState: { errors, isSubmitting: formSubmitting },
   } = useForm<CategoryFormData>({
@@ -89,32 +85,23 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const onFormSubmit: SubmitHandler<CategoryFormData> = async (data) => {
     setLocalError(null);
     try {
-      const parentIdClean = data.parentId?.trim() || undefined;
-      const codeClean = data.code?.trim() || undefined;
-      const slugClean = data.slug?.trim() || undefined;
-      const descClean = data.description?.trim() || undefined;
-
+      const payload = {
+        name: data.name.trim(),
+        code: data.code?.trim() || undefined,
+        slug: data.slug?.trim() || undefined,
+        description: data.description?.trim() || undefined,
+        sortOrder: Number(data.sortOrder) || 0,
+        status: data.status as any,
+      };
       if (mode === "create") {
         await onSubmit({
-          name: data.name.trim(),
-          code: codeClean,
-          slug: slugClean,
-          parentId: parentIdClean,
-          description: descClean,
+          ...payload,
+          parentId: data.parentId?.trim() || undefined,
           icon: "Layers",
-          sortOrder: Number(data.sortOrder) || 0,
           isSystem: false,
-          status: data.status as any,
         });
       } else {
-        await onSubmit({
-          name: data.name.trim(),
-          code: codeClean,
-          slug: slugClean,
-          description: descClean,
-          sortOrder: Number(data.sortOrder) || 0,
-          status: data.status as any,
-        });
+        await onSubmit(payload);
       }
     } catch (err: any) {
       setLocalError(err?.message || `Failed to ${mode} category`);
@@ -123,55 +110,34 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   const handleNameChange = (val: string) => {
     if (autoSlug && mode === "create") {
-      const generatedSlug = val
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-      setValue("slug", generatedSlug, { shouldValidate: true });
+      setValue(
+        "slug",
+        val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
+        { shouldValidate: true }
+      );
     }
   };
 
-  const activeError = error || localError;
   const submitting = isSubmitting || formSubmitting;
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="w-full flex flex-col gap-6" noValidate>
-      {activeError && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
-          <div className="flex-1 min-w-0">
-            <div className="font-bold">Operation Error</div>
-            <div className="mt-0.5">{activeError}</div>
-          </div>
-        </div>
-      )}
-
-      {/* Main Form Card */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col gap-6">
-        <div className="border-b border-gray-100 pb-4 flex items-center justify-between">
-          <div>
-            <h3 className="font-extrabold text-base text-gray-900">
-              {mode === "create" ? "Category Specifications" : `Edit: ${initialData?.name || "Category"}`}
-            </h3>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Configure product category identity, URL pathing, taxonomy hierarchy, and status.
-            </p>
-          </div>
-            <Badge variant="brand" size="sm">
-              {mode === "create" ? "New Record" : `Level ${initialData?.level || 1}`}
-        </Badge>
-      </div>
-
-      {/* Section 1: Basic Information */}
+    <MasterFormShell
+      title={mode === "create" ? "Category Specifications" : `Edit: ${initialData?.name || "Category"}`}
+      subtitle="Configure product category identity, URL pathing, taxonomy hierarchy, and status."
+      badgeLabel={mode === "create" ? "New Record" : `Level ${initialData?.level || 1}`}
+      error={error || localError}
+      onSubmit={handleSubmit(onFormSubmit)}
+      isSubmitting={submitting}
+      submitLabel={mode === "create" ? "Create Product Category" : "Save Changes"}
+      cancelHref={cancelHref}
+    >
       <div className="flex flex-col gap-4">
         <Input
           label="Category Name *"
           placeholder="e.g. Vitrified Floor Tiles"
           error={errors.name?.message}
           helperText="The primary display name shown to buyers and throughout catalog listings."
-          {...register("name", {
-            onChange: (e) => handleNameChange(e.target.value),
-          })}
+          {...register("name", { onChange: (e) => handleNameChange(e.target.value) })}
         />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -206,17 +172,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
               error={errors.slug?.message}
               helperText="SEO-friendly slug for routing and buyer discovery paths."
               className="font-mono"
-              {...register("slug", {
-                onChange: () => setAutoSlug(false),
-              })}
+              {...register("slug", { onChange: () => setAutoSlug(false) })}
             />
           </div>
         </div>
       </div>
 
-      {/* Section 2: Hierarchy & Parent Category */}
       {mode === "create" && (
-        <div className="border-t border-gray-100 pt-4 flex flex-col gap-2">
+        <div className="border-t border-gray-100 pt-4">
           <Select
             label="Parent Category (Taxonomy Hierarchy)"
             error={errors.parentId?.message}
@@ -233,7 +196,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         </div>
       )}
 
-      {/* Section 3: Description */}
       <div className="border-t border-gray-100 pt-4">
         <Textarea
           label="Description & Specifications (Optional)"
@@ -243,7 +205,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         />
       </div>
 
-      {/* Section 4: Display Order & Status */}
       <div className="border-t border-gray-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input
           label="Display Sort Order (Optional)"
@@ -266,34 +227,6 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           <option value="INACTIVE">INACTIVE — Hidden from Catalog</option>
         </Select>
       </div>
-
-      {/* Footer Actions */}
-      <div className="border-t border-gray-100 pt-6 flex items-center justify-between gap-3">
-        <Button variant="secondary" size="md" asChild>
-          <Link href={cancelHref}>
-            <ArrowLeft className="w-4 h-4" />
-            <span>Cancel &amp; Return</span>
-          </Link>
-        </Button>
-
-        <Button
-          type="submit"
-          variant="primary"
-          size="md"
-          isLoading={submitting}
-          disabled={submitting}
-          leftIcon={<Save className="w-4 h-4" />}
-        >
-          {mode === "create"
-            ? submitting
-              ? "Creating Category..."
-              : "Create Product Category"
-            : submitting
-              ? "Saving Changes..."
-              : "Save Changes"}
-        </Button>
-      </div>
-    </div>
-    </form >
+    </MasterFormShell>
   );
 };

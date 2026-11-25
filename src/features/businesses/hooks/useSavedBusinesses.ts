@@ -1,41 +1,64 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-const STORAGE_KEY = 'mercora_saved_businesses';
+const STORAGE_KEY = "mercora_saved_businesses";
+const SYNC_EVENT = "mercora:saved-businesses-changed";
+
+function readSavedIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return [];
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed.filter((id) => typeof id === "string") : [];
+  } catch {
+    return [];
+  }
+}
 
 export function useSavedBusinesses() {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setSavedIds(JSON.parse(stored));
+    setSavedIds(readSavedIds());
+    setIsHydrated(true);
+
+    const handleSync = (event: Event) => {
+      if (event instanceof StorageEvent && event.key && event.key !== STORAGE_KEY) {
+        return;
       }
-    } catch {
-      // Ignore storage errors
-    } finally {
-      setIsHydrated(true);
-    }
+      setSavedIds(readSavedIds());
+    };
+
+    window.addEventListener("storage", handleSync);
+    window.addEventListener(SYNC_EVENT, handleSync);
+    return () => {
+      window.removeEventListener("storage", handleSync);
+      window.removeEventListener(SYNC_EVENT, handleSync);
+    };
   }, []);
 
-  const toggleSave = useCallback((id: string) => {
+  const toggleSave = useCallback((businessId: string) => {
     setSavedIds((prev) => {
-      const updated = prev.includes(id)
-        ? prev.filter((item) => item !== id)
-        : [...prev, id];
+      const updated = prev.includes(businessId)
+        ? prev.filter((id) => id !== businessId)
+        : [...prev, businessId];
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        window.dispatchEvent(new Event(SYNC_EVENT));
       } catch {
-        // Ignore
+        // Ignore storage quota / private-browsing failures
       }
       return updated;
     });
   }, []);
 
-  const isSaved = useCallback((id: string) => savedIds.includes(id), [savedIds]);
+  const isSaved = useCallback(
+    (businessId: string) => savedIds.includes(businessId),
+    [savedIds]
+  );
 
   return {
     savedIds,
@@ -43,5 +66,6 @@ export function useSavedBusinesses() {
     isSaved,
     toggleSave,
     isHydrated,
+    isLoaded: isHydrated,
   };
 }

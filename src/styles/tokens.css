@@ -1,0 +1,135 @@
+:root {
+  /* Brand Primary (Bound to Theme System: Wine #7F1D3F / Dark Wine #641631) */
+  --theme-red: var(--primary, #7F1D3F);
+  --theme-red-hover: var(--primary-hover, #641631);
+  --theme-red-dark: var(--primary-active, #521127);
+  --theme-red-soft: var(--primary-soft, #F9EDEF);
+  --theme-red-glow: rgba(127, 29, 63, 0.25);
+
+  /* Inks & Text Colors */
+  --theme-ink: var(--text-secondary, #765C67);
+  --theme-ink-darkest: var(--text-primary, #3F2932);
+  --theme-ink-darker: var(--text-primary, #3F2932);
+  --theme-dark: #2B1220;
+  --theme-dark-card: var(--surface, #FFFFFF);
+
+  /* Grays */
+  --theme-gray-900: #2B1220;
+  --theme-gray-800: #3F2932;
+  --theme-gray-700: #59404B;
+  --theme-gray-600: #765C67;
+  --theme-gray-500: #947D87;
+  --theme-gray-400: #B8A7AE;
+  --theme-gray-300: #D4C7CD;
+  --theme-gray-200: #E5D4DA;
+  --theme-gray-100: #F4EAEF;
+  --theme-gray-50: #FFF7F5;
+
+  /* Surfaces */
+  --theme-canvas: var(--background, #FFF7F5);
+  --theme-warm-line: var(--border, #E5D4DA);
+  --theme-blush: var(--background-secondary, #F9EDEF);
+  --theme-glass-header: var(--header-bg, rgba(255, 255, 255, 0.96));
+  --theme-glass-border: var(--border, #E5D4DA);
+  --theme-card-bg: var(--surface, #FFFFFF);
+  --theme-panel-bg: var(--background-secondary, #F9EDEF);
+
+  /* Semantic Status */
+  --theme-success: var(--success, #16846A);
+  --theme-success-bg: var(--status-success-bg, #E8F6F2);
+  --theme-success-border: var(--status-success-border, #A3DEC8);
+  --theme-warning: var(--warning, #B7791F);
+  --theme-warning-bg: var(--status-warning-bg, #FEF7EB);
+  --theme-warning-border: var(--status-warning-border, #F8D89B);
+  --theme-error: var(--destructive, #B42318);
+  --theme-error-bg: var(--status-error-bg, #FDF0EF);
+  --theme-error-border: var(--status-error-border, #F6B1AC);
+
+  /* Typography Variables */
+  --font-display: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-ui: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-data: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Backward Compatibility Aliases */
+  --font-dm-sans: var(--font-body);
+  --theme-font-sans: var(--font-ui);
+  --theme-font-body: var(--font-body);
+  --theme-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Backward Compatibility Colors */
+  --color-primary-500: var(--theme-red);
+  --color-primary-600: var(--theme-red-dark);
+  --color-neutral-bg: var(--theme-canvas);
+  --color-neutral-card: var(--theme-card-bg);
+  --color-neutral-border: var(--theme-warm-line);
+  --color-neutral-text: var(--theme-ink-darkest);
+  --color-neutral-muted: var(--theme-gray-700);
+
+  /* Radii */
+  --theme-radius-sm: 6px;
+  --theme-radius-md: 8px;
+  --theme-radius-lg: 12px;
+  --theme-radius-xl: 16px;
+  --theme-radius-full: 9999px;
+
+  /* Type Scale */
+  --text-2xs: 11px;
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-md: 18px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+  --text-3xl: 42px;
+  --text-4xl: 52px;
+  --text-5xl: 64px;
+
+  /* Line Heights */
+  --leading-none: 1.0;
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.65;
+  --leading-loose: 1.8;
+
+  /* Letter Spacing */
+  --tracking-tightest: -0.04em;
+  --tracking-tight: -0.025em;
+  --tracking-snug: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-wider: 0.08em;
+  --tracking-widest: 0.13em;
+}
+
+/* ── Reset ─────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--theme-canvas);
+  color: var(--theme-ink-darkest);
+  font-family: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+}

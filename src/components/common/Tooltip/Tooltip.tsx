@@ -8,6 +8,8 @@ export interface TooltipProps {
   content: React.ReactNode;
   children: React.ReactNode;
   side?: "top" | "bottom" | "left" | "right";
+  /** @deprecated Use `side` instead. */
+  position?: "top" | "bottom" | "left" | "right";
   delayMs?: number;
   className?: string;
 }
@@ -15,10 +17,12 @@ export interface TooltipProps {
 export function Tooltip({
   content,
   children,
-  side = "top",
+  side,
+  position,
   delayMs = 120,
   className,
 }: TooltipProps) {
+  const effectiveSide = side ?? position ?? "top";
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [coords, setCoords] = useState<{ top: number; left: number } | null>(null);
@@ -42,12 +46,12 @@ export function Tooltip({
       let top = 0;
       let left = rect.left + rect.width / 2;
 
-      if (side === "top") top = rect.top - gap;
-      else if (side === "bottom") top = rect.bottom + gap;
-      else if (side === "left") {
+      if (effectiveSide === "top") top = rect.top - gap;
+      else if (effectiveSide === "bottom") top = rect.bottom + gap;
+      else if (effectiveSide === "left") {
         left = rect.left - gap;
         top = rect.top + rect.height / 2;
-      } else if (side === "right") {
+      } else if (effectiveSide === "right") {
         left = rect.right + gap;
         top = rect.top + rect.height / 2;
       }
@@ -80,11 +84,11 @@ export function Tooltip({
               top: `${coords.top}px`,
               left: `${coords.left}px`,
               transform:
-                side === "top"
+                effectiveSide === "top"
                   ? "translate(-50%, -100%)"
-                  : side === "bottom"
+                  : effectiveSide === "bottom"
                   ? "translate(-50%, 0)"
-                  : side === "left"
+                  : effectiveSide === "left"
                   ? "translate(-100%, -50%)"
                   : "translate(0, -50%)",
             }}

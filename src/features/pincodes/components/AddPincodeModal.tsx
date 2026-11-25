@@ -2,6 +2,10 @@
 
 import React, { useState } from "react";
 import { Sparkles, AlertCircle, Plus } from "lucide-react";
+import {
+  createPincode,
+  lookupIndiaPostExternal,
+} from "@/features/pincodes/api/pincode-api";
 import { Modal } from "@/components/ui/Modal";
 import { Button, Input, Select } from "@/components/common";
 import { useUIStore } from "@/lib/store/ui-store";
@@ -37,22 +41,16 @@ export function AddPincodeModal({
     setIsFetchingGovt(true);
     setError(null);
     try {
-      const res = await fetch(`https://api.postalpincode.in/pincode/${pincode.trim()}`);
-      const data = await res.json();
-      const first = Array.isArray(data) ? data[0] : null;
-
-      if (first && first.Status === "Success" && first.PostOffice && first.PostOffice.length > 0) {
-        const po = first.PostOffice[0];
+      const po = await lookupIndiaPostExternal(pincode);
+      if (po) {
         setPostOfficeName(po.Name || "");
         setDistrict(po.District || "");
         setState(po.State || "");
         setBranchType(po.BranchType || "Sub Post Office");
         setDeliveryStatus(po.DeliveryStatus === "Delivery" ? "Delivery" : "Non-Delivery");
-      } else {
-        setError(first?.Message || "No records found on India Post. You can enter details manually.");
       }
-    } catch {
-      setError("Unable to connect to India Post API. You can fill details manually.");
+    } catch (err: any) {
+      setError(err?.message || "Unable to connect to India Post API. You can fill details manually.");
     } finally {
       setIsFetchingGovt(false);
     }
@@ -73,21 +71,15 @@ export function AddPincodeModal({
 
     setIsSaving(true);
     try {
-      const res = await fetch("/api/pincodes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pincode: pincode.trim(),
-          postOfficeName: postOfficeName.trim(),
-          district: district.trim(),
-          state: state.trim(),
-          branchType,
-          deliveryStatus,
-          source: "MANUAL_ENTRY",
-        }),
+      const data = await createPincode({
+        pincode: pincode.trim(),
+        postOfficeName: postOfficeName.trim(),
+        district: district.trim(),
+        state: state.trim(),
+        branchType,
+        deliveryStatus,
+        source: "MANUAL_ENTRY",
       });
-
-      const data = await res.json();
       if (data.success) {
         addToast("success", "PIN Code Added", data.message || `Added ${pincode.trim()}`);
         setPincode("");

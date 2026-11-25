@@ -10,6 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import { Badge, Button } from "@/components/common";
+import { isAdminRole } from "@/lib/auth-helpers";
 
 interface MobileNavAuthSectionProps {
   isAuth: boolean;
@@ -29,6 +30,7 @@ export function MobileNavAuthSection({
   onLogout,
 }: MobileNavAuthSectionProps) {
   if (isAuth) {
+    const canAccessAdmin = isAdminRole(user);
     return (
       <div className="pt-4 border-t border-border flex flex-col gap-3 pb-6">
         <div className="p-3.5 rounded-2xl bg-surface border border-border shadow-xs flex items-center gap-3">
@@ -37,10 +39,10 @@ export function MobileNavAuthSection({
           </div>
           <div className="min-w-0 flex-1 text-left">
             <p className="text-sm font-bold text-text-primary truncate">
-              {user?.name || "Ashok Parmar"}
+              {user?.name || "Authenticated User"}
             </p>
             <p className="text-xs text-text-muted truncate mt-0.5">
-              {user?.email || "admin@mercora.com"}
+              {user?.email || ""}
             </p>
             <div className="mt-1.5 flex items-center gap-1.5">
               <Badge variant="brand" size="sm">
@@ -57,9 +59,9 @@ export function MobileNavAuthSection({
             className="w-full justify-center shadow-xs font-bold"
             asChild
           >
-            <Link href="/admin" onClick={onClose}>
+            <Link href={canAccessAdmin ? "/admin" : "/dashboard"} onClick={onClose}>
               <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>Open Admin Console</span>
+              <span>{canAccessAdmin ? "Open Admin Console" : "Open Dashboard"}</span>
             </Link>
           </Button>
 
@@ -70,7 +72,7 @@ export function MobileNavAuthSection({
               className="justify-center text-xs"
               asChild
             >
-              <Link href="/admin/profile" onClick={onClose}>
+              <Link href={canAccessAdmin ? "/admin/profile" : "/profile"} onClick={onClose}>
                 <Settings className="w-3.5 h-3.5 text-text-muted shrink-0" />
                 <span>Settings</span>
               </Link>

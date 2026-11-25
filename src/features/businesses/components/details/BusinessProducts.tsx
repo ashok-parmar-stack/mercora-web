@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Package, ArrowRight } from "lucide-react";
 import { BusinessProduct } from "../../types/business.types";
 import { EmptyState, Button } from "@/components/common";
-import { APP_MESSAGES } from "@/config/messages.config";
+import { APP_MESSAGES } from "@/config/messages";
 import { APP_HEADERS } from "@/config/headers.config";
 
 export interface BusinessProductsProps {

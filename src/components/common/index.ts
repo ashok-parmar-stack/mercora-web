@@ -16,6 +16,7 @@ export * from "./MultiSelect";
 export * from "./Checkbox";
 export * from "./RadioGroup";
 export * from "./Switch";
+export * from "./Form";
 export * from "./FormField";
 export * from "./FileUpload";
 
@@ -40,6 +41,7 @@ export {
   type ConfirmationDialogProps,
 } from "./Dialog";
 export * from "./AlertDialog";
+export * from "./ConfirmDialog";
 
 // 5. Navigation & Layout
 export * from "./Tabs";
@@ -53,6 +55,7 @@ export * from "./PageHeader";
 export * from "./Badge";
 export * from "./Avatar";
 export * from "./DataTable";
+export * from "./Table";
 
 // 7. Feedback & Status
 export * from "./Skeleton";

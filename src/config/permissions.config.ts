@@ -1,10 +1,20 @@
 export const ROLES = {
   SUPER_ADMIN: "SUPER_ADMIN",
   ADMIN: "ADMIN",
-  VENDOR: "VENDOR",
-  BUYER: "BUYER",
-  GUEST: "GUEST",
+  DATA_MANAGER: "DATA_MANAGER",
+  SALES: "SALES",
+  CUSTOMER: "CUSTOMER",
+  VIEWER: "VIEWER",
 } as const;
+
+export type RoleCode = (typeof ROLES)[keyof typeof ROLES];
+
+export const STAFF_ADMIN_ROLES: readonly RoleCode[] = [
+  ROLES.SUPER_ADMIN,
+  ROLES.ADMIN,
+  ROLES.DATA_MANAGER,
+  ROLES.SALES,
+];
 
 export const PERMISSIONS = {
   BUSINESS_CREATE: "business:create",

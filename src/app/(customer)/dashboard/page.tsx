@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { Bookmark, MessageSquare, Building2, User, ArrowRight, ShieldCheck } from "lucide-react";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
-import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/common";
 import { PAGE_METADATA } from "@/config/page-metadata";
 
@@ -12,10 +11,7 @@ export default function CustomerDashboardPage() {
   const { savedCount } = useSavedBusinesses();
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
-      <Header savedCount={savedCount} />
-
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+    <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
         <div className="border-b border-border pb-5">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary uppercase tracking-wider mb-1">
             <ShieldCheck className="w-4 h-4" />
@@ -98,6 +94,5 @@ export default function CustomerDashboardPage() {
           </Button>
         </div>
       </main>
-    </div>
   );
 }

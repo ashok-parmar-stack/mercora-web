@@ -52,10 +52,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   evictionNotice: null,
 
   setAuth: ({ user, accessToken, refreshToken }) => {
+    // Store non-sensitive user display state only; tokens reside in memory & httpOnly cookies
     const stateData = {
       user,
-      accessToken,
-      refreshToken,
       isAuthenticated: true,
       evictionNotice: null,
     };
@@ -83,38 +82,15 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   updateTokens: (accessToken, refreshToken) => {
-    const current = get();
-    if (!current.user) return;
-
-    const stateData = {
-      user: current.user,
-      accessToken,
-      refreshToken,
-      isAuthenticated: true,
-      evictionNotice: current.evictionNotice,
-    };
-
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(stateData));
-      } catch (e) {
-        console.error('Failed to update tokens in storage:', e);
-      }
-    }
-
     set({ accessToken, refreshToken });
   },
 
   updateUser: (partialUser) => {
     const current = get();
-    const baseUser = current.user || {
-      id: 'usr_admin',
-      name: 'Ashok Parmar',
-      email: 'ashokparmar72038@gmail.com',
-      role: { id: 'role_super_admin', name: 'Super Administrator', code: 'SUPER_ADMIN' },
-      isEmailVerified: true,
-    };
-    const updated = { ...baseUser, ...partialUser };
+    if (!current.user) {
+      return;
+    }
+    const updated = { ...current.user, ...partialUser };
 
     if (typeof window !== 'undefined') {
       try {
@@ -122,12 +98,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         if (stored) {
           const parsed = JSON.parse(stored);
           parsed.user = updated;
+          delete parsed.accessToken;
+          delete parsed.refreshToken;
           localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(parsed));
         } else {
           localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify({ user: updated, isAuthenticated: true }));
         }
         document.cookie = `mercora_user=${encodeURIComponent(JSON.stringify(updated))}; path=/; max-age=604800; SameSite=Lax`;
-        
+
         // Broadcast user profile update across tabs
         const channel = new BroadcastChannel('mercora_auth_channel');
         channel.postMessage({ type: 'USER_UPDATED', user: updated });
@@ -144,6 +122,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (typeof window !== 'undefined') {
       try {
         localStorage.removeItem(STORAGE_KEY_AUTH);
+        document.cookie = 'mercora_user=; path=/; max-age=0; SameSite=Lax';
         const channel = new BroadcastChannel('mercora_auth_channel');
         channel.postMessage({ type: 'LOGOUT' });
         channel.close();
@@ -167,11 +146,18 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const stored = localStorage.getItem(STORAGE_KEY_AUTH);
       if (stored) {
         const parsed = JSON.parse(stored);
-        if (parsed.accessToken && parsed.user) {
+        if (parsed.user) {
+          // Strip legacy plaintext JWT tokens if present from older builds
+          if (parsed.accessToken || parsed.refreshToken) {
+            localStorage.setItem(
+              STORAGE_KEY_AUTH,
+              JSON.stringify({ user: parsed.user, isAuthenticated: true }),
+            );
+          }
           set({
             user: parsed.user,
-            accessToken: parsed.accessToken,
-            refreshToken: parsed.refreshToken,
+            accessToken: null,
+            refreshToken: null,
             isAuthenticated: true,
             isLoading: false,
           });
@@ -182,7 +168,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       console.warn('Failed parsing stored auth state:', e);
     }
 
-    // Fallback: Check if mercora_user cookie is present
+    // Fallback: Check if mercora_user display cookie is present
     try {
       const match = document.cookie.match(/(?:^|;\s*)mercora_user=([^;]+)/);
       if (match) {

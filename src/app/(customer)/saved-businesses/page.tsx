@@ -1,13 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Bookmark, ArrowLeft } from "lucide-react";
-import { Header } from "@/components/layout/Header";
+import { Bookmark } from "lucide-react";
+import { CustomerSubHeader } from "@/components/layout/CustomerSubHeader";
 import { Footer } from "@/components/layout/Footer";
 import { BusinessCard } from "@/features/businesses/components/listing/BusinessCard";
 import { EmptyState, LoadingState } from "@/components/common";
-import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
+import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { fetchBusinesses } from "@/features/businesses/api/business-api";
 import { Business } from "@/features/businesses/types/business.types";
 import { MESSAGES } from "@/config/messages";
@@ -27,26 +26,13 @@ export default function CustomerSavedBusinessesPage() {
   const savedList = allBusinesses.filter((b) => savedIds.includes(b.id));
 
   return (
-    <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans transition-colors">
-      <Header savedCount={savedIds.length} />
-
-      <div className="bg-surface border-b border-border shadow-2xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5 min-w-0">
-            <Bookmark className="w-5 h-5 text-primary fill-primary shrink-0" />
-            <h1 className="text-sm sm:text-base font-bold text-text-primary truncate">
-              Saved Businesses ({savedList.length})
-            </h1>
-          </div>
-          <Link
-            href="/businesses"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-primary transition-colors shrink-0 px-2 py-1 rounded-lg hover:bg-surface-hover"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Directory</span>
-          </Link>
-        </div>
-      </div>
+    <>
+      <CustomerSubHeader
+        icon={<Bookmark className="w-5 h-5 text-primary fill-primary shrink-0" />}
+        title={`Saved Businesses (${savedList.length})`}
+        backHref="/businesses"
+        backLabel="Back to Directory"
+      />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
@@ -77,6 +63,6 @@ export default function CustomerSavedBusinessesPage() {
       </main>
 
       <Footer />
-    </div>
+    </>
   );
 }

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Send, CheckCircle2 } from "lucide-react";
 import { submitEnquiry } from "../../businesses/api/business-api";
-import { APP_MESSAGES } from "@/config/messages.config";
+import { APP_MESSAGES } from "@/config/messages";
 import {
   Dialog,
   DialogContent,

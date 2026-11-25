@@ -7,6 +7,7 @@
     "build": "next build --webpack",
     "build:vercel": "npm run build",
     "start": "next start -p 9000",
+    "test": "node scripts/run-tests.mjs",
     "lint": "next lint"
   },
   "dependencies": {

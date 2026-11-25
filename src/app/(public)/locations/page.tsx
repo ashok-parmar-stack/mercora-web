@@ -11,6 +11,7 @@ import {
   Input,
   Badge,
 } from "@/components/common";
+import { apiHttpClient } from "@/lib/http/client";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { PAGE_METADATA } from "@/config/page-metadata";
 
@@ -52,27 +53,25 @@ export default function LocationsDirectoryPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/locations/cities", { cache: "no-store" });
-      if (res.ok) {
-        const json = await res.json();
-        const list = Array.isArray(json) ? json : json.data || [];
-        if (list.length > 0) {
-          const formatted: CityItem[] = list.map((item: any) => ({
-            id: item.id || item.slug,
-            name: item.name,
-            code: item.code,
-            slug: item.slug || (item.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-            state: (typeof item.state === "object" ? item.state?.name : item.state) || item.stateName || "Gujarat",
-            locationType: item.locationType || "Industrial Hub",
-            businessCount: typeof item.businessCount === "number" ? item.businessCount : undefined,
-          }));
-          setLocations(formatted);
-          return;
-        }
+      const res = await apiHttpClient.get<any>("/locations/cities");
+      const json = res.data;
+      const list = Array.isArray(json) ? json : json?.data || [];
+      if (list.length > 0) {
+        const formatted: CityItem[] = list.map((item: any) => ({
+          id: item.id || item.slug,
+          name: item.name,
+          code: item.code,
+          slug: item.slug || (item.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+          state: (typeof item.state === "object" ? item.state?.name : item.state) || item.stateName || "Gujarat",
+          locationType: item.locationType || "Industrial Hub",
+          businessCount: typeof item.businessCount === "number" ? item.businessCount : undefined,
+        }));
+        setLocations(formatted);
+        return;
       }
       setLocations(FALLBACK_CLUSTERS);
     } catch (err: any) {
-      console.warn("Locations API fetch failed, using fallback clusters:", err);
+      console.warn("Locations API fetch failed, using baseline clusters:", err);
       setLocations(FALLBACK_CLUSTERS);
     } finally {
       setLoading(false);

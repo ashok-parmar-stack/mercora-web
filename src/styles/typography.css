@@ -1,0 +1,75 @@
+/* ── Headings H1-H3: Plus Jakarta Sans (Brand & Display) ─────────────── */
+h1 {
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 52px;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+h2 {
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+h3 {
+  font-family: var(--font-jakarta, 'Plus Jakarta Sans'), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+/* ── Headings H4-H6: Rethink Sans (Navigation & Interface Headings) ── */
+h4 {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.25;
+}
+
+h5 {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+h6 {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+/* ── Content & Paragraphs: Work Sans ─────────────────────────────── */
+p,
+article,
+summary,
+blockquote {
+  font-family: var(--font-work, 'Work Sans'), 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Navigation, Buttons & Form Controls: Rethink Sans ─────────────── */
+label,
+input,
+select,
+textarea,
+button,
+nav,
+nav a,
+.nav-link,
+.sidebar-link {
+  font-family: var(--font-rethink, 'Rethink Sans'), 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ── Tables & Data Grids: Instrument Sans ────────────────────────── */
+table,
+th,
+td,
+[data-tabular="true"] {
+  font-family: var(--font-instrument, 'Instrument Sans'), 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

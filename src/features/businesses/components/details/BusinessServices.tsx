@@ -2,7 +2,7 @@ import React from "react";
 import { Wrench, CheckCircle } from "lucide-react";
 import { Business } from "../../types/business.types";
 import { EmptyState } from "@/components/common/EmptyState";
-import { APP_MESSAGES } from "@/config/messages.config";
+import { APP_MESSAGES } from "@/config/messages";
 
 export interface BusinessServicesProps {
   business: Business;

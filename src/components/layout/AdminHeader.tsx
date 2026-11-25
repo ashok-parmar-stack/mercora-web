@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useUIStore } from "@/lib/store/ui-store";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { getUserDisplayRole, getUserInitials } from "@/lib/auth-helpers";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import {
   Badge,
@@ -32,12 +33,9 @@ export function AdminHeader() {
     setMounted(true);
   }, []);
 
-  const roleLabel =
-    typeof user?.role === "object" && user.role !== null
-      ? user.role.name || user.role.code
-      : user?.role || "SUPER_ADMIN";
+  const roleLabel = getUserDisplayRole(user);
 
-  const avatarInitials = user?.name ? user.name.slice(0, 2).toUpperCase() : "AP";
+  const avatarInitials = getUserInitials(user?.name, "A");
 
   const handleLogout = async () => {
     try {
@@ -127,7 +125,7 @@ export function AdminHeader() {
                   </div>
                   <div className="hidden md:flex flex-col text-left">
                     <span className="text-xs font-bold text-text-primary max-w-[130px] truncate leading-tight group-hover:text-primary transition-colors">
-                      {user?.name || "Ashok Parmar"}
+                      {user?.name || "Admin Account"}
                     </span>
                     <span className="text-[10px] text-text-muted font-medium leading-tight">
                       {roleLabel}
@@ -140,7 +138,7 @@ export function AdminHeader() {
             >
               {/* Clean non-redundant account email line (no duplicate avatar or name) */}
               <div className="px-3 py-2 text-[11px] text-muted-foreground truncate border-b border-border/60 mb-1">
-                <span className="font-medium text-foreground">{user?.email || "admin@mercora.com"}</span>
+                <span className="font-medium text-foreground">{user?.email || ""}</span>
               </div>
 
               {/* Action List */}

@@ -1,14 +1,5 @@
+import { HttpClientError, requestApi } from "@/lib/http/client";
 import { Business, EnquirySubmission } from "../types/business.types";
-
-const getApiEndpoint = (endpoint: string) => {
-  const cleanEndpoint = endpoint.replace(/^\//, "");
-  if (typeof window !== "undefined") {
-    return `/api/${cleanEndpoint}`;
-  }
-  const rawBase = process.env.INTERNAL_BACKEND_URL || "http://127.0.0.1:5001";
-  const cleanBase = rawBase.replace(/\/api\/?$/, "");
-  return `${cleanBase}/api/${cleanEndpoint}`;
-};
 
 export interface GetBusinessesParams {
   query?: string;
@@ -20,6 +11,7 @@ export interface GetBusinessesParams {
   page?: number;
   limit?: number;
   sortBy?: string;
+  signal?: AbortSignal;
 }
 
 export interface GetBusinessesResponse {
@@ -30,107 +22,85 @@ export interface GetBusinessesResponse {
   totalPages: number;
 }
 
-export async function fetchBusinesses(params: GetBusinessesParams = {}): Promise<GetBusinessesResponse> {
-  const query = new URLSearchParams();
-  if (params.query) query.set("query", params.query);
-  if (params.category && params.category !== "all") query.set("category", params.category);
-  if (params.state) query.set("state", params.state);
-  if (params.city) query.set("city", params.city);
-  if (params.businessType && params.businessType !== "all") query.set("businessType", params.businessType);
-  if (params.verifiedOnly) query.set("verifiedOnly", "true");
-  if (params.page) query.set("page", String(params.page));
-  if (params.limit) query.set("limit", String(params.limit));
-  if (params.sortBy) query.set("sortBy", params.sortBy);
-
-  try {
-    const res = await fetch(`${getApiEndpoint("businesses")}?${query.toString()}`, {
-      cache: "no-store",
-    });
-
-    if (res.ok) {
-      const json = await res.json();
-      return {
-        data: json.data || [],
-        total: json.total ?? json.totalCount ?? json.data?.length ?? 0,
-        page: json.page || params.page || 1,
-        limit: json.limit || params.limit || 12,
-        totalPages: json.totalPages || Math.ceil((json.total ?? json.data?.length ?? 0) / (params.limit || 12)) || 1,
-      };
-    }
-
-    const errJson = await res.json().catch(() => null);
-    throw new Error(errJson?.message || `Failed to fetch businesses (HTTP ${res.status})`);
-  } catch (err: any) {
-    console.error("fetchBusinesses error:", err);
-    throw new Error(err?.message || "Unable to connect to the business directory service. Please try again later.");
+export async function fetchBusinesses(
+  params: GetBusinessesParams = {}
+): Promise<GetBusinessesResponse> {
+  const queryParams: Record<string, string> = {};
+  if (params.query) queryParams.query = params.query;
+  if (params.category && params.category !== "all") queryParams.category = params.category;
+  if (params.state) queryParams.state = params.state;
+  if (params.city) queryParams.city = params.city;
+  if (params.businessType && params.businessType !== "all") {
+    queryParams.businessType = params.businessType;
   }
+  if (params.verifiedOnly) queryParams.verifiedOnly = "true";
+  if (params.page) queryParams.page = String(params.page);
+  if (params.limit) queryParams.limit = String(params.limit);
+  if (params.sortBy) queryParams.sortBy = params.sortBy;
+
+  const json = await requestApi<any>("businesses", {
+    method: "GET",
+    params: queryParams,
+    signal: params.signal,
+  });
+
+  const data = json?.data || [];
+  const total = json?.total ?? json?.totalCount ?? data.length ?? 0;
+  const limit = json?.limit || params.limit || 12;
+
+  return {
+    data,
+    total,
+    page: json?.page || params.page || 1,
+    limit,
+    totalPages: json?.totalPages || Math.ceil(total / limit) || 1,
+  };
 }
 
-export async function fetchBusinessBySlug(slug: string): Promise<Business | null> {
+export async function fetchBusinessBySlug(
+  slug: string,
+  signal?: AbortSignal
+): Promise<Business | null> {
   if (!slug) return null;
   try {
-    const res = await fetch(`${getApiEndpoint(`businesses/${encodeURIComponent(slug)}`)}`, {
-      cache: "no-store",
+    return await requestApi<Business>(`businesses/${encodeURIComponent(slug)}`, {
+      method: "GET",
+      signal,
     });
-
-    if (res.ok) {
-      const data = await res.json();
-      return data;
-    }
-
-    if (res.status === 404) {
+  } catch (err) {
+    if (err instanceof HttpClientError && err.status === 404) {
       return null;
     }
-
-    const errJson = await res.json().catch(() => null);
-    throw new Error(errJson?.message || `Failed to fetch business details (HTTP ${res.status})`);
-  } catch (err: any) {
-    if (err?.message?.includes("404") || err?.message?.includes("not found")) {
-      return null;
-    }
-    console.error(`fetchBusinessBySlug error for "${slug}":`, err);
     throw err;
   }
 }
 
-export async function submitEnquiry(enquiry: EnquirySubmission): Promise<{ success: boolean; message: string }> {
-  try {
-    const res = await fetch(`${getApiEndpoint("businesses/enquiries")}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(enquiry),
-    });
-
-    if (res.ok) {
-      const json = await res.json().catch(() => ({}));
-      return { success: true, message: json.message || "Enquiry sent successfully!" };
-    }
-
-    const errJson = await res.json().catch(() => null);
-    throw new Error(errJson?.message || `Enquiry submission failed (HTTP ${res.status})`);
-  } catch (err: any) {
-    console.error("submitEnquiry error:", err);
-    throw new Error(err?.message || "Unable to submit inquiry at this time. Please try again.");
-  }
+export async function submitEnquiry(
+  enquiry: EnquirySubmission
+): Promise<{ success: boolean; message: string }> {
+  const json = await requestApi<any>("businesses/enquiries", {
+    method: "POST",
+    data: enquiry,
+  });
+  return {
+    success: true,
+    message: json?.message || "Enquiry sent successfully!",
+  };
 }
 
-export async function createBusiness(data: Partial<Business> | any): Promise<{ success: boolean; data: Business }> {
+export async function createBusiness(
+  data: Partial<Business> | Record<string, unknown>
+): Promise<{ success: boolean; data: Business }> {
   try {
-    const res = await fetch(getApiEndpoint("businesses"), {
+    const json = await requestApi<Business>("businesses", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      data,
     });
-
-    if (res.ok) {
-      const json = await res.json();
-      return { success: true, data: json };
+    return { success: true, data: json };
+  } catch (err) {
+    if (err instanceof HttpClientError && err.status === 401) {
+      throw new Error("Please sign in to register or create a business profile.");
     }
-
-    const errJson = await res.json().catch(() => null);
-    throw new Error(errJson?.message || `Failed to create business (HTTP ${res.status})`);
-  } catch (err: any) {
-    console.error("createBusiness error:", err);
     throw err;
   }
 }

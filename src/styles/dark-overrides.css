@@ -1,0 +1,330 @@
+/* ──────────────────────────────────────────────────────────────────────────
+ * DARK THEME ADAPTATION BRIDGE v2 (Applies globally across all components)
+ * ────────────────────────────────────────────────────────────────────────── */
+html.dark,
+html.dark body {
+  background-color: var(--background) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Surfaces & Containers */
+.dark .bg-white {
+  background-color: var(--surface) !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-50\/40,
+.dark .bg-gray-50\/60,
+.dark .bg-gray-50\/70,
+.dark .bg-gray-50\/80 {
+  background-color: var(--background-secondary) !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: var(--border) !important;
+}
+
+/* Sidebar uses deepest layer */
+.dark aside,
+.dark [role="navigation"] {
+  background-color: var(--sidebar-bg) !important;
+  border-color: var(--sidebar-border) !important;
+}
+
+/* Borders */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-200\/80,
+.dark .border-gray-300,
+.dark .divide-gray-100> :not([hidden])~ :not([hidden]),
+.dark .divide-gray-200> :not([hidden])~ :not([hidden]) {
+  border-color: var(--border) !important;
+}
+
+/* Text & Typography */
+.dark .text-gray-900,
+.dark .text-gray-950 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-800,
+.dark .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+.dark .text-gray-600 {
+  color: var(--text-secondary) !important;
+}
+
+.dark .text-gray-500 {
+  color: var(--text-muted) !important;
+}
+
+.dark .text-gray-400 {
+  color: #64748b !important;
+}
+
+/* Hover States */
+.dark .hover\:bg-gray-50:hover,
+.dark .hover\:bg-gray-100:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: var(--border-hover) !important;
+}
+
+.dark .hover\:border-gray-300:hover,
+.dark .hover\:border-gray-200:hover {
+  border-color: var(--border-hover) !important;
+}
+
+.dark .hover\:text-gray-900:hover,
+.dark .hover\:text-gray-800:hover {
+  color: var(--text-primary) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * DARK MODE: Clean Monochrome Adaptation (OLED Black & Charcoal)
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+/* Soft background tints → subtle monochrome overlay in dark */
+.dark .bg-brand-50,
+.dark .bg-brand-50\/20,
+.dark .bg-brand-50\/30,
+.dark .bg-brand-50\/40,
+.dark .bg-brand-50\/70,
+.dark .bg-brand-100 {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Brand borders → subtle slate / monochrome in dark */
+.dark .border-brand-100,
+.dark .border-brand-200,
+.dark .border-brand-200\/80,
+.dark .border-brand-200\/90,
+.dark .border-brand-300 {
+  border-color: var(--border, #2d2d2d) !important;
+}
+
+/* Brand text → pure white in dark */
+.dark .text-brand-300,
+.dark .text-brand-400,
+.dark .text-brand-600,
+.dark .text-brand-700,
+.dark .text-brand-950 {
+  color: #ffffff !important;
+}
+
+/* Brand hover states → crisp monochrome hover in dark */
+.dark .hover\:bg-brand-50:hover,
+.dark .hover\:bg-brand-100:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .hover\:text-brand-600:hover,
+.dark .hover\:text-brand-700:hover {
+  color: #ffffff !important;
+}
+
+.dark .hover\:border-brand-300:hover,
+.dark .hover\:border-brand-600:hover {
+  border-color: var(--border-hover, #444444) !important;
+}
+
+/* Focus rings → pure white in dark */
+.dark .focus\:ring-brand-100:focus,
+.dark .ring-brand-100,
+.dark .ring-brand-900\/30 {
+  --tw-ring-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.dark .border-brand-500:not(button):not([class*="bg-brand-5"]):not([class*="bg-brand-6"]) {
+  border-color: var(--border-hover, #444444) !important;
+}
+
+/* Brand-tinted badge counters in dark */
+.dark .bg-brand-900\/40,
+.dark .bg-brand-950\/40 {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+.dark .border-brand-800\/50,
+.dark .border-brand-800\/60,
+.dark .border-brand-900\/40 {
+  border-color: var(--border, #2d2d2d) !important;
+}
+
+.dark .bg-blue-50 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+
+.dark .border-blue-100,
+.dark .border-blue-200 {
+  border-color: rgba(59, 130, 246, 0.28) !important;
+}
+
+.dark .text-blue-600,
+.dark .text-blue-700 {
+  color: #60a5fa !important;
+}
+
+/* Indigo */
+.dark .bg-indigo-50 {
+  background-color: rgba(99, 102, 241, 0.12) !important;
+}
+
+.dark .border-indigo-100,
+.dark .border-indigo-200 {
+  border-color: rgba(99, 102, 241, 0.28) !important;
+}
+
+.dark .text-indigo-600,
+.dark .text-indigo-700 {
+  color: #818cf8 !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-green-50 {
+  background-color: rgba(16, 185, 129, 0.12) !important;
+}
+
+.dark .border-emerald-100,
+.dark .border-green-100,
+.dark .border-emerald-200,
+.dark .border-green-200 {
+  border-color: rgba(16, 185, 129, 0.28) !important;
+}
+
+.dark .text-emerald-600,
+.dark .text-green-600,
+.dark .text-emerald-700,
+.dark .text-green-700 {
+  color: #34d399 !important;
+}
+
+.dark .bg-purple-50,
+.dark .bg-purple-100 {
+  background-color: rgba(168, 85, 247, 0.12) !important;
+}
+
+.dark .border-purple-100,
+.dark .border-purple-200 {
+  border-color: rgba(168, 85, 247, 0.28) !important;
+}
+
+.dark .text-purple-600,
+.dark .text-purple-700 {
+  color: #c084fc !important;
+}
+
+.dark .bg-amber-50,
+.dark .bg-yellow-50,
+.dark .bg-amber-100 {
+  background-color: rgba(251, 191, 36, 0.12) !important;
+}
+
+.dark .border-amber-100,
+.dark .border-yellow-100,
+.dark .border-amber-200,
+.dark .border-yellow-200 {
+  border-color: rgba(251, 191, 36, 0.28) !important;
+}
+
+.dark .text-amber-600,
+.dark .text-yellow-600,
+.dark .text-amber-700,
+.dark .text-yellow-700 {
+  color: #fbbf24 !important;
+}
+
+.dark .bg-rose-50,
+.dark .bg-red-50,
+.dark .bg-rose-100,
+.dark .bg-red-100 {
+  background-color: rgba(248, 113, 113, 0.12) !important;
+}
+
+.dark .border-rose-100,
+.dark .border-red-100,
+.dark .border-rose-200,
+.dark .border-red-200 {
+  border-color: rgba(248, 113, 113, 0.28) !important;
+}
+
+.dark .text-rose-600,
+.dark .text-red-600,
+.dark .text-rose-700,
+.dark .text-red-700 {
+  color: #f87171 !important;
+}
+
+/* Cyan / Teal */
+.dark .bg-cyan-50,
+.dark .bg-teal-50 {
+  background-color: rgba(20, 184, 166, 0.12) !important;
+}
+
+.dark .text-cyan-600,
+.dark .text-teal-600,
+.dark .text-cyan-700,
+.dark .text-teal-700 {
+  color: #2dd4bf !important;
+}
+
+/* Orange */
+.dark .bg-orange-50 {
+  background-color: rgba(249, 115, 22, 0.12) !important;
+}
+
+.dark .text-orange-600,
+.dark .text-orange-700 {
+  color: #fb923c !important;
+}
+
+/* Form Controls & Native Elements */
+.dark select option {
+  background-color: var(--surface) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark ::selection {
+  background-color: rgba(127, 29, 63, 0.3);
+  color: #ffffff;
+}
+
+/* ── Clean Professional Minimalist Scrollbars (Both Light and Dark Mode) ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(118, 92, 103, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(118, 92, 103, 0.35);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(229, 212, 218, 0.15);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(229, 212, 218, 0.3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(118, 92, 103, 0.2) transparent;
+}

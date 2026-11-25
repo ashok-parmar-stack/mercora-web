@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Bookmark, ExternalLink, Trash2 } from "lucide-react";
 import { Business } from "../../businesses/types/business.types";
 import { EmptyState } from "@/components/common/EmptyState";
-import { APP_MESSAGES } from "@/config/messages.config";
+import { APP_MESSAGES } from "@/config/messages";
 import {
   Sheet,
   SheetContent,

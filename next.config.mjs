@@ -52,7 +52,7 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: false,
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   images: {
     remotePatterns: [

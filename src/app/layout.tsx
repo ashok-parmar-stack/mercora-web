@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from 'next';
 import React from 'react';
 import './globals.css';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/components.css';
+import '../styles/dark-overrides.css';
 import { GlobalWheelHandler } from '../components/common/GlobalWheelHandler';
 import { Providers } from './providers';
 import { Geist } from "next/font/google";

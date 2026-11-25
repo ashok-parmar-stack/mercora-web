@@ -6,14 +6,16 @@ import { cn } from "@/lib/utils";
 
 export interface LoadingSpinnerProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
-  variant?: "primary" | "secondary" | "white" | "muted";
+  variant?: "primary" | "secondary" | "red" | "white" | "muted" | "current";
   className?: string;
+  label?: string;
 }
 
 export function LoadingSpinner({
   size = "md",
   variant = "primary",
   className = "",
+  label = "Loading...",
 }: LoadingSpinnerProps) {
   const sizeMap = {
     xs: "w-3 h-3",
@@ -26,8 +28,10 @@ export function LoadingSpinner({
   const variantMap = {
     primary: "text-primary",
     secondary: "text-accent",
+    red: "text-[var(--theme-red)]",
     white: "text-white",
     muted: "text-muted-foreground",
+    current: "text-current",
   };
 
   return (
@@ -38,7 +42,7 @@ export function LoadingSpinner({
         variantMap[variant],
         className
       )}
-      aria-label="Loading..."
+      aria-label={label}
     />
   );
 }

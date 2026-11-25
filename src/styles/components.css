@@ -1,0 +1,333 @@
+/* ── Theme-Aware Form Controls ─────────── */
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 0.28rem;
+  border: 1.5px solid var(--border-strong, #cbd5e1);
+  background-color: var(--surface, #ffffff);
+  display: inline-grid;
+  place-content: center;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:hover {
+  border-color: var(--primary, #ee3135);
+  box-shadow: 0 0 0 2px rgba(238, 49, 53, 0.1);
+}
+
+.dark input[type="checkbox"] {
+  border-color: var(--border, #2d2d2d);
+  background-color: var(--surface, #161616);
+}
+
+.dark input[type="checkbox"]:hover {
+  border-color: var(--border-hover, #444444);
+  background-color: var(--surface-hover, #2a2a2a);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--primary, #ee3135);
+  border-color: var(--primary, #ee3135);
+}
+
+.dark input[type="checkbox"]:checked {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.dark input[type="checkbox"]:checked::before {
+  background-color: #000000;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "";
+  width: 0.65rem;
+  height: 0.65rem;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background-color: #ffffff;
+}
+
+input[type="checkbox"]:indeterminate {
+  background-color: var(--primary, #ee3135);
+  border-color: var(--primary, #ee3135);
+}
+
+.dark input[type="checkbox"]:indeterminate {
+  background-color: #ffffff;
+  border-color: #ffffff;
+}
+
+.dark input[type="checkbox"]:indeterminate::before {
+  background-color: #000000;
+}
+
+input[type="checkbox"]:indeterminate::before {
+  content: "";
+  width: 0.55rem;
+  height: 2px;
+  background-color: #ffffff;
+  border-radius: 1px;
+}
+
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+input[type="radio"] {
+  accent-color: var(--border-focus);
+  cursor: pointer;
+}
+
+/* Disable browser number input spin arrows */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ── Eyebrow (Duxre: small red caps, wide spacing) ── */
+.eyebrow {
+  font-family: var(--theme-font-sans);
+  font-size: var(--text-2xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--theme-red);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+
+/* ── Red Dot ─────────────────────────────── */
+.red-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--theme-red);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* ── Callout Quote (Duxre-style left border) ── */
+.duxre-callout {
+  border-left: 3px solid var(--theme-red);
+  padding: 2px 0 2px 20px;
+  margin: 28px 0;
+  color: var(--theme-gray-600);
+  font-size: var(--text-sm);
+  line-height: var(--leading-loose);
+  font-weight: 400;
+}
+
+.duxre-callout strong {
+  font-weight: 700;
+  color: var(--theme-ink-darkest);
+}
+
+/* ── Buttons (Rethink Sans: 12-14px, 600-700, tracking 0.02-0.06em) ── */
+.btn-red {
+  background-color: var(--theme-red);
+  color: #ffffff;
+  border: 1.5px solid var(--theme-red);
+  padding: 12px 22px;
+  border-radius: var(--theme-radius-sm);
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+  transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-red:hover {
+  background-color: var(--theme-red-hover);
+  border-color: var(--theme-red-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(238, 49, 53, 0.28);
+}
+
+.btn-outline {
+  background-color: #ffffff;
+  color: var(--theme-ink-darkest);
+  border: 1.5px solid var(--theme-ink-darkest);
+  padding: 12px 20px;
+  border-radius: var(--theme-radius-sm);
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  transition: all 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  background-color: var(--theme-gray-50);
+  transform: translateY(-1px);
+}
+
+/* ── Exact Rectangular CTAs: START FREE (Red) & BOOK A DEMO (Black) ── */
+.btn-primary-bold {
+  background-color: var(--theme-red, #e11d48);
+  color: #ffffff !important;
+  border: 1.5px solid var(--theme-red, #e11d48);
+  padding: 14px 30px;
+  border-radius: 2px;
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary-bold:hover {
+  background-color: var(--theme-red-hover, #be123c);
+  border-color: var(--theme-red-hover, #be123c);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+}
+
+.btn-black {
+  background-color: #0d1117;
+  color: #ffffff !important;
+  border: 1.5px solid #0d1117;
+  padding: 14px 30px;
+  border-radius: 2px;
+  font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: all 150ms ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-black:hover {
+  background-color: #000000;
+  border-color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Cards ─────────────────────────────── */
+.duxre-card {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-warm-line);
+  border-radius: var(--theme-radius-lg);
+  box-shadow: 0 4px 24px rgba(20, 22, 26, 0.05);
+  transition: box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.duxre-card:hover {
+  box-shadow: 0 10px 36px rgba(20, 22, 26, 0.09);
+  border-color: #d0d0d0;
+}
+
+/* ── Container (shared shell for header, main, footer) ── */
+/* Enterprise-grade 1280px container with unified responsive padding */
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Small tablets / phones (640px+) */
+@media (min-width: 640px) {
+  .container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Desktop & laptops (1024px+) */
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.8s infinite;
+}
+
+/* OPT-06: Consolidated shimmer utility — use this instead of inlining all before:* classes */
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-hover);
+}
+
+.skeleton-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  animation: shimmer 1.8s infinite;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent);
+}
+
+.dark .skeleton-shimmer::before {
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.05),
+      transparent);
+}

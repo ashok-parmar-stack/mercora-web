@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { User, Sun, Key, Laptop, LogOut } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/common";
+import { apiHttpClient, extractErrorMessage } from "@/lib/http/client";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useUIStore } from "@/lib/store/ui-store";
 import {
@@ -39,10 +40,10 @@ export default function AdminProfilePage() {
   useEffect(() => {
     if (user?.avatarUrl !== undefined) setAvatarUrl(user.avatarUrl || "");
 
-    fetch("/api/upload")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json?.data) setStorageInfo(json.data);
+    apiHttpClient
+      .get<{ data?: { driver: string; bucketName: string; region?: string } }>("/upload")
+      .then((res) => {
+        if (res.data?.data) setStorageInfo(res.data.data);
       })
       .catch(() => {});
   }, [user]);
@@ -71,9 +72,15 @@ export default function AdminProfilePage() {
       formData.append("file", file);
       formData.append("folder", "avatars");
 
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const json = await res.json();
-      if (!res.ok || !json.success) throw new Error(json.error || "Upload failed");
+      const res = await apiHttpClient.post<{
+        success?: boolean;
+        error?: string;
+        data?: { url?: string };
+      }>("/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const json = res.data;
+      if (!json?.success) throw new Error(json?.error || "Upload failed");
 
       const finalUrl = json.data?.url || objectUrl;
       setAvatarUrl(finalUrl);
@@ -81,7 +88,7 @@ export default function AdminProfilePage() {
       addToast("success", "Avatar Uploaded", `Stored successfully in bucket.`);
     } catch (err: any) {
       setAvatarUrl(prevUrl);
-      addToast("error", "Upload Failed", err?.message || "Could not complete upload.");
+      addToast("error", "Upload Failed", extractErrorMessage(err, "Could not complete upload."));
     } finally {
       setIsUploadingAvatar(false);
     }

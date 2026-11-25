@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import axios from "axios";
+import { getInternalBackendUrl } from "@/app/actions/action-helpers";
 
 export interface DemoRequestBody {
   fullName: string;
@@ -48,30 +50,41 @@ export async function POST(req: Request) {
       }
     }
 
-    // Generate unique enterprise lead tracking ID
-    const leadId = `LEAD-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-
     const leadRecord = {
-      leadId,
-      fullName: fullName.trim(),
+      businessId: "mercora-platform-demo",
+      businessName: "Mercora Platform Demo",
+      name: fullName.trim(),
       email: email.trim().toLowerCase(),
-      company: company.trim(),
       phone: `${countryCode} ${phoneNumber.trim()}`.trim(),
-      interest,
+      company: company.trim(),
+      message: `Interested in: ${interest}`,
       source: "LANDING_PAGE_MODAL",
-      status: "NEW",
-      createdAt: new Date().toISOString(),
     };
 
-    // Log the received lead for enterprise CRM ingestion & audit trail
-    console.log("[Mercora] New Demo Lead Ingested:", leadRecord);
+    // Persist demo request through NestJS database-backed enquiry endpoint
+    const backendUrl = getInternalBackendUrl();
+    const apiRes = await axios.post(
+      `${backendUrl}/api/businesses/enquiries`,
+      leadRecord,
+      { headers: { "Content-Type": "application/json" }, validateStatus: () => true },
+    );
+
+    if (apiRes.status >= 400 || !apiRes.data?.success) {
+      throw new Error(apiRes.data?.message || "Failed to persist demo walkthrough request.");
+    }
+
+    const leadId = apiRes.data.id || `LEAD-${Date.now().toString(36).toUpperCase()}`;
 
     return NextResponse.json(
       {
         success: true,
         message: "Demo walkthrough request registered successfully.",
         leadId,
-        data: leadRecord,
+        data: {
+          leadId,
+          status: "NEW",
+          createdAt: apiRes.data.receivedAt || new Date().toISOString(),
+        },
       },
       { status: 201 }
     );

@@ -36,7 +36,6 @@ const DEFAULT_ACCEPTED_IMAGES: Accept = {
   "image/png": [".png"],
   "image/webp": [".webp"],
   "image/gif": [".gif"],
-  "image/svg+xml": [".svg"],
 };
 
 export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
@@ -76,7 +75,7 @@ export const ImageUploadDropzone: React.FC<ImageUploadDropzoneProps> = ({
           setStorageInfo(json.data);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       isMounted = false;

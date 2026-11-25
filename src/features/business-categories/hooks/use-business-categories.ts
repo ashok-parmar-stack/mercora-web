@@ -1,48 +1,26 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { fetchBusinessCategories, fetchBusinessCategoriesTree } from "../business-category-api";
-import { BusinessCategoryItem } from "../types";
+import { useEffect, useCallback } from "react";
+import { useTaxonomyStore } from "@/lib/store/taxonomy-store";
 
 export function useBusinessCategories() {
-  const [categories, setCategories] = useState<BusinessCategoryItem[]>([]);
-  const [treeCategories, setTreeCategories] = useState<BusinessCategoryItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const load = useCallback(() => {
-    setLoading(true);
-    setError(null);
-
-    Promise.all([
-      fetchBusinessCategories(),
-      fetchBusinessCategoriesTree(),
-    ])
-      .then(([flat, tree]) => {
-        if (flat && flat.length > 0) {
-          setCategories(flat);
-        }
-        if (tree && tree.length > 0) {
-          setTreeCategories(tree);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("useBusinessCategories hook error:", err);
-        setError(err?.message || "Failed to load business categories");
-        setLoading(false);
-      });
-  }, []);
+  const categories = useTaxonomyStore((s) => s.businessCategories);
+  const treeCategories = useTaxonomyStore((s) => s.businessCategoryTree);
+  const loading = useTaxonomyStore((s) => s.isLoading);
+  const error = useTaxonomyStore((s) => s.error);
+  const fetchTaxonomy = useTaxonomyStore((s) => s.fetchTaxonomy);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    void fetchTaxonomy(false);
+  }, [fetchTaxonomy]);
+
+  const refetch = useCallback(() => fetchTaxonomy(true), [fetchTaxonomy]);
 
   return {
     categories,
     treeCategories,
     loading,
     error,
-    refetch: load,
+    refetch,
   };
 }

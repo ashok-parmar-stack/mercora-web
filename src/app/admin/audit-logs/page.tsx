@@ -1,11 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
-import { PageHeader } from "../../../components/layout/PageHeader";
-import { DataTable, Column } from "../../../components/data-table/DataTable";
-import { Badge } from "../../../components/ui/Badge";
-import { LoadingState } from "@/components/common/LoadingState";
-import { ErrorState } from "@/components/common/ErrorState";
+import React from "react";
+import { useTableState } from "@/lib/hooks/useTableState";
+import { useAbortableFetch } from "@/lib/hooks/useAbortableFetch";
+import { adminV1Client } from "@/lib/http/client";
+import {
+  Badge,
+  Column,
+  DataTable,
+  ErrorState,
+  LoadingState,
+  PageHeader,
+} from "@/components/common";
 
 interface AuditLogEntry {
   id: string;
@@ -19,33 +25,15 @@ interface AuditLogEntry {
 }
 
 export default function AuditLogsPage() {
-  const [search, setSearch] = useState("");
-  const [logs, setLogs] = useState<AuditLogEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { search, setSearch } = useTableState({ defaultPageSize: 10 });
+  const [logs, setLogs] = React.useState<AuditLogEntry[]>([]);
 
-  const loadLogs = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/v1/admin/audit-logs", { cache: "no-store" });
-      if (res.ok) {
-        const json = await res.json();
-        setLogs(json.data || []);
-      } else {
-        throw new Error(`Failed to load audit trails (HTTP ${res.status})`);
-      }
-    } catch (err: any) {
-      console.error("Error loading audit logs:", err);
-      setError(err?.message || "Unable to connect to audit log service.");
-    } finally {
-      setLoading(false);
-    }
+  const { isLoading, error, load } = useAbortableFetch(async (signal) => {
+    const res = await adminV1Client.get<{ data?: AuditLogEntry[] }>("/audit-logs", {
+      signal,
+    });
+    setLogs(res.data?.data || []);
   }, []);
-
-  useEffect(() => {
-    loadLogs();
-  }, [loadLogs]);
 
   const filtered = logs.filter((l) => {
     if (!search.trim()) return true;
@@ -76,7 +64,7 @@ export default function AuditLogsPage() {
         <div className="flex items-center gap-2">
           <Badge
             variant={
-              l.severity === "CRITICAL" ? "red" : l.severity === "WARNING" ? "amber" : "blue"
+              l.severity === "CRITICAL" ? "danger" : l.severity === "WARNING" ? "warning" : "info"
             }
             size="sm"
           >
@@ -118,14 +106,10 @@ export default function AuditLogsPage() {
         description="Immutable administrative activity trail for compliance, forensic analysis, and security auditing."
       />
 
-      {loading ? (
+      {isLoading ? (
         <LoadingState message="Loading audit trails..." />
       ) : error ? (
-        <ErrorState
-          title="Unable to Load Audit Logs"
-          message={error}
-          onRetry={loadLogs}
-        />
+        <ErrorState title="Unable to Load Audit Logs" message={error} onRetry={load} />
       ) : (
         <DataTable<AuditLogEntry>
           tableKey="audit-logs-table"
@@ -137,7 +121,11 @@ export default function AuditLogsPage() {
           searchPlaceholder="Search audit events by actor, action, or details..."
           enableSelection={false}
           emptyTitle="No Audit Logs Recorded"
-          emptyDescription={search ? `No audit events matched "${search}".` : "No system events have been recorded yet."}
+          emptyDescription={
+            search
+              ? `No audit events matched "${search}".`
+              : "No system events have been recorded yet."
+          }
         />
       )}
     </div>

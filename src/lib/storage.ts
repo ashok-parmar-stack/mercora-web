@@ -38,8 +38,54 @@ export const ALLOWED_IMAGE_TYPES = [
   'image/png',
   'image/webp',
   'image/gif',
-  'image/svg+xml',
 ];
+
+const EXTENSION_BY_MIME: Record<string, string[]> = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+  'image/webp': ['.webp'],
+  'image/gif': ['.gif'],
+};
+
+const SAFE_FOLDER_REGEX = /^[a-zA-Z0-9_-]{1,40}(?:\/[a-zA-Z0-9_-]{1,40})?$/;
+
+function sanitizeUploadFolder(folder: string): string {
+  const cleaned = folder.trim().replace(/^\/+|\/+$/g, '');
+  if (!cleaned || cleaned.includes('..') || !SAFE_FOLDER_REGEX.test(cleaned)) {
+    throw new Error('Invalid upload folder path.');
+  }
+  return cleaned;
+}
+
+function hasValidImageMagicBytes(buffer: Buffer, mimeType: string): boolean {
+  if (!buffer || buffer.length < 4) return false;
+  switch (mimeType) {
+    case 'image/jpeg':
+      return buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+    case 'image/png':
+      return (
+        buffer[0] === 0x89 &&
+        buffer[1] === 0x50 &&
+        buffer[2] === 0x4e &&
+        buffer[3] === 0x47
+      );
+    case 'image/gif':
+      return (
+        buffer[0] === 0x47 &&
+        buffer[1] === 0x49 &&
+        buffer[2] === 0x46 &&
+        buffer[3] === 0x38
+      );
+    case 'image/webp':
+      return (
+        buffer.length >= 12 &&
+        buffer.subarray(0, 4).toString('ascii') === 'RIFF' &&
+        buffer.subarray(8, 12).toString('ascii') === 'WEBP'
+      );
+    default:
+      return false;
+  }
+}
 
 export const MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -189,10 +235,19 @@ export async function uploadFileToBucket(
   folder = 'uploads'
 ): Promise<UploadResult> {
   const config = getStorageConfig();
+  const safeFolder = sanitizeUploadFolder(folder);
+  const normalizedMime = (mimeType || '').toLowerCase();
 
-  // Validate MIME type
-  if (!ALLOWED_IMAGE_TYPES.includes(mimeType)) {
-    throw new Error(`Invalid file type '${mimeType}'. Allowed: JPG, PNG, WEBP, GIF, SVG.`);
+  // Validate MIME type (SVG blocked to prevent stored XSS)
+  if (!ALLOWED_IMAGE_TYPES.includes(normalizedMime)) {
+    throw new Error(`Invalid file type '${mimeType}'. Allowed: JPG, PNG, WEBP, GIF.`);
+  }
+
+  // Validate Extension matches declared MIME type
+  const cleanExt = path.extname(originalFileName || '').toLowerCase();
+  const allowedExts = EXTENSION_BY_MIME[normalizedMime] || [];
+  if (!allowedExts.includes(cleanExt)) {
+    throw new Error(`File extension '${cleanExt || 'none'}' does not match MIME type '${normalizedMime}'.`);
   }
 
   // Validate File Size (10 MB limit)
@@ -200,18 +255,22 @@ export async function uploadFileToBucket(
     throw new Error(`File size exceeds 10 MB limit.`);
   }
 
+  // Validate magic bytes
+  if (!hasValidImageMagicBytes(fileBuffer, normalizedMime)) {
+    throw new Error('Uploaded file signature does not match declared image type.');
+  }
+
   // Optimize image buffer (WebP conversion, resizing, EXIF auto-rotation, metadata stripping)
-  const opt = await optimizeImage(fileBuffer, mimeType, folder);
+  const opt = await optimizeImage(fileBuffer, normalizedMime, safeFolder);
   const targetBuffer = opt.buffer;
   const targetMime = opt.mimeType;
   const targetExt = opt.extension;
 
   // Generate safe unique filename using optimized extension (e.g. .webp)
-  const cleanExt = path.extname(originalFileName).toLowerCase();
-  const safeBase = path.basename(originalFileName, cleanExt).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 24);
+  const safeBase = path.basename(originalFileName, cleanExt).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 24) || 'upload';
   const uniqueId = crypto.randomBytes(6).toString('hex');
   const fileName = `${safeBase}-${Date.now()}-${uniqueId}${targetExt}`;
-  const key = `${folder}/${fileName}`;
+  const key = `${safeFolder}/${fileName}`;
 
   let result: UploadResult;
 
@@ -221,11 +280,11 @@ export async function uploadFileToBucket(
       result = await uploadToS3Bucket(targetBuffer, key, targetMime, config);
     } catch (err: any) {
       console.warn(`[Storage] Cloud bucket upload failed, falling back to local storage:`, err?.message || err);
-      result = await uploadToLocalDisk(targetBuffer, fileName, targetMime, folder, config.bucketName, err?.message);
+      result = await uploadToLocalDisk(targetBuffer, fileName, targetMime, safeFolder, config.bucketName, err?.message);
     }
   } else {
     // Fallback to local storage if S3 credentials not present
-    result = await uploadToLocalDisk(targetBuffer, fileName, targetMime, folder, config.bucketName);
+    result = await uploadToLocalDisk(targetBuffer, fileName, targetMime, safeFolder, config.bucketName);
   }
 
   // Attach optimization metrics to response
