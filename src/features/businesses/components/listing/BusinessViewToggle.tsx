@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { LayoutGrid, Table as TableIcon } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
 import { ViewMode } from "../../types/business.types";
 
 export interface BusinessViewToggleProps {
@@ -11,33 +11,33 @@ export interface BusinessViewToggleProps {
 
 export function BusinessViewToggle({ viewMode, onViewModeChange }: BusinessViewToggleProps) {
   return (
-    <div className="flex items-center p-1 bg-surface rounded-xl border border-border shadow-2xs">
+    <div className="flex items-center p-0.5 bg-gray-100 rounded-xl border border-gray-200">
       <button
         type="button"
         onClick={() => onViewModeChange("card")}
-        aria-label="Card view"
+        aria-label="Grid view"
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
           viewMode === "card"
-            ? "bg-primary text-white shadow-xs"
-            : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+            ? "bg-[#7F1D3F] text-white shadow-xs"
+            : "text-gray-600 hover:text-gray-900"
         }`}
       >
         <LayoutGrid className="w-3.5 h-3.5" />
-        <span>Card</span>
+        <span>Grid</span>
       </button>
 
       <button
         type="button"
         onClick={() => onViewModeChange("table")}
-        aria-label="Table view"
+        aria-label="List view"
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
           viewMode === "table"
-            ? "bg-primary text-white shadow-xs"
-            : "text-text-secondary hover:text-text-primary hover:bg-surface-hover"
+            ? "bg-[#7F1D3F] text-white shadow-xs"
+            : "text-gray-600 hover:text-gray-900"
         }`}
       >
-        <TableIcon className="w-3.5 h-3.5" />
-        <span>Table</span>
+        <List className="w-3.5 h-3.5" />
+        <span>List</span>
       </button>
     </div>
   );

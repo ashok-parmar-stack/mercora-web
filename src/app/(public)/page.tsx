@@ -18,10 +18,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans transition-colors">
-      <Header
-        savedCount={savedCount}
-        onRequestDemo={() => setIsDemoModalOpen(true)}
-      />
+      <Header savedCount={savedCount} />
       <main className="flex-1">
         <HeroSection onRequestDemo={() => setIsDemoModalOpen(true)} />
         <MetricsStrip />

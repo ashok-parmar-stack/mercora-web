@@ -77,6 +77,7 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
         label: "Catalog Master",
         icon: Package,
         children: [
+          { href: "/admin/business-categories", label: "Business Categories", icon: Layers, badge: "Types" },
           { href: "/admin/categories", label: "Product Categories", icon: FolderTree },
           { href: "/admin/hsn-codes", label: "HSN Code Master", icon: Hash },
         ],

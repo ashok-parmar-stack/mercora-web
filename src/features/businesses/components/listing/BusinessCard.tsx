@@ -5,27 +5,43 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Star,
   MapPin,
-  Calendar,
   Bookmark,
   ArrowRight,
-  Phone,
   Mail,
   Globe,
+  Ship,
+  Truck,
+  Factory,
+  Building2,
+  Briefcase,
+  Layers,
+  Check,
+  Cog,
+  BarChart2,
   Package,
+  LucideIcon,
 } from "lucide-react";
 import { Business } from "../../types/business.types";
-import { BusinessBadge } from "../shared/BusinessBadge";
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80";
+const CATEGORY_IMAGES: Record<string, string> = {
+  export: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80", // Cargo port & ship
+  importer: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&w=800&q=80", // Cargo ship on sea
+  logistics: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80", // Yellow/Orange cargo truck
+  "freight-forwarder": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80", // Logistics warehouse / freight
+  manufacture: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80", // Industrial manufacturing plant
+  wholesaler: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80", // Warehouse racking
+  "trading-company": "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80", // Business handshake
+  distributor: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80",
+  default: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80",
+};
 
 export interface BusinessCardProps {
   business: Business;
   isSaved?: boolean;
   onToggleSave?: (businessId: string) => void;
   onSelect?: (business: Business) => void;
+  onContact?: (business: Business) => void;
 }
 
 export function BusinessCard({
@@ -33,10 +49,18 @@ export function BusinessCard({
   isSaved: controlledIsSaved,
   onToggleSave,
   onSelect,
+  onContact,
 }: BusinessCardProps) {
   const router = useRouter();
   const [internalSaved, setInternalSaved] = useState(Boolean(controlledIsSaved));
-  const [imgSrc, setImgSrc] = useState(business.imageUrl || FALLBACK_IMAGE);
+
+  // Determine appropriate category slug & image
+  const categoryType = (business.businessType || business.category || "").toLowerCase();
+  const matchedKey =
+    Object.keys(CATEGORY_IMAGES).find((k) => categoryType.includes(k)) || "default";
+
+  const defaultImage = CATEGORY_IMAGES[matchedKey] || CATEGORY_IMAGES.default;
+  const [imgSrc, setImgSrc] = useState(business.imageUrl || defaultImage);
 
   useEffect(() => {
     if (controlledIsSaved !== undefined) {
@@ -45,8 +69,8 @@ export function BusinessCard({
   }, [controlledIsSaved]);
 
   useEffect(() => {
-    setImgSrc(business.imageUrl || FALLBACK_IMAGE);
-  }, [business.imageUrl]);
+    setImgSrc(business.imageUrl || defaultImage);
+  }, [business.imageUrl, defaultImage]);
 
   const saved = controlledIsSaved !== undefined ? controlledIsSaved : internalSaved;
 
@@ -54,9 +78,7 @@ export function BusinessCard({
     e.preventDefault();
     e.stopPropagation();
     setInternalSaved((prev) => !prev);
-    if (onToggleSave) {
-      onToggleSave(business.id);
-    }
+    onToggleSave?.(business.id);
   };
 
   const handleCardClick = () => {
@@ -67,147 +89,141 @@ export function BusinessCard({
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleCardClick();
+  const handleContactClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onContact) {
+      onContact(business);
+    } else {
+      router.push(`/businesses/${business.slug}#contact`);
     }
   };
 
-  const productCount = business.products?.length || 0;
+  // Avatar Icon Resolver
+  const getAvatarIcon = () => {
+    if (categoryType.includes("export")) return { Icon: Globe, bg: "bg-cyan-50 text-cyan-600" };
+    if (categoryType.includes("logistics")) return { Icon: Truck, bg: "bg-blue-50 text-blue-600" };
+    if (categoryType.includes("manufactur")) return { Icon: Cog, bg: "bg-blue-50 text-blue-600" };
+    if (categoryType.includes("import")) return { Icon: Ship, bg: "bg-cyan-50 text-cyan-600" };
+    if (categoryType.includes("distribut") || categoryType.includes("wholesale"))
+      return { Icon: Package, bg: "bg-indigo-50 text-indigo-600" };
+    if (categoryType.includes("trading")) return { Icon: BarChart2, bg: "bg-emerald-50 text-emerald-600" };
+    return { Icon: Building2, bg: "bg-pink-50 text-[#7F1D3F]" };
+  };
+
+  const { Icon: AvatarIcon, bg: avatarBg } = getAvatarIcon();
 
   return (
     <div
       role="article"
       tabIndex={0}
       onClick={handleCardClick}
-      onKeyDown={handleKeyDown}
-      className="group relative flex flex-col bg-surface rounded-2xl border border-border hover:border-primary/50 shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20"
+      className="group relative flex flex-col bg-white rounded-2xl border border-gray-200 hover:border-[#7F1D3F]/40 shadow-xs hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer"
     >
-      {/* Business Image Banner */}
-      <div
-        className="relative h-44 min-h-[11rem] shrink-0 w-full bg-background-secondary overflow-hidden"
-        style={{ minHeight: "11rem", height: "11rem" }}
-      >
+      {/* 1. Cover Image Banner */}
+      <div className="relative h-44 w-full bg-gray-100 overflow-hidden">
         <Image
           src={imgSrc}
           alt={business.name}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          onError={() => setImgSrc(FALLBACK_IMAGE)}
+          onError={() => setImgSrc(CATEGORY_IMAGES.default)}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10" />
 
-        {/* Top Badges */}
-        <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
-          <BusinessBadge isVerified={business.isVerified} tier={business.tier} size="sm" />
+        {/* Top-Left: Verified Pill Badge */}
+        <div className="absolute top-3 left-3 z-10">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-xs text-emerald-600 text-[11px] font-bold shadow-xs">
+            <Check className="w-3 h-3 stroke-[3]" />
+            <span>Verified</span>
+          </div>
         </div>
 
-        {/* Save button overlay */}
+        {/* Top-Right: Instagram Bookmark Button */}
         <button
           type="button"
           onClick={handleSaveClick}
-          aria-label={saved ? "Remove from saved" : "Save business (Instagram bookmark)"}
-          title={saved ? "Saved" : "Save to collection"}
-          className={`absolute top-3 left-3 p-2 rounded-xl backdrop-blur-md transition-all z-30 pointer-events-auto cursor-pointer shadow-xs border ${
+          aria-label={saved ? "Remove from saved" : "Save business"}
+          title={saved ? "Saved" : "Save business"}
+          className={`absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all z-20 shadow-xs cursor-pointer ${
             saved
-              ? "bg-primary text-white border-primary shadow-sm ring-2 ring-white/40"
-              : "bg-surface/90 text-text-secondary hover:text-primary border-border"
+              ? "bg-[#7F1D3F] text-white shadow-sm"
+              : "bg-white/90 hover:bg-white text-gray-700 hover:text-[#7F1D3F]"
           }`}
         >
-          <Bookmark className={`w-4 h-4 ${saved ? "fill-current text-white" : ""}`} />
+          <Bookmark className={`w-4 h-4 ${saved ? "fill-white text-white" : ""}`} />
         </button>
-
-        {/* Location pill over image */}
-        <div className="absolute bottom-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/75 backdrop-blur-md text-white text-[11px] font-semibold border border-white/10 shadow-xs">
-          <MapPin className="w-3 h-3 text-accent" />
-          <span>
-            {business.city}, {business.state}
-          </span>
-        </div>
       </div>
 
-      {/* Card Content */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-        <div>
-          {/* Business Type & Category */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-text-muted mb-1">
-            <span className="text-primary font-bold uppercase tracking-wider text-[11px]">
-              {business.businessType}
-            </span>
-            <span className="text-border">·</span>
-            <span className="truncate text-text-secondary font-medium">{business.category}</span>
+      {/* 2. Overlapping Circular Avatar */}
+      <div className="relative -mt-7 ml-4 z-10 w-14 h-14 rounded-full bg-white p-1 border-2 border-white shadow-md flex items-center justify-center">
+        {business.logoUrl ? (
+          <Image
+            src={business.logoUrl}
+            alt={business.name}
+            width={48}
+            height={48}
+            className="w-full h-full rounded-full object-cover"
+          />
+        ) : (
+          <div className={`w-full h-full rounded-full flex items-center justify-center ${avatarBg}`}>
+            <AvatarIcon className="w-6 h-6 stroke-[2]" />
           </div>
+        )}
+      </div>
 
+      {/* 3. Card Body Content */}
+      <div className="p-4 pt-2 flex-1 flex flex-col justify-between space-y-3">
+        <div className="space-y-1.5">
           {/* Business Name */}
-          <h3 className="text-base font-bold text-text-primary group-hover:text-primary transition-colors line-clamp-1">
+          <h3 className="font-extrabold text-base text-gray-900 group-hover:text-[#7F1D3F] transition-colors line-clamp-1">
             {business.name}
           </h3>
 
-          {/* Rating */}
-          <div className="flex items-center gap-1.5 mt-1.5">
-            <div className="flex items-center text-status-warning">
-              <Star className="w-3.5 h-3.5 fill-current" />
-            </div>
-            <span className="text-xs font-bold text-text-primary">
-              {business.rating}
+          {/* Category Badge */}
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FCECEE] text-[#7F1D3F]">
+              <span className="w-1.5 h-1.5 rounded-full border border-[#7F1D3F]" />
+              <span>{business.businessType || business.category || "Verified Member"}</span>
             </span>
-            <span className="text-xs text-text-muted">
-              ({business.reviewCount} Reviews)
+          </div>
+
+          {/* Location */}
+          <div className="flex items-center gap-1 text-xs text-gray-500 font-medium pt-0.5">
+            <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+            <span className="line-clamp-1">
+              {[business.city, business.state, "India"].filter(Boolean).join(", ")}
             </span>
           </div>
 
           {/* Short Description */}
-          <p className="mt-2 text-xs text-text-secondary line-clamp-2 leading-relaxed font-normal">
-            {business.description}
+          <p className="text-xs text-gray-600 font-normal line-clamp-2 leading-relaxed pt-1">
+            {business.description ||
+              business.fullOverview ||
+              "Verified enterprise supplier offering high-grade industrial capabilities, certified trade quality, and dedicated supply chain support."}
           </p>
         </div>
 
-        {/* Contact Icons Bar */}
-        <div className="flex items-center gap-2 pt-2 border-t border-border text-text-muted">
-          <span
-            title={`Call ${business.phone || "N/A"}`}
-            className="p-1.5 rounded-lg bg-surface-hover text-text-secondary hover:text-primary transition-colors"
-          >
-            <Phone className="w-3.5 h-3.5" />
-          </span>
-          <span
-            title={`Email ${business.email || "N/A"}`}
-            className="p-1.5 rounded-lg bg-surface-hover text-text-secondary hover:text-primary transition-colors"
-          >
-            <Mail className="w-3.5 h-3.5" />
-          </span>
-          <span
-            title={`Visit ${business.website || "N/A"}`}
-            className="p-1.5 rounded-lg bg-surface-hover text-text-secondary hover:text-primary transition-colors"
-          >
-            <Globe className="w-3.5 h-3.5" />
-          </span>
-          <span
-            title={`${productCount} Products`}
-            className="flex items-center gap-1 text-[11px] font-semibold text-text-muted ml-auto"
-          >
-            <Package className="w-3.5 h-3.5 text-text-muted" />
-            <span>{productCount} Products</span>
-          </span>
-        </div>
-
-        {/* Footer Meta & Action */}
-        <div className="pt-3 border-t border-border flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs text-text-muted">
-            <Calendar className="w-3.5 h-3.5 text-text-muted" />
-            <span>Est. {business.establishedYear}</span>
-          </div>
-
+        {/* 4. Card Footer */}
+        <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
           <Link
             href={`/businesses/${business.slug}`}
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-primary-soft text-primary group-hover:bg-primary group-hover:text-white text-xs font-bold transition-all shadow-2xs"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] hover:underline"
           >
-            <span>View Details</span>
+            <span>View Profile</span>
             <ArrowRight className="w-3 h-3" />
           </Link>
+
+          <button
+            type="button"
+            onClick={handleContactClick}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#7F1D3F] hover:bg-[#681532] text-white text-xs font-bold shadow-xs transition-colors cursor-pointer"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Contact</span>
+          </button>
         </div>
       </div>
     </div>

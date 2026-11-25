@@ -16,6 +16,9 @@ export function AddBusinessModal({
   onBusinessCreated,
 }: AddBusinessModalProps) {
   const [businessType, setBusinessType] = useState("Manufacturer");
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [subcategoryId, setSubcategoryId] = useState("");
+  const [categoryData, setCategoryData] = useState<Record<string, any>>({});
   const [name, setName] = useState("");
   const [category, setCategory] = useState("Industrial Machinery");
   const [city, setCity] = useState("Ahmedabad");
@@ -108,6 +111,8 @@ export function AddBusinessModal({
         establishedYear: Number(establishedYear) || new Date().getFullYear(),
         employeeCount,
         verificationStatus,
+        categoryData,
+        categoryIds: [selectedCategoryId, subcategoryId].filter(Boolean),
         products: validProducts,
       };
 
@@ -152,6 +157,12 @@ export function AddBusinessModal({
         <AddBusinessBasicSection
           businessType={businessType}
           setBusinessType={setBusinessType}
+          selectedCategoryId={selectedCategoryId}
+          setSelectedCategoryId={setSelectedCategoryId}
+          subcategoryId={subcategoryId}
+          setSubcategoryId={setSubcategoryId}
+          categoryData={categoryData}
+          setCategoryData={setCategoryData}
           name={name}
           setName={setName}
           category={category}
