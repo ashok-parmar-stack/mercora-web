@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FolderTree, List, Plus, RefreshCw } from "lucide-react";
 import {
   BulkAction,
@@ -23,6 +24,7 @@ import {
 } from "@/features/business-categories/components/business-category-columns";
 
 export default function AdminBusinessCategoriesPage() {
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<"table" | "tree">("table");
   const {
     categories,
@@ -74,7 +76,7 @@ export default function AdminBusinessCategoriesPage() {
       <PageHeader
         title="Business Category Master"
         description="Dynamic management of core business types, logistics roles, and operational classifications across Mercora."
-        actionButton={{ label: "Add Category", onClick: () => handleOpenCreate(), icon: <Plus className="w-4 h-4" /> }}
+        actionButton={{ label: "Add Category", href: "/admin/business-categories/create", icon: <Plus className="w-4 h-4" /> }}
         extraActions={
           <div className="flex items-center gap-2">
             <div className="bg-background-secondary p-1 rounded-xl flex items-center gap-1 border border-border">
@@ -130,8 +132,9 @@ export default function AdminBusinessCategoriesPage() {
           defaultSortDir="asc"
           renderActions={(cat) =>
             renderBusinessCategoryRowActions(cat, {
-              onAddSubcategory: handleOpenCreate,
-              onEdit: handleOpenEdit,
+              onAddSubcategory: (parentId) =>
+                router.push(`/admin/business-categories/create?parentId=${encodeURIComponent(parentId)}`),
+              onEdit: (c) => router.push(`/admin/business-categories/${encodeURIComponent(c.id)}/edit`),
               onDelete: setDeleteTarget,
             })
           }
@@ -158,8 +161,10 @@ export default function AdminBusinessCategoriesPage() {
         <BusinessCategoryHierarchyView
           rootCategories={rootCategories}
           allCategories={categories}
-          onCreateSubcategory={handleOpenCreate}
-          onEdit={handleOpenEdit}
+          onCreateSubcategory={(parentId) =>
+            router.push(`/admin/business-categories/create?parentId=${encodeURIComponent(parentId)}`)
+          }
+          onEdit={(c) => router.push(`/admin/business-categories/${encodeURIComponent(c.id)}/edit`)}
           onDelete={setDeleteTarget}
         />
       )}

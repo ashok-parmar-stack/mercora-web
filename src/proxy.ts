@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { getInternalBackendUrl } from '@/app/actions/action-helpers';
 import { isAdminRole } from '@/lib/auth-helpers';
 
-const PROTECTED_PREFIXES = ['/dashboard', '/admin', '/profile', '/enquiries'];
+const PROTECTED_PREFIXES = ['/dashboard', '/admin', '/profile', '/enquiries', '/saved-businesses'];
 const ADMIN_PREFIXES = ['/admin'];
 const AUTH_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password'];
 
@@ -179,6 +179,8 @@ export const config = {
     '/profile/:path*',
     '/enquiries',
     '/enquiries/:path*',
+    '/saved-businesses',
+    '/saved-businesses/:path*',
     '/admin',
     '/admin/:path*',
     '/login',

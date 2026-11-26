@@ -4,13 +4,21 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Button, Input, EmptyState, ErrorState, Pagination } from '@/components/common';
 
 describe('Common UI Primitives (Unit)', () => {
-  it('FE-UI-001: Button handles click, disabled, and loading states', () => {
+  it('FE-UI-001: Button handles click, disabled, loading, and asChild leftIcon states', () => {
     const onClick = vi.fn();
     const { rerender } = render(<Button onClick={onClick}>Save Changes</Button>);
 
     const btn = screen.getByRole('button', { name: /save changes/i });
     fireEvent.click(btn);
     expect(onClick).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <Button asChild leftIcon={<span data-testid="plus-icon">+</span>}>
+        <a href="/create">Create Item</a>
+      </Button>,
+    );
+    expect(screen.getByTestId('plus-icon')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /create item/i })).toHaveAttribute('href', '/create');
 
     rerender(
       <Button onClick={onClick} disabled>

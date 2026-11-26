@@ -37,7 +37,7 @@ export function AddBusinessModal({
   const [logoUrl, setLogoUrl] = useState("");
   const [establishedYear, setEstablishedYear] = useState<number>(2018);
   const [employeeCount, setEmployeeCount] = useState("50-200");
-  const [verificationStatus, setVerificationStatus] = useState("Verified");
+  const [verificationStatus, setVerificationStatus] = useState("Pending");
 
   const [products, setProducts] = useState<ProductItem[]>([
     { id: "prod-1", name: "", category: "", imageUrl: "", description: "" },

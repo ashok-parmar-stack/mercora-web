@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
 import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import {
   BulkAction,
@@ -98,8 +99,8 @@ export default function AdminPincodesPage() {
         }}
         extraActions={
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="md" onClick={() => setIsAddOpen(true)} leftIcon={<Plus className="w-4 h-4" />}>
-              Add PIN Code
+            <Button variant="outline" size="md" leftIcon={<Plus className="w-4 h-4" />} asChild>
+              <Link href="/admin/pincodes/create">Add PIN Code</Link>
             </Button>
             <Button variant="outline" size="md" onClick={loadData} className="w-10 h-10 p-0" aria-label="Refresh">
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin text-primary" : ""}`} />

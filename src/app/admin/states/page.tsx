@@ -149,6 +149,7 @@ export default function StatesAdminPage() {
             <div className="w-36">
               <Select
                 value={statusFilter}
+                selectSize="sm"
                 onChange={(e) => handleStatusFilterChange(e.target.value)}
                 dropdownPosition="bottom"
                 aria-label="Filter by status"

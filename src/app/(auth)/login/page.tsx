@@ -7,6 +7,7 @@ import { Eye, EyeOff, Mail, Lock, ShieldCheck, ArrowRight } from 'lucide-react';
 import { z } from 'zod';
 import { loginServerAction } from '@/app/actions/auth-actions';
 import { useAuthStore } from '@/lib/store/auth-store';
+import { isAdminRole } from '@/lib/auth-helpers';
 import { Logo } from '@/components/Logo';
 import { Input, Button, Checkbox, Card } from '@/components/common';
 import { LoginFormAlerts } from './components/LoginFormAlerts';
@@ -84,7 +85,8 @@ function LoginForm() {
 
       setAuth(res.data);
       setEvictionNotice(null);
-      const redirectPath = searchParams.get('redirect') || '/admin';
+      const defaultRoute = isAdminRole(res.data?.user) ? '/admin' : '/dashboard';
+      const redirectPath = searchParams.get('redirect') || defaultRoute;
       router.push(redirectPath);
       router.refresh();
     } catch (err: any) {

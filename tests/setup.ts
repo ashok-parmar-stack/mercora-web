@@ -4,7 +4,7 @@ import { cleanup } from '@testing-library/react';
 import { server } from './mocks/server';
 
 beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'bypass' });
+  server.listen();
 });
 
 afterEach(() => {

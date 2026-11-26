@@ -48,10 +48,10 @@ describe('Next.js Proxy Auth Middleware (Unit)', () => {
     expect(res.status).toBe(200);
   });
 
-  it('FE-AUTH-006: documents BUG-005 (/saved-businesses is not in PROTECTED_PREFIXES)', async () => {
+  it('FE-AUTH-006: redirects unauthenticated guest on /saved-businesses to /login?redirect=/saved-businesses', async () => {
     const req = new NextRequest('http://localhost:9000/saved-businesses');
     const res = await proxy(req);
-    // Unauthenticated request currently passes through (200) instead of redirecting to /login
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(307);
+    expect(res.headers.get('location')).toContain('/login?redirect=%2Fsaved-businesses');
   });
 });

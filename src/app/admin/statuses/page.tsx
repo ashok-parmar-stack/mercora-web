@@ -150,6 +150,7 @@ export default function StatusesListPage() {
           <div className="w-48">
             <Select
               value={selectedType}
+              selectSize="sm"
               onChange={(e) => setSelectedType(e.target.value)}
             >
               {statusTypes.map((t) => (

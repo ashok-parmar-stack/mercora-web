@@ -70,12 +70,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Custom asChild implementation without Radix Slot dependency
     if (asChild && React.isValidElement(children)) {
       const child = children as React.ReactElement<any>;
-      return React.cloneElement(child, {
-        ref,
-        className: cn(combinedClassName, child.props.className),
-        disabled: isDisabled,
-        ...props,
-      });
+      const content = (
+        <>
+          {!isBusy && leftIcon && (
+            <span className="flex-shrink-0 flex items-center transition-transform duration-200">
+              {leftIcon}
+            </span>
+          )}
+          <span className="relative z-10">{child.props.children}</span>
+          {!isBusy && rightIcon && (
+            <span className="flex-shrink-0 flex items-center transition-transform duration-200">
+              {rightIcon}
+            </span>
+          )}
+        </>
+      );
+      return React.cloneElement(
+        child,
+        {
+          ref,
+          className: cn(combinedClassName, child.props.className),
+          disabled: isDisabled,
+          ...props,
+        },
+        content
+      );
     }
 
     return (
