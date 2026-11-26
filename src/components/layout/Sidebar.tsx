@@ -130,16 +130,29 @@ export const Sidebar: React.FC = () => {
       <aside
         id="admin-sidebar"
         aria-label="Admin Navigation Sidebar"
-        className={`fixed top-0 bottom-0 left-0 z-40 bg-[var(--sidebar-bg,var(--surface))] text-[var(--text-secondary)] border-r border-[#E5D4DA] dark:border-white/10 shadow-[1px_0_0_0_#E5D4DA] dark:shadow-none transition-all duration-300 flex flex-col select-none ${
-          isCollapsed
+        className={`fixed top-0 bottom-0 left-0 z-50 bg-[var(--sidebar-bg,var(--surface))] text-[var(--text-secondary)] border-r border-[#E5D4DA] dark:border-white/10 shadow-[1px_0_0_0_#E5D4DA] dark:shadow-none transition-all duration-300 flex flex-col select-none ${isCollapsed
             ? "-translate-x-full w-64 lg:translate-x-0 lg:w-16"
             : "translate-x-0 w-64"
-        }`}
-      >
-        <div
-          className={`h-16 flex items-center border-b border-white/10 flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-4 ${
-            isCollapsed ? "justify-center" : "justify-between"
           }`}
+      >
+        {/* Floating Circular Collapse / Expand Toggle on Sidebar Border */}
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className="hidden lg:flex absolute -right-3.5 top-[18px] z-50 w-7 h-7 rounded-full bg-[var(--sidebar-bg)] border border-white/25 text-white shadow-md items-center justify-center hover:bg-[var(--sidebar-active-bg)] hover:scale-105 transition-all cursor-pointer"
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-3.5 h-3.5" />
+          ) : (
+            <ChevronLeft className="w-3.5 h-3.5" />
+          )}
+        </button>
+
+        <div
+          className={`h-16 flex items-center border-b border-white/10 flex-shrink-0 bg-[var(--sidebar-bg,var(--surface))] px-4 ${isCollapsed ? "justify-center" : "justify-between"
+            }`}
         >
           {isCollapsed ? (
             <Link
@@ -159,22 +172,18 @@ export const Sidebar: React.FC = () => {
               >
                 <Logo height={24} dark={true} className="max-w-[140px]" />
               </Link>
-              <button
-                type="button"
-                onClick={toggleSidebar}
-                className="w-7 h-7 flex items-center justify-center rounded-lg text-white/60 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-                title="Collapse sidebar"
-                aria-label="Collapse sidebar"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
             </div>
           )}
         </div>
 
-        <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto sidebar-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"} py-4 px-3 flex flex-col gap-5`}>
-          {ADMIN_NAV_SECTIONS.map((section, idx) => (
-            <div key={idx} className="flex flex-col gap-1">
+          <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto sidebar-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"} py-4 px-3 flex flex-col gap-4`}>
+            {ADMIN_NAV_SECTIONS.map((section, idx) => (
+            <div
+              key={idx}
+              className={`flex flex-col gap-1 ${
+                idx > 0 ? "border-t border-white/10 pt-4" : ""
+              }`}
+            >
               {!isCollapsed && (
                 <div className="px-3 text-[10.5px] font-bold tracking-wider uppercase text-white/40 mb-1 select-none">
                   {section.label}
@@ -224,7 +233,7 @@ export const Sidebar: React.FC = () => {
           ))}
         </div>
 
-        <div className="p-2.5 border-t border-[var(--sidebar-border)] flex-shrink-0 bg-[var(--sidebar-bg)] flex flex-col gap-2">
+        <div className="p-2.5 border-t border-white/10 flex-shrink-0 bg-[var(--sidebar-bg)] flex flex-col gap-2">
           <SidebarUserFooter
             user={user}
             isCollapsed={isCollapsed}
@@ -233,7 +242,7 @@ export const Sidebar: React.FC = () => {
         </div>
       </aside>
     </>
-  );
+          );
 };
 
-export default Sidebar;
+          export default Sidebar;

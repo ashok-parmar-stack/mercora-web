@@ -49,10 +49,10 @@ export function SidebarGroupItem({
         <button
           type="button"
           onClick={onPinClick}
-          className={`w-full flex items-center justify-center p-2 rounded-lg transition-all cursor-pointer ${
+          className={`w-full flex items-center justify-center p-2 rounded-lg border transition-all cursor-pointer ${
             isAnyChildActive || isMenuOpen
-              ? "bg-[var(--sidebar-active-bg)] text-white shadow-xs"
-              : "text-[var(--sidebar-text)] hover:bg-white/10 hover:text-white"
+              ? "bg-[var(--sidebar-active-bg)] text-white border-white/25 shadow-xs"
+              : "border-transparent text-[var(--sidebar-text)] hover:bg-white/10 hover:text-white hover:border-white/15"
           }`}
           aria-label={entry.label}
           title={isPinned ? `${entry.label} (Pinned - click to close)` : `${entry.label} (Click to keep open)`}
@@ -125,10 +125,10 @@ export function SidebarGroupItem({
       <button
         type="button"
         onClick={onToggleOpen}
-        className={`group relative w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-all duration-150 cursor-pointer ${
+        className={`group relative w-full flex items-center justify-between rounded-lg border px-2.5 py-1.5 transition-all duration-150 cursor-pointer ${
           isAnyChildActive
-            ? "bg-white/10 text-white font-semibold"
-            : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
+            ? "bg-white/10 text-white border-white/20 font-semibold"
+            : "border-transparent text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 hover:border-white/15 font-medium"
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
@@ -176,10 +176,10 @@ export function SidebarGroupItem({
               <Link
                 key={child.href}
                 href={child.href}
-                className={`group/child flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-150 relative ${
+                className={`group/child flex items-center gap-2 px-2 py-1.5 rounded-lg border text-xs transition-all duration-150 relative ${
                   isChildActive
-                    ? "bg-[var(--sidebar-active-bg)] text-white font-semibold shadow-xs"
-                    : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
+                    ? "bg-[var(--sidebar-active-bg)] text-white border-white/25 font-semibold shadow-xs"
+                    : "border-transparent text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 hover:border-white/15 font-medium"
                 }`}
               >
                 <div

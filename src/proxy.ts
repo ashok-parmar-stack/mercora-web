@@ -107,7 +107,11 @@ async function verifySessionWithBackend(
       return await pending;
     }
   } catch (err) {
-    console.error('[Proxy Auth] Session verification failed:', err);
+    const reason =
+      err instanceof Error
+        ? (err as Error & { cause?: { code?: string } }).cause?.code || err.message
+        : String(err);
+    console.warn(`[Proxy Auth] Backend session check unreachable (${backendUrl}): ${reason}`);
     return { authenticated: false, user: null, transientError: true };
   }
 
