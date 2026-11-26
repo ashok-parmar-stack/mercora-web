@@ -32,9 +32,9 @@ export function Skeleton({
       aria-hidden="true"
       style={{ width, height, ...style }}
       className={cn(
-        "relative overflow-hidden bg-surface-hover/70",
+        "relative overflow-hidden bg-[#EAE1E4] dark:bg-white/10 animate-pulse",
         "before:absolute before:inset-0 before:-translate-x-full",
-        "before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 dark:before:via-white/5 before:to-transparent",
+        "before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/40 dark:before:via-white/10 before:to-transparent",
         variantStyles[variant],
         className
       )}
@@ -45,29 +45,35 @@ export function Skeleton({
 
 export function SkeletonCard({ className = "" }: { className?: string }) {
   return (
-    <div className={cn("p-5 rounded-xl border border-border bg-surface shadow-xs space-y-4", className)}>
-      <div className="flex items-center justify-between">
-        <Skeleton variant="text" className="w-1/3 h-4" />
-        <Skeleton variant="circular" className="w-7 h-7" />
+    <div className={cn("p-4 rounded-xl border border-border bg-surface shadow-2xs flex items-center justify-between gap-3", className)}>
+      <div className="space-y-2.5 flex-1">
+        <Skeleton variant="text" className="w-24 h-3.5" />
+        <Skeleton variant="text" className="w-16 h-7" />
       </div>
-      <Skeleton variant="text" className="w-1/2 h-6" />
-      <Skeleton variant="rectangular" className="w-full h-8" />
+      <Skeleton variant="rectangular" className="w-10 h-10 rounded-xl shrink-0" />
     </div>
   );
 }
 
-export function SkeletonTable({ rows = 5, cols = 4, className = "" }: { rows?: number; cols?: number; className?: string }) {
+export function SkeletonTable({ rows = 6, cols = 5, className = "" }: { rows?: number; cols?: number; className?: string }) {
   return (
-    <div className={cn("w-full bg-surface rounded-xl border border-border overflow-hidden shadow-xs", className)}>
-      <div className="flex gap-4 p-4 bg-background-secondary border-b border-border">
+    <div className={cn("w-full bg-surface rounded-xl border border-border overflow-hidden shadow-2xs", className)}>
+      <div className="flex gap-4 px-4 py-3.5 bg-background-secondary border-b border-border">
         {Array.from({ length: cols }).map((_, i) => (
           <Skeleton key={`head-${i}`} variant="text" className="flex-1 h-3.5" />
         ))}
       </div>
       {Array.from({ length: rows }).map((_, r) => (
-        <div key={`row-${r}`} className="flex items-center gap-4 px-4 py-3 border-b border-border last:border-b-0">
-          {Array.from({ length: cols }).map((_, c) => (
-            <Skeleton key={`cell-${r}-${c}`} variant="text" className="flex-1 h-3" />
+        <div key={`row-${r}`} className="flex items-center gap-4 px-4 py-3.5 border-b border-border last:border-b-0">
+          <div className="flex items-center gap-3 flex-[1.4]">
+            <Skeleton variant="rectangular" className="w-9 h-9 rounded-lg shrink-0" />
+            <div className="space-y-1.5 flex-1">
+              <Skeleton variant="text" className="w-3/4 h-3.5" />
+              <Skeleton variant="text" className="w-1/2 h-2.5" />
+            </div>
+          </div>
+          {Array.from({ length: Math.max(1, cols - 1) }).map((_, c) => (
+            <Skeleton key={`cell-${r}-${c}`} variant="text" className="flex-1 h-3.5" />
           ))}
         </div>
       ))}

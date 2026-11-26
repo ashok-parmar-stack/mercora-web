@@ -15,6 +15,7 @@ import {
   Package,
   FileText,
   Mail,
+  Briefcase,
   LucideIcon,
 } from "lucide-react";
 
@@ -57,6 +58,12 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
     label: "Overview",
     items: [
       { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: "Directory",
+    items: [
+      { href: "/admin/businesses", label: "Businesses", icon: Briefcase },
     ],
   },
   {
