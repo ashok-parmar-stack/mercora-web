@@ -56,7 +56,7 @@ export function AdminHeader() {
 
   return (
     <header className="sticky top-0 z-30 h-16 w-full border-b border-[var(--header-border)] bg-[var(--header-bg)] backdrop-blur-md transition-colors flex items-center justify-between px-4 sm:px-6 lg:pl-8 shadow-2xs">
-      {/* Left: Sidebar Toggle & Console Workspace Indicator */}
+      {/* Left: Mobile Sidebar Toggle */}
       <div className="flex items-center gap-2.5">
         {/* Mobile Sidebar Toggle (Always accessible on mobile & tablet) */}
         <button
@@ -67,16 +67,6 @@ export function AdminHeader() {
         >
           <PanelLeft className="w-4 h-4 text-primary" />
         </button>
-
-        {/* Console Workspace Indicator */}
-        <div className="hidden sm:flex items-center gap-2 select-none">
-          <span className="text-xs font-bold text-text-primary tracking-tight">
-            Mercora
-          </span>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
-            Console
-          </span>
-        </div>
       </div>
 
       {/* Right: Quick actions, Live directory shortcut, System Telemetry & Admin User */}
