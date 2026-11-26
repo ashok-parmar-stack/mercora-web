@@ -15,11 +15,12 @@ export function CategoryFilterSlot({
   onLevelChange,
 }: CategoryFilterSlotProps) {
   return (
-    <div className="flex items-center gap-2.5 flex-wrap">
-      <div className="w-36">
+    <div className="flex flex-wrap items-center gap-2.5">
+      <div className="w-full sm:w-40">
         <Select
           value={statusFilter}
           onChange={(e) => onStatusChange(e.target.value)}
+          selectSize="sm"
           dropdownPosition="bottom"
           aria-label="Filter by status"
         >
@@ -29,10 +30,11 @@ export function CategoryFilterSlot({
         </Select>
       </div>
 
-      <div className="w-40">
+      <div className="w-full sm:w-52">
         <Select
           value={levelFilter}
           onChange={(e) => onLevelChange(e.target.value)}
+          selectSize="sm"
           dropdownPosition="bottom"
           aria-label="Filter by level"
         >

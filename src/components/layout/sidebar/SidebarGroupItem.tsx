@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { NavGroupItem } from "./sidebar-navigation.data";
@@ -33,15 +33,58 @@ export function SidebarGroupItem({
   onChildClick,
 }: SidebarGroupItemProps) {
   const Icon = entry.icon;
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [flyoutPos, setFlyoutPos] = useState<{
+    left: number;
+    top?: number;
+    bottom?: number;
+  } | null>(null);
+
   const isAnyChildActive = entry.children.some(
     (c) => pathname === c.href || (c.href !== "/admin" && pathname?.startsWith(c.href))
   );
 
-  if (isCollapsed) {
-    const isMenuOpen = isHovered || isPinned;
+  const isMenuOpen = isCollapsed && (isHovered || isPinned);
 
+  useEffect(() => {
+    if (!isMenuOpen || !triggerRef.current) {
+      setFlyoutPos(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const el = triggerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const estimatedMenuHeight = 56 + entry.children.length * 36;
+      const spaceBelow = window.innerHeight - rect.top;
+
+      if (spaceBelow < estimatedMenuHeight + 16) {
+        setFlyoutPos({
+          left: rect.right,
+          bottom: Math.max(12, window.innerHeight - rect.bottom),
+        });
+      } else {
+        setFlyoutPos({
+          left: rect.right,
+          top: Math.max(12, rect.top),
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [isMenuOpen, entry.children.length]);
+
+  if (isCollapsed) {
     return (
       <div
+        ref={triggerRef}
         className="relative group"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -49,10 +92,10 @@ export function SidebarGroupItem({
         <button
           type="button"
           onClick={onPinClick}
-          className={`w-full flex items-center justify-center p-2 rounded-lg transition-all cursor-pointer ${
+          className={`w-full flex items-center justify-center p-2 rounded-lg border transition-all cursor-pointer ${
             isAnyChildActive || isMenuOpen
-              ? "bg-[var(--sidebar-active-bg)] text-white shadow-xs"
-              : "text-[var(--sidebar-text)] hover:bg-white/10 hover:text-white"
+              ? "bg-[var(--sidebar-active-bg)] text-white border-white/25 shadow-xs"
+              : "border-transparent text-[var(--sidebar-text)] hover:bg-white/10 hover:text-white hover:border-white/15"
           }`}
           aria-label={entry.label}
           title={isPinned ? `${entry.label} (Pinned - click to close)` : `${entry.label} (Click to keep open)`}
@@ -62,15 +105,18 @@ export function SidebarGroupItem({
           </div>
         </button>
 
-        {isMenuOpen && (
+        {isMenuOpen && flyoutPos && (
           <div
-            className={`absolute left-full ${
-              entry.id === "geographic-master" ? "bottom-[-10px]" : "top-0"
-            } pl-2 w-64 z-50 pointer-events-auto`}
+            style={{
+              left: `${flyoutPos.left}px`,
+              ...(flyoutPos.top !== undefined ? { top: `${flyoutPos.top}px` } : {}),
+              ...(flyoutPos.bottom !== undefined ? { bottom: `${flyoutPos.bottom}px` } : {}),
+            }}
+            className="fixed pl-3 w-64 z-50 pointer-events-auto"
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
           >
-            <div className="absolute -left-3 top-0 bottom-0 w-4 pointer-events-auto" />
+            <div className="absolute -left-2 top-0 bottom-0 w-5 pointer-events-auto" />
             <div className="w-60 bg-surface-raised rounded-xl shadow-2xl border border-border py-2.5 px-2 animate-in fade-in slide-in-from-left-2 duration-150">
               <div className="px-2.5 py-1 text-[11px] font-semibold text-text-primary uppercase tracking-wider border-b border-border mb-1.5 flex items-center justify-between">
                 <span>{entry.label}</span>
@@ -125,10 +171,10 @@ export function SidebarGroupItem({
       <button
         type="button"
         onClick={onToggleOpen}
-        className={`group relative w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 transition-all duration-150 cursor-pointer ${
+        className={`group relative w-full flex items-center justify-between rounded-lg border px-2.5 py-1.5 transition-all duration-150 cursor-pointer ${
           isAnyChildActive
-            ? "bg-white/10 text-white font-semibold"
-            : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
+            ? "bg-white/10 text-white border-white/20 font-semibold"
+            : "border-transparent text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 hover:border-white/15 font-medium"
         }`}
       >
         <div className="flex items-center gap-2.5 min-w-0">
@@ -176,10 +222,10 @@ export function SidebarGroupItem({
               <Link
                 key={child.href}
                 href={child.href}
-                className={`group/child flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs transition-all duration-150 relative ${
+                className={`group/child flex items-center gap-2 px-2 py-1.5 rounded-lg border text-xs transition-all duration-150 relative ${
                   isChildActive
-                    ? "bg-[var(--sidebar-active-bg)] text-white font-semibold shadow-xs"
-                    : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
+                    ? "bg-[var(--sidebar-active-bg)] text-white border-white/25 font-semibold shadow-xs"
+                    : "border-transparent text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 hover:border-white/15 font-medium"
                 }`}
               >
                 <div

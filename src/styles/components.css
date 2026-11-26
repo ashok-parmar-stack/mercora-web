@@ -17,34 +17,34 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:hover {
-  border-color: var(--primary, #ee3135);
-  box-shadow: 0 0 0 2px rgba(238, 49, 53, 0.1);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-soft);
 }
 
 .dark input[type="checkbox"] {
-  border-color: var(--border, #2d2d2d);
-  background-color: var(--surface, #161616);
+  border-color: var(--border);
+  background-color: var(--surface);
 }
 
 .dark input[type="checkbox"]:hover {
-  border-color: var(--border-hover, #444444);
-  background-color: var(--surface-hover, #2a2a2a);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+  border-color: var(--border-hover);
+  background-color: var(--surface-hover);
+  box-shadow: 0 0 0 2px var(--primary-soft);
 }
 
 input[type="checkbox"]:checked {
-  background-color: var(--primary, #ee3135);
-  border-color: var(--primary, #ee3135);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .dark input[type="checkbox"]:checked {
-  background-color: #ffffff;
-  border-color: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  background-color: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary-soft);
 }
 
 .dark input[type="checkbox"]:checked::before {
-  background-color: #000000;
+  background-color: var(--primary-foreground);
 }
 
 input[type="checkbox"]:checked::before {
@@ -52,21 +52,21 @@ input[type="checkbox"]:checked::before {
   width: 0.65rem;
   height: 0.65rem;
   clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-  background-color: #ffffff;
+  background-color: var(--primary-foreground);
 }
 
 input[type="checkbox"]:indeterminate {
-  background-color: var(--primary, #ee3135);
-  border-color: var(--primary, #ee3135);
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .dark input[type="checkbox"]:indeterminate {
-  background-color: #ffffff;
-  border-color: #ffffff;
+  background-color: var(--primary);
+  border-color: var(--primary);
 }
 
 .dark input[type="checkbox"]:indeterminate::before {
-  background-color: #000000;
+  background-color: var(--primary-foreground);
 }
 
 input[type="checkbox"]:indeterminate::before {
@@ -140,11 +140,11 @@ input[type="number"] {
   color: var(--theme-ink-darkest);
 }
 
-/* ── Buttons (Rethink Sans: 12-14px, 600-700, tracking 0.02-0.06em) ── */
+/* ── Buttons (Bound to Global Theme Tokens) ── */
 .btn-red {
-  background-color: var(--theme-red);
-  color: #ffffff;
-  border: 1.5px solid var(--theme-red);
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border: 1.5px solid var(--primary);
   padding: 12px 22px;
   border-radius: var(--theme-radius-sm);
   font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
@@ -163,16 +163,16 @@ input[type="number"] {
 }
 
 .btn-red:hover {
-  background-color: var(--theme-red-hover);
-  border-color: var(--theme-red-hover);
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(238, 49, 53, 0.28);
+  box-shadow: 0 4px 14px var(--theme-red-glow);
 }
 
 .btn-outline {
-  background-color: #ffffff;
-  color: var(--theme-ink-darkest);
-  border: 1.5px solid var(--theme-ink-darkest);
+  background-color: var(--surface);
+  color: var(--foreground);
+  border: 1.5px solid var(--border);
   padding: 12px 20px;
   border-radius: var(--theme-radius-sm);
   font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
@@ -190,15 +190,16 @@ input[type="number"] {
 }
 
 .btn-outline:hover {
-  background-color: var(--theme-gray-50);
+  background-color: var(--surface-hover);
+  border-color: var(--border-hover);
   transform: translateY(-1px);
 }
 
-/* ── Exact Rectangular CTAs: START FREE (Red) & BOOK A DEMO (Black) ── */
+/* ── Rectangular CTAs: Bound to Global Primary & Navigation Dark Tokens ── */
 .btn-primary-bold {
-  background-color: var(--theme-red, #e11d48);
-  color: #ffffff !important;
-  border: 1.5px solid var(--theme-red, #e11d48);
+  background-color: var(--primary);
+  color: var(--primary-foreground) !important;
+  border: 1.5px solid var(--primary);
   padding: 14px 30px;
   border-radius: 2px;
   font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
@@ -217,16 +218,16 @@ input[type="number"] {
 }
 
 .btn-primary-bold:hover {
-  background-color: var(--theme-red-hover, #be123c);
-  border-color: var(--theme-red-hover, #be123c);
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+  box-shadow: 0 4px 14px var(--theme-red-glow);
 }
 
 .btn-black {
-  background-color: #0d1117;
-  color: #ffffff !important;
-  border: 1.5px solid #0d1117;
+  background-color: var(--sidebar-bg);
+  color: var(--primary-foreground) !important;
+  border: 1.5px solid var(--sidebar-bg);
   padding: 14px 30px;
   border-radius: 2px;
   font-family: var(--font-rethink), 'Rethink Sans', system-ui, sans-serif;
@@ -245,10 +246,10 @@ input[type="number"] {
 }
 
 .btn-black:hover {
-  background-color: #000000;
-  border-color: #000000;
+  background-color: var(--primary-active);
+  border-color: var(--primary-active);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
 /* ── Cards ─────────────────────────────── */

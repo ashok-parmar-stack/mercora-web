@@ -55,12 +55,13 @@ export function DataTableToolbar<T>({
     <div className="flex flex-col gap-3">
       {hasSearchOrFilters && (
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 flex-1 min-w-0">
             {onSearchChange && (
-              <div className="w-full sm:w-64 lg:max-w-xs">
+              <div className="w-full sm:flex-1 sm:min-w-[260px] sm:max-w-md">
                 <SearchInput
                   value={searchQuery ?? ""}
                   onChange={(e) => onSearchChange(e.target.value)}
+                  onClear={() => onSearchChange("")}
                   placeholder={searchPlaceholder}
                   inputSize="sm"
                 />

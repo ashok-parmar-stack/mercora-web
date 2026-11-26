@@ -38,7 +38,6 @@ export function BusinessProfileHeader({
 
   const tabs = [
     { id: "overview", label: APP_HEADERS.businessDetails.tabs.overview },
-    { id: "products", label: APP_HEADERS.businessDetails.tabs.products },
     { id: "contact", label: APP_HEADERS.businessDetails.tabs.contact },
     { id: "location", label: APP_HEADERS.businessDetails.tabs.location },
     { id: "reviews", label: APP_HEADERS.businessDetails.tabs.reviews },

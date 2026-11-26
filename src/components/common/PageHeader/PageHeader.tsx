@@ -2,8 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Button } from "../Button";
-import { ArrowLeft } from "lucide-react";
+import { BackButton, Button } from "../Button";
 import { cn } from "@/lib/utils";
 
 export interface PageHeaderActionButton {
@@ -45,15 +44,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
       )}
     >
       <div className="flex items-start gap-2.5 sm:gap-3 min-w-0">
-        {backHref && (
-          <Link
-            href={backHref}
-            className="p-1.5 sm:p-2 -ml-1 sm:-ml-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface-hover border border-transparent hover:border-border transition-all flex-shrink-0"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-          </Link>
-        )}
+        {backHref && <BackButton href={backHref} iconOnly className="mt-0.5" />}
         <div className="min-w-0">
           <div className="flex items-center gap-2.5 flex-wrap">
             <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-foreground tracking-tight truncate sm:whitespace-normal font-sans">

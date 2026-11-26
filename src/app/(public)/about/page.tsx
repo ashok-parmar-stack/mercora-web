@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ShieldCheck, Globe, Users, ArrowRight } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 
@@ -65,6 +66,7 @@ export default function AboutPage() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

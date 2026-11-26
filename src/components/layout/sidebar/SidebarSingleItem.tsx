@@ -21,17 +21,17 @@ export function SidebarSingleItem({ entry, pathname, isCollapsed }: SidebarSingl
   return (
     <Link
       href={entry.href}
-      className={`group relative flex items-center rounded-lg transition-all duration-150 ${
+      className={`group relative flex items-center rounded-lg border transition-all duration-150 ${
         isCollapsed
           ? `justify-center p-2 ${
               isActive
-                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] shadow-xs"
-                : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10"
+                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-white/25 shadow-xs"
+                : "border-transparent text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 hover:border-white/15"
             }`
-          : `gap-2.5 px-2.5 py-1.5 text-xs transition-all duration-150 ${
+          : `gap-2.5 px-2.5 py-1.5 text-xs ${
               isActive
-                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] font-semibold shadow-xs"
-                : "text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 font-medium"
+                ? "bg-[var(--sidebar-active-bg)] text-[var(--sidebar-active-text)] border-white/25 font-semibold shadow-xs"
+                : "border-transparent text-[var(--sidebar-text)] hover:text-white hover:bg-white/10 hover:border-white/15 font-medium"
             }`
       }`}
     >

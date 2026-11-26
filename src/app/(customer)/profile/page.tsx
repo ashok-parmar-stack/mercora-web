@@ -7,6 +7,7 @@ import { useAuthStore } from "@/lib/store/auth-store";
 import { PAGE_METADATA } from "@/config/page-metadata";
 import { MESSAGES } from "@/config/messages";
 import { Input, Button } from "@/components/common";
+import { v1HttpClient, extractErrorMessage } from "@/lib/http/client";
 
 export default function CustomerProfilePage() {
   const user = useAuthStore((s) => s.user);
@@ -19,6 +20,8 @@ export default function CustomerProfilePage() {
   const [city, setCity] = useState("");
   const [gstin, setGstin] = useState("");
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -27,13 +30,25 @@ export default function CustomerProfilePage() {
     setPhone(user.phone || "");
   }, [user]);
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      updateUser({ name: name.trim(), phone: phone.trim() || undefined });
+    setSaveError(null);
+    setIsSaving(true);
+    try {
+      await v1HttpClient.patch("/auth/me", {
+        name: name.trim() || undefined,
+        phone: phone.trim(),
+      });
+      if (name.trim()) {
+        updateUser({ name: name.trim(), phone: phone.trim() || undefined });
+      }
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 2500);
+    } catch (err: any) {
+      setSaveError(extractErrorMessage(err, "Failed to update profile."));
+    } finally {
+      setIsSaving(false);
     }
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 2500);
   };
 
   return (
@@ -49,6 +64,11 @@ export default function CustomerProfilePage() {
             <div className="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs font-medium flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>{MESSAGES.common.saveSuccess}</span>
+            </div>
+          )}
+          {saveError && (
+            <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 text-xs font-medium">
+              {saveError}
             </div>
           )}
 

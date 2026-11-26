@@ -1,7 +1,7 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { Button, Input, EmptyState, ErrorState, Pagination } from '@/components/common';
+import { Button, BackButton, Input, EmptyState, ErrorState, Pagination } from '@/components/common';
 
 describe('Common UI Primitives (Unit)', () => {
   it('FE-UI-001: Button handles click, disabled, loading, and asChild leftIcon states', () => {
@@ -76,5 +76,17 @@ describe('Common UI Primitives (Unit)', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '2' }));
     expect(onPageChange).toHaveBeenCalledWith(2);
+  });
+
+  it('FE-UI-002: BackButton renders labeled and iconOnly links with theme-aware classes', () => {
+    const { rerender } = render(<BackButton href="/admin/users" label="All Users" />);
+    const link = screen.getByRole('link', { name: /all users/i });
+    expect(link).toHaveAttribute('href', '/admin/users');
+    expect(link.className).toContain('bg-surface');
+
+    rerender(<BackButton href="/admin/roles" iconOnly />);
+    const iconLink = screen.getByRole('link', { name: /go back/i });
+    expect(iconLink).toHaveAttribute('href', '/admin/roles');
+    expect(iconLink.className).toContain('w-9 h-9');
   });
 });

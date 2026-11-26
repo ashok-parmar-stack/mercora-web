@@ -55,8 +55,8 @@ export function AdminHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 h-16 w-full border-b border-[var(--header-border)] bg-[var(--header-bg)] backdrop-blur-md transition-colors flex items-center justify-between px-4 sm:px-6 shadow-2xs">
-      {/* Left: Sidebar Toggle & Console Workspace Indicator */}
+    <header className="sticky top-0 z-30 h-16 w-full border-b border-[var(--header-border)] bg-[var(--header-bg)] backdrop-blur-md transition-colors flex items-center justify-between px-4 sm:px-6 lg:pl-8 shadow-2xs">
+      {/* Left: Mobile Sidebar Toggle */}
       <div className="flex items-center gap-2.5">
         {/* Mobile Sidebar Toggle (Always accessible on mobile & tablet) */}
         <button
@@ -67,29 +67,6 @@ export function AdminHeader() {
         >
           <PanelLeft className="w-4 h-4 text-primary" />
         </button>
-
-        {/* Desktop Expand Sidebar Toggle */}
-        {isCollapsed && (
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            aria-label="Expand sidebar"
-            title="Expand sidebar"
-            className="hidden lg:flex h-9 w-9 items-center justify-center rounded-xl text-text-secondary hover:text-primary hover:bg-surface-hover border border-border transition-colors cursor-pointer shadow-2xs shrink-0 group"
-          >
-            <PanelLeft className="w-4 h-4 text-primary group-hover:scale-105 transition-transform" />
-          </button>
-        )}
-
-        {/* Console Workspace Indicator */}
-        <div className="hidden sm:flex items-center gap-2 select-none">
-          <span className="text-xs font-bold text-text-primary tracking-tight">
-            Mercora
-          </span>
-          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
-            Console
-          </span>
-        </div>
       </div>
 
       {/* Right: Quick actions, Live directory shortcut, System Telemetry & Admin User */}

@@ -86,7 +86,11 @@ function LoginForm() {
       setAuth(res.data);
       setEvictionNotice(null);
       const defaultRoute = isAdminRole(res.data?.user) ? '/admin' : '/dashboard';
-      const redirectPath = searchParams.get('redirect') || defaultRoute;
+      const rawRedirect = searchParams.get('redirect');
+      const redirectPath =
+        rawRedirect && rawRedirect.startsWith('/') && !rawRedirect.startsWith('//') && !rawRedirect.includes('\\')
+          ? rawRedirect
+          : defaultRoute;
       router.push(redirectPath);
       router.refresh();
     } catch (err: any) {

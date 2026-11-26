@@ -106,6 +106,43 @@ export default function AuditLogsPage() {
         description="Immutable administrative activity trail for compliance, forensic analysis, and security auditing."
       />
 
+      {!isLoading && !error && logs.length > 0 && (
+        <div className="bg-surface border border-border rounded-xl p-4 shadow-2xs flex flex-col gap-2.5">
+          <div className="flex items-center justify-between text-xs">
+            <span className="font-semibold text-text-primary">Audit Severity Breakdown</span>
+            <span className="text-text-muted font-data">{logs.length} total events</span>
+          </div>
+          <div className="h-2.5 w-full rounded-full bg-surface-hover overflow-hidden flex">
+            <div
+              className="bg-info h-full"
+              style={{
+                width: `${(logs.filter((l) => l.severity === "INFO").length / logs.length) * 100}%`,
+              }}
+              title="INFO"
+            />
+            <div
+              className="bg-warning h-full"
+              style={{
+                width: `${(logs.filter((l) => l.severity === "WARNING").length / logs.length) * 100}%`,
+              }}
+              title="WARNING"
+            />
+            <div
+              className="bg-destructive h-full"
+              style={{
+                width: `${(logs.filter((l) => l.severity === "CRITICAL").length / logs.length) * 100}%`,
+              }}
+              title="CRITICAL"
+            />
+          </div>
+          <div className="flex items-center gap-4 text-[11px] text-text-secondary flex-wrap">
+            <span>Info: <strong className="text-text-primary">{logs.filter((l) => l.severity === "INFO").length}</strong></span>
+            <span>Warning: <strong className="text-text-primary">{logs.filter((l) => l.severity === "WARNING").length}</strong></span>
+            <span>Critical: <strong className="text-text-primary">{logs.filter((l) => l.severity === "CRITICAL").length}</strong></span>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <LoadingState message="Loading audit trails..." />
       ) : error ? (

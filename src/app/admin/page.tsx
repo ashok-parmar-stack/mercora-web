@@ -11,6 +11,7 @@ import { PageHeader } from "../../components/layout/PageHeader";
 import { Badge, Button } from "@/components/common";
 import { DashboardStats } from "@/features/dashboard/components/DashboardStats";
 import { DashboardAuditTimeline } from "@/features/dashboard/components/DashboardAuditTimeline";
+import { DashboardAnalyticsCharts } from "@/features/dashboard/components/DashboardAnalyticsCharts";
 import {
   Shield,
   Users,
@@ -73,7 +74,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-8 max-w-6xl">
+    <div className="flex flex-col gap-8 w-full">
       <PageHeader
         title="Admin Console Overview"
         description="Unified enterprise control plane for Mercora Global B2B Intelligence Platform."
@@ -90,6 +91,8 @@ export default function AdminDashboardPage() {
         permissionsCount={permissions.length}
         statusesCount={statuses.length}
       />
+
+      <DashboardAnalyticsCharts />
 
       {/* Active Persona Banner */}
       <div className="bg-card border border-border text-text-primary rounded-xl p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">

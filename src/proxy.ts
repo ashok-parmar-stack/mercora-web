@@ -107,7 +107,11 @@ async function verifySessionWithBackend(
       return await pending;
     }
   } catch (err) {
-    console.error('[Proxy Auth] Session verification failed:', err);
+    const reason =
+      err instanceof Error
+        ? (err as Error & { cause?: { code?: string } }).cause?.code || err.message
+        : String(err);
+    console.warn(`[Proxy Auth] Backend session check unreachable (${backendUrl}): ${reason}`);
     return { authenticated: false, user: null, transientError: true };
   }
 
@@ -185,9 +189,13 @@ export async function proxy(request: NextRequest) {
     if (isAuthRoute) {
       if (session.authenticated) {
         const defaultTarget = isAdminRole(session.user) ? '/admin' : '/dashboard';
-        const redirectUrl = request.nextUrl.searchParams.get('redirect') || defaultTarget;
+        const rawRedirect = request.nextUrl.searchParams.get('redirect');
+        const safeRedirect =
+          rawRedirect && rawRedirect.startsWith('/') && !rawRedirect.startsWith('//') && !rawRedirect.includes('\\')
+            ? rawRedirect
+            : defaultTarget;
         return applyRefreshedCookies(
-          NextResponse.redirect(new URL(redirectUrl, request.url)),
+          NextResponse.redirect(new URL(safeRedirect, request.url)),
           session,
           isSecure,
         );

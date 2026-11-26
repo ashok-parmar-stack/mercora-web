@@ -125,7 +125,7 @@ export function BusinessCategoryForm({
   const displayError = validationError || error;
 
   return (
-    <div className="flex flex-col gap-6 max-w-3xl">
+    <div className="flex flex-col gap-6 w-full">
       <PageHeader
         title={mode === "edit" ? "Edit Business Category" : "Create Business Category"}
         description="Configure category hierarchy, identifiers, icons, and registration visibility."

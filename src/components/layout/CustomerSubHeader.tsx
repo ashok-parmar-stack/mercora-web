@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { BackButton } from "@/components/common/Button";
 
 export interface CustomerSubHeaderProps {
   icon: React.ReactNode;
@@ -26,13 +25,7 @@ export function CustomerSubHeader({
             {title}
           </h1>
         </div>
-        <Link
-          href={backHref}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-primary transition-colors shrink-0 px-2 py-1 rounded-lg hover:bg-surface-hover"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>{backLabel}</span>
-        </Link>
+        <BackButton href={backHref} label={backLabel} className="shrink-0" />
       </div>
     </div>
   );
