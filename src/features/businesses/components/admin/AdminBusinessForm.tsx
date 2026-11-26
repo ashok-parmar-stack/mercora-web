@@ -74,6 +74,7 @@ export function AdminBusinessForm({
   const [name, setName] = useState("");
   const [establishedYear, setEstablishedYear] = useState("2020");
   const [employeeCount, setEmployeeCount] = useState("50-200");
+  const [tier, setTier] = useState("Unverified");
   const [description, setDescription] = useState("");
   const [fullOverview, setFullOverview] = useState("");
 
@@ -159,6 +160,7 @@ export function AdminBusinessForm({
       setName(initialData.name || "");
       setEstablishedYear(String(initialData.establishedYear || 2020));
       setEmployeeCount(initialData.employeeCount || "50-200");
+      setTier(initialData.tier || "Unverified");
       setDescription(initialData.description || "");
       setFullOverview(initialData.fullOverview || "");
       setEmail(initialData.email || "");
@@ -307,7 +309,7 @@ export function AdminBusinessForm({
       fullOverview: fullOverview.trim() || undefined,
       establishedYear: Number(establishedYear) || undefined,
       employeeCount: employeeCount.trim() || undefined,
-      ...(mode === "create" ? { verificationStatus: "Unverified" } : {}),
+      verificationStatus: mode === "edit" ? tier : "Unverified",
       email: email.trim() || primaryContact?.email || undefined,
       phone: phone.trim() || primaryContact?.phone || undefined,
       contacts: validContacts,
@@ -469,6 +471,19 @@ export function AdminBusinessForm({
                       placeholder="e.g. 50-200"
                     />
                   </div>
+                  {mode === "edit" && (
+                    <Select
+                      label="Visibility & Verification Status"
+                      value={tier}
+                      onChange={(e) => setTier(e.target.value)}
+                      helperText="Verified & Premium businesses are visible on the public customer directory. Unverified & Standard stay Admin-only."
+                    >
+                      <option value="Verified">Verified (Visible to Customers)</option>
+                      <option value="Premium">Premium (Visible to Customers)</option>
+                      <option value="Standard">Standard (Admin Only)</option>
+                      <option value="Unverified">Unverified (Admin Only)</option>
+                    </Select>
+                  )}
                   <Textarea
                     label="Short Description"
                     value={description}
@@ -889,6 +904,10 @@ export function AdminBusinessForm({
                       <p className="font-mono text-xs mt-0.5">
                         {gstin || "—"} / {pan || "—"} / {cin || "—"}
                       </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-text-muted">Visibility / Status</p>
+                      <p className="font-semibold">{mode === "edit" ? tier : "Unverified (Admin Only)"}</p>
                     </div>
                   </div>
                   {mode === "create" && (
