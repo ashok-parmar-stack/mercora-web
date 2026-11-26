@@ -19,6 +19,15 @@ export interface BusinessProduct {
   priceRange?: string;
 }
 
+export interface BusinessContact {
+  id: string;
+  role: 'Owner' | 'Seller' | 'Marketing' | 'IT' | 'Support' | 'Accounts' | (string & {});
+  name?: string;
+  phone: string;
+  email?: string;
+  isPrimary?: boolean;
+}
+
 export interface BusinessReview {
   id: string;
   author: string;
@@ -62,6 +71,7 @@ export interface Business {
   updatedAt?: string;
   createdAt?: string;
   products: BusinessProduct[];
+  contacts?: BusinessContact[];
   reviews?: BusinessReview[];
 }
 

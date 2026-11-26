@@ -12,7 +12,7 @@ import {
   Select,
   Textarea,
 } from "@/components/common";
-import { Business } from "../../types/business.types";
+import { Business, BusinessContact } from "../../types/business.types";
 import { useTaxonomyStore } from "@/lib/store/taxonomy-store";
 import { fetchCategories } from "@/features/categories/category-api";
 import { CategoryItem } from "@/features/categories/types";
@@ -71,6 +71,9 @@ export function AdminBusinessForm({
 
   const [logoUrl, setLogoUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [contacts, setContacts] = useState<BusinessContact[]>([
+    { id: "cnt-1", role: "Owner", name: "", phone: "", email: "", isPrimary: true },
+  ]);
   const [products, setProducts] = useState<Array<{ id: string; name: string; category: string; imageUrl: string; description: string }>>([]);
 
   useEffect(() => {
@@ -112,6 +115,20 @@ export function AdminBusinessForm({
       setPincode(initialData.pincode || "");
       setLogoUrl(initialData.logoUrl || "");
       setImageUrl(initialData.imageUrl || "");
+      if (initialData.contacts && initialData.contacts.length > 0) {
+        setContacts(initialData.contacts);
+      } else if (initialData.phone) {
+        setContacts([
+          {
+            id: "cnt-1",
+            role: "Owner",
+            name: "",
+            phone: initialData.phone,
+            email: initialData.email || "",
+            isPrimary: true,
+          },
+        ]);
+      }
       setProducts(
         (initialData.products || []).map((p) => ({
           id: p.id,
@@ -164,6 +181,9 @@ export function AdminBusinessForm({
       (c) => c.name.toLowerCase() === businessType.trim().toLowerCase()
     );
 
+    const validContacts = contacts.filter((c) => c.phone.trim().length > 0);
+    const primaryContact = validContacts.find((c) => c.isPrimary) || validContacts[0];
+
     const payload: Record<string, unknown> = {
       name: name.trim(),
       businessType: businessType.trim(),
@@ -174,8 +194,9 @@ export function AdminBusinessForm({
       establishedYear: Number(establishedYear) || undefined,
       employeeCount: employeeCount.trim() || undefined,
       verificationStatus: tier,
-      email: email.trim() || undefined,
-      phone: phone.trim() || undefined,
+      email: email.trim() || primaryContact?.email || undefined,
+      phone: phone.trim() || primaryContact?.phone || undefined,
+      contacts: validContacts,
       website: website.trim() || undefined,
       gstin: gstin.trim() || undefined,
       cin: cin.trim() || undefined,
@@ -308,42 +329,167 @@ export function AdminBusinessForm({
             )}
 
             {step === 1 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <Input
-                  label="Business Email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="contact@company.com"
-                />
-                <Input
-                  label="Phone Number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
-                />
-                <Input
-                  label="Website"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                  placeholder="https://company.com"
-                />
-                <Input
-                  label="Employee Count"
-                  value={employeeCount}
-                  onChange={(e) => setEmployeeCount(e.target.value)}
-                  placeholder="50-200"
-                />
-                <Input
-                  label="GSTIN"
-                  value={gstin}
-                  onChange={(e) => setGstin(e.target.value.toUpperCase())}
-                />
-                <Input
-                  label="CIN"
-                  value={cin}
-                  onChange={(e) => setCin(e.target.value.toUpperCase())}
-                />
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Input
+                    label="Primary Business Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="contact@company.com"
+                  />
+                  <Input
+                    label="Primary Phone Number"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="+91 98765 43210"
+                  />
+                  <Input
+                    label="Website"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="https://company.com"
+                  />
+                  <Input
+                    label="Employee Count"
+                    value={employeeCount}
+                    onChange={(e) => setEmployeeCount(e.target.value)}
+                    placeholder="50-200"
+                  />
+                  <Input
+                    label="GSTIN"
+                    value={gstin}
+                    onChange={(e) => setGstin(e.target.value.toUpperCase())}
+                  />
+                  <Input
+                    label="CIN"
+                    value={cin}
+                    onChange={(e) => setCin(e.target.value.toUpperCase())}
+                  />
+                </div>
+
+                {/* Multiple Department / Role Contacts */}
+                <div className="space-y-3 pt-4 border-t border-border">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div>
+                      <p className="text-sm font-bold text-foreground">
+                        Department & Role Contacts
+                      </p>
+                      <p className="text-xs text-text-secondary">
+                        Add multiple numbers for Owner, Seller, Marketing, IT, or Support teams.
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setContacts((prev) => [
+                          ...prev,
+                          {
+                            id: `cnt-${Date.now()}`,
+                            role: "Seller",
+                            name: "",
+                            phone: "",
+                            email: "",
+                            isPrimary: prev.length === 0,
+                          },
+                        ])
+                      }
+                      leftIcon={<Plus className="w-3.5 h-3.5" />}
+                    >
+                      Add Number
+                    </Button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {contacts.map((c, idx) => (
+                      <div
+                        key={c.id}
+                        className="grid grid-cols-1 sm:grid-cols-12 gap-3 p-3.5 rounded-xl border border-border bg-surface-hover/30 items-end"
+                      >
+                        <div className="sm:col-span-3">
+                          <Select
+                            label="Role"
+                            selectSize="sm"
+                            value={c.role}
+                            onChange={(e) =>
+                              setContacts((prev) =>
+                                prev.map((item, i) =>
+                                  i === idx ? { ...item, role: e.target.value } : item
+                                )
+                              )
+                            }
+                          >
+                            <option value="Owner">Owner</option>
+                            <option value="Seller">Seller / Sales</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="IT">IT</option>
+                            <option value="Support">Support</option>
+                            <option value="Accounts">Accounts</option>
+                          </Select>
+                        </div>
+                        <div className="sm:col-span-3">
+                          <Input
+                            label="Contact Name"
+                            inputSize="sm"
+                            placeholder="e.g. Rajesh Patel"
+                            value={c.name || ""}
+                            onChange={(e) =>
+                              setContacts((prev) =>
+                                prev.map((item, i) =>
+                                  i === idx ? { ...item, name: e.target.value } : item
+                                )
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="sm:col-span-3">
+                          <Input
+                            label="Phone Number *"
+                            inputSize="sm"
+                            placeholder="+91 98765 43210"
+                            value={c.phone}
+                            onChange={(e) =>
+                              setContacts((prev) =>
+                                prev.map((item, i) =>
+                                  i === idx ? { ...item, phone: e.target.value } : item
+                                )
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="sm:col-span-3 flex items-center justify-between gap-2">
+                          <label className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground cursor-pointer">
+                            <input
+                              type="radio"
+                              name="primary-contact"
+                              checked={Boolean(c.isPrimary)}
+                              onChange={() =>
+                                setContacts((prev) =>
+                                  prev.map((item, i) => ({ ...item, isPrimary: i === idx }))
+                                )
+                              }
+                            />
+                            <span>Primary</span>
+                          </label>
+                          {contacts.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setContacts((prev) => prev.filter((_, i) => i !== idx))
+                              }
+                            >
+                              Remove
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -486,7 +632,7 @@ export function AdminBusinessForm({
               </div>
             )}
 
-            <div className="flex items-center justify-between gap-3 pt-4 border-t border-border">
+            <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-border">
               <div className="flex items-center gap-2">
                 <Button variant="outline" asChild>
                   <Link href={cancelHref}>Cancel</Link>

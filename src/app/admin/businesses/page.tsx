@@ -209,8 +209,8 @@ function AdminBusinessesContent() {
             })
           }
           filterSlot={
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className="w-36">
+            <div className="grid grid-cols-1 sm:flex sm:items-center gap-2 sm:flex-wrap w-full sm:w-auto">
+              <div className="w-full sm:w-36">
                 <Select
                   value={tierFilter}
                   selectSize="sm"
@@ -227,7 +227,7 @@ function AdminBusinessesContent() {
                   <option value="Unverified">Unverified</option>
                 </Select>
               </div>
-              <div className="w-44">
+              <div className="w-full sm:w-44">
                 <Select
                   value={categoryFilter}
                   selectSize="sm"
@@ -245,7 +245,7 @@ function AdminBusinessesContent() {
                   ))}
                 </Select>
               </div>
-              <div className="w-36">
+              <div className="w-full sm:w-36">
                 <Select
                   value={stateFilter}
                   selectSize="sm"
@@ -263,7 +263,7 @@ function AdminBusinessesContent() {
                   ))}
                 </Select>
               </div>
-              <div className="w-36">
+              <div className="w-full sm:w-36">
                 <Select
                   value={sortBy}
                   selectSize="sm"

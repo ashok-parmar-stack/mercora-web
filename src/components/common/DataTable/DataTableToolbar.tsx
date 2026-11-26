@@ -54,10 +54,10 @@ export function DataTableToolbar<T>({
   return (
     <div className="flex flex-col gap-3">
       {hasSearchOrFilters && (
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 flex-1 min-w-0">
             {onSearchChange && (
-              <div className="w-full sm:max-w-xs">
+              <div className="w-full sm:w-64 lg:max-w-xs">
                 <SearchInput
                   value={searchQuery ?? ""}
                   onChange={(e) => onSearchChange(e.target.value)}
@@ -70,7 +70,7 @@ export function DataTableToolbar<T>({
           </div>
 
           {showColumnPicker && columns.length > 0 && (
-            <div className="relative self-end sm:self-auto" ref={colPickerRef}>
+            <div className="relative self-end lg:self-auto shrink-0" ref={colPickerRef}>
               <button
                 type="button"
                 onClick={() => setIsColPickerOpen((prev) => !prev)}

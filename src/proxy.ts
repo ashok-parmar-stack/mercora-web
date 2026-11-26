@@ -14,10 +14,59 @@ const COOKIE_USER = 'mercora_user';
 interface VerifiedSession {
   authenticated: boolean;
   user: any | null;
+  transientError?: boolean;
   refreshedTokens?: {
     accessToken: string;
     refreshToken: string;
   };
+}
+
+// Deduplicate concurrent refresh-token rotations across parallel Next.js page/RSC requests
+const inFlightProxyRefreshes = new Map<string, Promise<VerifiedSession>>();
+
+async function performBackendRefresh(
+  backendUrl: string,
+  refreshToken: string,
+): Promise<VerifiedSession> {
+  try {
+    const refreshRes = await fetch(`${backendUrl}/api/v1/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken }),
+      cache: 'no-store',
+    });
+
+    if (refreshRes.ok) {
+      const refreshed = await refreshRes.json();
+      if (refreshed?.accessToken) {
+        const meRes = await fetch(`${backendUrl}/api/v1/auth/me`, {
+          headers: { Authorization: `Bearer ${refreshed.accessToken}` },
+          cache: 'no-store',
+        });
+        if (meRes.ok) {
+          const meData = await meRes.json();
+          if (meData?.user) {
+            return {
+              authenticated: true,
+              user: meData.user,
+              refreshedTokens: {
+                accessToken: refreshed.accessToken,
+                refreshToken: refreshed.refreshToken,
+              },
+            };
+          }
+        }
+      }
+    }
+
+    if (refreshRes.status >= 500) {
+      return { authenticated: false, user: null, transientError: true };
+    }
+    return { authenticated: false, user: null };
+  } catch (err) {
+    console.error('[Proxy Auth] Refresh verification failed:', err);
+    return { authenticated: false, user: null, transientError: true };
+  }
 }
 
 async function verifySessionWithBackend(
@@ -42,60 +91,53 @@ async function verifySessionWithBackend(
           return { authenticated: true, user: meData.user };
         }
       }
+      if (meRes.status >= 500 && !refreshToken) {
+        return { authenticated: false, user: null, transientError: true };
+      }
     }
 
     if (refreshToken) {
-      const refreshRes = await fetch(`${backendUrl}/api/v1/auth/refresh`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
-        cache: 'no-store',
-      });
-
-      if (refreshRes.ok) {
-        const refreshed = await refreshRes.json();
-        if (refreshed?.accessToken) {
-          const meRes = await fetch(`${backendUrl}/api/v1/auth/me`, {
-            headers: { Authorization: `Bearer ${refreshed.accessToken}` },
-            cache: 'no-store',
-          });
-          if (meRes.ok) {
-            const meData = await meRes.json();
-            if (meData?.user) {
-              return {
-                authenticated: true,
-                user: meData.user,
-                refreshedTokens: {
-                  accessToken: refreshed.accessToken,
-                  refreshToken: refreshed.refreshToken,
-                },
-              };
-            }
-          }
-        }
+      let pending = inFlightProxyRefreshes.get(refreshToken);
+      if (!pending) {
+        pending = performBackendRefresh(backendUrl, refreshToken).finally(() => {
+          inFlightProxyRefreshes.delete(refreshToken);
+        });
+        inFlightProxyRefreshes.set(refreshToken, pending);
       }
+      return await pending;
     }
   } catch (err) {
     console.error('[Proxy Auth] Session verification failed:', err);
+    return { authenticated: false, user: null, transientError: true };
   }
 
   return { authenticated: false, user: null };
 }
 
-function applyRefreshedCookies(res: NextResponse, session: VerifiedSession): NextResponse {
+function isRequestHttps(request: NextRequest): boolean {
+  return (
+    request.nextUrl.protocol === 'https:' ||
+    request.headers.get('x-forwarded-proto') === 'https'
+  );
+}
+
+function applyRefreshedCookies(
+  res: NextResponse,
+  session: VerifiedSession,
+  isSecure: boolean,
+): NextResponse {
   if (!session.refreshedTokens) return res;
-  const isProd = process.env.NODE_ENV === 'production';
 
   res.cookies.set(COOKIE_ACCESS_TOKEN, session.refreshedTokens.accessToken, {
     httpOnly: true,
-    secure: isProd,
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 15 * 60,
   });
   res.cookies.set(COOKIE_REFRESH_TOKEN, session.refreshedTokens.refreshToken, {
     httpOnly: true,
-    secure: isProd,
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 30 * 24 * 60 * 60,
@@ -103,7 +145,7 @@ function applyRefreshedCookies(res: NextResponse, session: VerifiedSession): Nex
   if (session.user) {
     res.cookies.set(COOKIE_USER, JSON.stringify(session.user), {
       httpOnly: false,
-      secure: isProd,
+      secure: isSecure,
       sameSite: 'lax',
       path: '/',
       maxAge: 30 * 24 * 60 * 60,
@@ -136,6 +178,7 @@ export async function proxy(request: NextRequest) {
       (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
     );
 
+    const isSecure = isRequestHttps(request);
     // Always verify live httpOnly tokens against backend (never trust client mercora_user alone)
     const session = await verifySessionWithBackend(accessToken, refreshToken);
 
@@ -146,12 +189,17 @@ export async function proxy(request: NextRequest) {
         return applyRefreshedCookies(
           NextResponse.redirect(new URL(redirectUrl, request.url)),
           session,
+          isSecure,
         );
       }
       return NextResponse.next();
     }
 
     if (isProtected && !session.authenticated) {
+      if (session.transientError && (accessToken || refreshToken)) {
+        // Do not wipe valid session cookies on transient backend/network errors
+        return NextResponse.next();
+      }
       const loginUrl = new URL('/login', request.url);
       loginUrl.searchParams.set('redirect', pathname);
       return clearCookiesOnResponse(NextResponse.redirect(loginUrl));
@@ -161,10 +209,11 @@ export async function proxy(request: NextRequest) {
       return applyRefreshedCookies(
         NextResponse.redirect(new URL('/dashboard', request.url)),
         session,
+        isSecure,
       );
     }
 
-    return applyRefreshedCookies(NextResponse.next(), session);
+    return applyRefreshedCookies(NextResponse.next(), session, isSecure);
   } catch (error) {
     console.error('Proxy error:', error);
     return NextResponse.next();

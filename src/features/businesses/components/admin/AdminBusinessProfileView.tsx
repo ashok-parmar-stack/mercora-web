@@ -191,37 +191,73 @@ export function AdminBusinessProfileView({
       )}
 
       {activeTab === "contact" && (
-        <Card>
-          <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm">
-            <div className="flex items-start gap-3">
-              <Mail className="w-4 h-4 text-primary mt-0.5" />
-              <div>
-                <p className="text-xs text-text-muted">Email</p>
-                <p className="font-semibold">{business.email || "—"}</p>
+        <div className="space-y-4">
+          <Card>
+            <CardContent className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5 text-sm">
+              <div className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-primary mt-0.5" />
+                <div>
+                  <p className="text-xs text-text-muted">Primary Email</p>
+                  <p className="font-semibold">{business.email || "—"}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Phone className="w-4 h-4 text-primary mt-0.5" />
-              <div>
-                <p className="text-xs text-text-muted">Phone</p>
-                <p className="font-semibold">{business.phone || "—"}</p>
+              <div className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-primary mt-0.5" />
+                <div>
+                  <p className="text-xs text-text-muted">Primary Phone</p>
+                  <p className="font-semibold">{business.phone || "—"}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Globe className="w-4 h-4 text-primary mt-0.5" />
-              <div>
-                <p className="text-xs text-text-muted">Website</p>
-                <p className="font-semibold">{business.website || "—"}</p>
+              <div className="flex items-start gap-3">
+                <Globe className="w-4 h-4 text-primary mt-0.5" />
+                <div>
+                  <p className="text-xs text-text-muted">Website</p>
+                  <p className="font-semibold">{business.website || "—"}</p>
+                </div>
               </div>
-            </div>
-            <div>
-              <p className="text-xs text-text-muted">GSTIN / CIN</p>
-              <p className="font-mono text-xs mt-1">
-                GSTIN: {business.gstin || "—"} | CIN: {business.cin || "—"}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+              <div>
+                <p className="text-xs text-text-muted">GSTIN / CIN</p>
+                <p className="font-mono text-xs mt-1">
+                  GSTIN: {business.gstin || "—"} | CIN: {business.cin || "—"}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {business.contacts && business.contacts.length > 0 && (
+            <Card>
+              <CardContent className="p-6 space-y-3">
+                <h3 className="text-sm font-bold text-foreground">
+                  Department & Role Contacts
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {business.contacts.map((c) => (
+                    <div
+                      key={c.id}
+                      className="p-3.5 rounded-xl border border-border bg-surface-hover/30 flex items-start justify-between gap-3"
+                    >
+                      <div className="space-y-1 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-bold">
+                            {c.role}
+                          </span>
+                          {c.isPrimary && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 font-semibold">
+                              Primary
+                            </span>
+                          )}
+                        </div>
+                        {c.name && <p className="font-semibold text-foreground">{c.name}</p>}
+                        <p className="text-text-secondary font-medium">{c.phone}</p>
+                        {c.email && <p className="text-text-muted">{c.email}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       )}
 
       {activeTab === "location" && (

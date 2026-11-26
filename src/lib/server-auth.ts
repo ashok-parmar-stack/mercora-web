@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 
 export function getInternalBackendUrl(): string {
   const sanitize = (val?: string) => val?.replace(/^["']|["']$/g, '').trim();
@@ -66,18 +66,30 @@ export async function getServerAuth(): Promise<ServerAuthData> {
 /**
  * Persist tokens & user in secure httpOnly cookies
  */
+async function shouldUseSecureCookies(): Promise<boolean> {
+  if (process.env.VERCEL === '1') return true;
+  try {
+    const hdrs = await headers();
+    const proto = hdrs.get('x-forwarded-proto');
+    if (proto) return proto === 'https';
+  } catch {
+    // headers() unavailable outside request context
+  }
+  return false;
+}
+
 export async function setAuthCookies(
   accessToken: string,
   refreshToken: string,
   user: ServerUser,
 ): Promise<void> {
   const cookieStore = await cookies();
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isSecure = await shouldUseSecureCookies();
 
   // Access Token (15 min)
   cookieStore.set(COOKIE_ACCESS_TOKEN, accessToken, {
     httpOnly: true,
-    secure: isProduction,
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 15 * 60, // 15 minutes
@@ -86,7 +98,7 @@ export async function setAuthCookies(
   // Refresh Token (30 days)
   cookieStore.set(COOKIE_REFRESH_TOKEN, refreshToken, {
     httpOnly: true,
-    secure: isProduction,
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -95,7 +107,7 @@ export async function setAuthCookies(
   // Non-sensitive user summary
   cookieStore.set(COOKIE_USER, JSON.stringify(user), {
     httpOnly: false, // Accessible to client components for instant greeting
-    secure: isProduction,
+    secure: isSecure,
     sameSite: 'lax',
     path: '/',
     maxAge: 30 * 24 * 60 * 60,

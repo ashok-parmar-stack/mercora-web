@@ -54,4 +54,39 @@ describe('Next.js Proxy Auth Middleware (Unit)', () => {
     expect(res.status).toBe(307);
     expect(res.headers.get('location')).toContain('/login?redirect=%2Fsaved-businesses');
   });
+
+  it('FE-AUTH-006: deduplicates concurrent refresh requests and does not log out on transient 5xx', async () => {
+    const fetchMock = vi.spyOn(global, 'fetch').mockImplementation(async (url) => {
+      const u = String(url);
+      if (u.endsWith('/api/v1/auth/refresh')) {
+        return new Response(
+          JSON.stringify({ accessToken: 'new-acc', refreshToken: 'new-ref' }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+      if (u.endsWith('/api/v1/auth/me')) {
+        return new Response(
+          JSON.stringify({ user: { id: 'u-admin', role: { code: 'ADMIN' } } }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+      return new Response(null, { status: 404 });
+    });
+
+    const req1 = new NextRequest('http://localhost:9000/admin/businesses', {
+      headers: { cookie: 'mercora_refresh_token=same-ref-token' },
+    });
+    const req2 = new NextRequest('http://localhost:9000/admin/business-categories', {
+      headers: { cookie: 'mercora_refresh_token=same-ref-token' },
+    });
+
+    const [res1, res2] = await Promise.all([proxy(req1), proxy(req2)]);
+    expect(res1.status).toBe(200);
+    expect(res2.status).toBe(200);
+
+    const refreshCalls = fetchMock.mock.calls.filter(([u]) =>
+      String(u).endsWith('/api/v1/auth/refresh'),
+    );
+    expect(refreshCalls).toHaveLength(1);
+  });
 });

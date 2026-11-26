@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, SkeletonCard, SkeletonTable } from '@/components/common';
+import { Skeleton, SkeletonCard, SkeletonTable } from '@/components/common/Skeleton/Skeleton';
 
 export default function AdminLoading() {
   return (
