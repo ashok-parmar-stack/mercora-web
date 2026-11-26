@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { NavGroupItem } from "./sidebar-navigation.data";
@@ -33,15 +33,58 @@ export function SidebarGroupItem({
   onChildClick,
 }: SidebarGroupItemProps) {
   const Icon = entry.icon;
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const [flyoutPos, setFlyoutPos] = useState<{
+    left: number;
+    top?: number;
+    bottom?: number;
+  } | null>(null);
+
   const isAnyChildActive = entry.children.some(
     (c) => pathname === c.href || (c.href !== "/admin" && pathname?.startsWith(c.href))
   );
 
-  if (isCollapsed) {
-    const isMenuOpen = isHovered || isPinned;
+  const isMenuOpen = isCollapsed && (isHovered || isPinned);
 
+  useEffect(() => {
+    if (!isMenuOpen || !triggerRef.current) {
+      setFlyoutPos(null);
+      return;
+    }
+
+    const updatePosition = () => {
+      const el = triggerRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const estimatedMenuHeight = 56 + entry.children.length * 36;
+      const spaceBelow = window.innerHeight - rect.top;
+
+      if (spaceBelow < estimatedMenuHeight + 16) {
+        setFlyoutPos({
+          left: rect.right,
+          bottom: Math.max(12, window.innerHeight - rect.bottom),
+        });
+      } else {
+        setFlyoutPos({
+          left: rect.right,
+          top: Math.max(12, rect.top),
+        });
+      }
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [isMenuOpen, entry.children.length]);
+
+  if (isCollapsed) {
     return (
       <div
+        ref={triggerRef}
         className="relative group"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -62,15 +105,18 @@ export function SidebarGroupItem({
           </div>
         </button>
 
-        {isMenuOpen && (
+        {isMenuOpen && flyoutPos && (
           <div
-            className={`absolute left-full ${
-              entry.id === "geographic-master" ? "bottom-[-10px]" : "top-0"
-            } pl-2 w-64 z-50 pointer-events-auto`}
+            style={{
+              left: `${flyoutPos.left}px`,
+              ...(flyoutPos.top !== undefined ? { top: `${flyoutPos.top}px` } : {}),
+              ...(flyoutPos.bottom !== undefined ? { bottom: `${flyoutPos.bottom}px` } : {}),
+            }}
+            className="fixed pl-3 w-64 z-50 pointer-events-auto"
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
           >
-            <div className="absolute -left-3 top-0 bottom-0 w-4 pointer-events-auto" />
+            <div className="absolute -left-2 top-0 bottom-0 w-5 pointer-events-auto" />
             <div className="w-60 bg-surface-raised rounded-xl shadow-2xl border border-border py-2.5 px-2 animate-in fade-in slide-in-from-left-2 duration-150">
               <div className="px-2.5 py-1 text-[11px] font-semibold text-text-primary uppercase tracking-wider border-b border-border mb-1.5 flex items-center justify-between">
                 <span>{entry.label}</span>

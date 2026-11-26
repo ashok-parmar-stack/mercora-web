@@ -176,12 +176,20 @@ export const Sidebar: React.FC = () => {
           )}
         </div>
 
-          <div className={`flex-1 ${isCollapsed ? "overflow-visible" : "overflow-y-auto sidebar-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"} py-4 px-3 flex flex-col gap-4`}>
-            {ADMIN_NAV_SECTIONS.map((section, idx) => (
+        <div
+          className={`flex-1 overflow-y-auto sidebar-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden ${
+            isCollapsed ? "py-3 px-2.5 flex flex-col gap-2.5" : "py-4 px-3 flex flex-col gap-4"
+          }`}
+        >
+          {ADMIN_NAV_SECTIONS.map((section, idx) => (
             <div
               key={idx}
               className={`flex flex-col gap-1 ${
-                idx > 0 ? "border-t border-white/10 pt-4" : ""
+                idx > 0
+                  ? isCollapsed
+                    ? "border-t border-white/10 pt-2.5"
+                    : "border-t border-white/10 pt-4"
+                  : ""
               }`}
             >
               {!isCollapsed && (
