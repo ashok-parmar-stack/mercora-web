@@ -122,13 +122,6 @@ export function BusinessesDiscoveryClient({
       onClear: () => setFilters((prev) => ({ ...prev, category: "all" })),
     });
   }
-  if (filters.verifiedOnly) {
-    activeFilterPills.push({
-      key: "verifiedOnly",
-      label: "Verified Only",
-      onClear: () => setFilters((prev) => ({ ...prev, verifiedOnly: false })),
-    });
-  }
 
   const emptyMessage = getDirectoryEmptyMessage({
     query: filters.query,

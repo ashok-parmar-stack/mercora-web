@@ -25,7 +25,7 @@ export default async function BusinessesDiscoveryPage({ searchParams }: PageProp
   const location = readParam(sp.state) || readParam(sp.location) || "all";
   const city = readParam(sp.city) || "all";
   const businessType = readParam(sp.businessType) || "all";
-  const verifiedOnly = readParam(sp.verifiedOnly) === "true";
+  const verifiedOnly = readParam(sp.verifiedOnly) !== "false";
 
   const initialFilters: Partial<BusinessFiltersState> = {
     query,
@@ -47,7 +47,7 @@ export default async function BusinessesDiscoveryPage({ searchParams }: PageProp
 
   const listParams = new URLSearchParams(params);
   listParams.set("page", "1");
-  listParams.set("limit", "200");
+  listParams.set("limit", "12");
   listParams.set("sortBy", "relevance");
 
   const backendUrl = getInternalBackendUrl();

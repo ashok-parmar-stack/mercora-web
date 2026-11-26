@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef, useMemo, SetStateAction } from "react";
+import { useState, useEffect, useCallback, useRef, SetStateAction } from "react";
 import {
   Business,
   BusinessFacets,
@@ -31,62 +31,21 @@ const DEFAULT_FILTERS: BusinessFiltersState = {
   sortBy: "relevance",
 };
 
-function matchesFilters(b: Business, f: BusinessFiltersState, exclude?: keyof BusinessFiltersState): boolean {
-  if (exclude !== "query" && f.query.trim()) {
-    const q = f.query.trim().toLowerCase();
-    const hay = `${b.name} ${b.category} ${b.businessType} ${b.city} ${b.state} ${b.description || ""}`.toLowerCase();
-    if (!hay.includes(q)) return false;
-  }
-  if (exclude !== "category" && f.category && f.category !== "all") {
-    const c = f.category.toLowerCase();
-    if ((b.category || "").toLowerCase() !== c && (b.industry || "").toLowerCase() !== c) {
-      return false;
-    }
-  }
-  if (exclude !== "location" && f.location && f.location !== "all") {
-    if ((b.state || "").trim().toLowerCase() !== f.location.trim().toLowerCase()) return false;
-  }
-  if (exclude !== "city" && f.city && f.city !== "all") {
-    if ((b.city || "").trim().toLowerCase() !== f.city.trim().toLowerCase()) return false;
-  }
-  if (exclude !== "businessType" && f.businessType && f.businessType !== "all") {
-    const bt = f.businessType.trim().toLowerCase();
-    const bizType = (b.businessType || "").trim().toLowerCase();
-    if (bizType !== bt && !bizType.includes(bt)) return false;
-  }
-  if (exclude !== "verifiedOnly" && f.verifiedOnly) {
-    if (!b.isVerified && b.tier !== "Verified" && b.tier !== "Premium") return false;
-  }
-  return true;
-}
-
 export function useBusinesses(options: UseBusinessesOptions = {}) {
   const pageSize = options.pageSize || 12;
-  const serverList = options.initialBusinesses || [];
-  const canFilterLocally =
-    serverList.length > 0 &&
-    (options.initialTotal ?? serverList.length) <= serverList.length &&
-    (!options.initialFilters ||
-      (options.initialFilters.query === "" &&
-        (options.initialFilters.category || "all") === "all" &&
-        (options.initialFilters.location || "all") === "all" &&
-        (options.initialFilters.city || "all") === "all" &&
-        (options.initialFilters.businessType || "all") === "all"));
+  const hasServerSeed = Boolean(options.initialBusinesses && options.initialBusinesses.length > 0);
 
-  const [allBusinesses] = useState<Business[]>(canFilterLocally ? serverList : []);
-  const [businesses, setBusinesses] = useState<Business[]>(
-    canFilterLocally ? serverList.slice(0, pageSize) : serverList
-  );
+  const [businesses, setBusinesses] = useState<Business[]>(options.initialBusinesses || []);
   const [facets, setFacets] = useState<BusinessFacets | null>(options.initialFacets ?? null);
   const [baseFacets, setBaseFacets] = useState<BusinessFacets | null>(options.initialFacets ?? null);
   const [totalCount, setTotalCount] = useState<number>(
-    options.initialTotal ?? serverList.length ?? 0
+    options.initialTotal ?? options.initialBusinesses?.length ?? 0
   );
   const [totalPages, setTotalPages] = useState<number>(
     options.initialTotalPages ??
-    Math.max(1, Math.ceil((options.initialTotal ?? serverList.length ?? 0) / pageSize))
+      Math.max(1, Math.ceil((options.initialTotal ?? options.initialBusinesses?.length ?? 0) / pageSize))
   );
-  const [isLoading, setIsLoading] = useState<boolean>(serverList.length === 0);
+  const [isLoading, setIsLoading] = useState<boolean>(!hasServerSeed);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("card");
@@ -98,85 +57,41 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
   });
 
   const abortControllerRef = useRef<AbortController | null>(null);
-  const hasLoadedOnceRef = useRef<boolean>(serverList.length > 0);
-  const lastFacetKeyRef = useRef<string | null>(null);
+  const skipInitialFetchRef = useRef<boolean>(hasServerSeed);
+  const hasLoadedOnceRef = useRef<boolean>(hasServerSeed);
+  const lastFacetKeyRef = useRef<string | null>(
+    options.initialFacets
+      ? JSON.stringify({
+          query: options.initialFilters?.query || "",
+          category:
+            options.initialFilters?.category && options.initialFilters.category !== "all"
+              ? options.initialFilters.category
+              : undefined,
+          state:
+            options.initialFilters?.location && options.initialFilters.location !== "all"
+              ? options.initialFilters.location
+              : undefined,
+          city:
+            options.initialFilters?.city && options.initialFilters.city !== "all"
+              ? options.initialFilters.city
+              : undefined,
+          businessType:
+            options.initialFilters?.businessType && options.initialFilters.businessType !== "all"
+              ? options.initialFilters.businessType
+              : undefined,
+          verifiedOnly: options.initialFilters?.verifiedOnly ?? true,
+        })
+      : null
+  );
 
   const setFilters = useCallback((updater: SetStateAction<BusinessFiltersState>) => {
     setFiltersState((prev) => (typeof updater === "function" ? updater(prev) : updater));
     setPage(1);
   }, []);
 
-  // Instant in-memory Flipkart-style filtering when full dataset is loaded
-  const localResult = useMemo(() => {
-    if (allBusinesses.length === 0) return null;
-
-    const filtered = allBusinesses.filter((b) => matchesFilters(b, filters));
-    const sorted = [...filtered].sort((a, b) => {
-      switch (filters.sortBy) {
-        case "rating":
-          return (b.rating || 0) - (a.rating || 0);
-        case "reviews":
-          return (b.reviewCount || 0) - (a.reviewCount || 0);
-        case "established":
-          return (a.establishedYear || 9999) - (b.establishedYear || 9999);
-        default:
-          return (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0);
-      }
-    });
-
-    const total = sorted.length;
-    const pages = Math.max(1, Math.ceil(total / pageSize));
-    const safePage = Math.min(page, pages);
-    const paged = sorted.slice((safePage - 1) * pageSize, safePage * pageSize);
-
-    // Compute live facet counts locally
-    const stateCounts = new Map<string, number>();
-    const cityCounts = new Map<string, { state?: string; count: number }>();
-    const masterCounts = new Map<string, number>();
-    const typeCounts = new Map<string, number>();
-
-    for (const b of allBusinesses) {
-      if (matchesFilters(b, filters, "location") && b.state) {
-        stateCounts.set(b.state, (stateCounts.get(b.state) || 0) + 1);
-      }
-      if (matchesFilters(b, filters, "city") && b.city) {
-        const prev = cityCounts.get(b.city);
-        cityCounts.set(b.city, { state: b.state, count: (prev?.count || 0) + 1 });
-      }
-      if (matchesFilters(b, filters, "category") && b.category) {
-        masterCounts.set(b.category, (masterCounts.get(b.category) || 0) + 1);
-      }
-      if (matchesFilters(b, filters, "businessType") && b.businessType) {
-        typeCounts.set(b.businessType, (typeCounts.get(b.businessType) || 0) + 1);
-      }
-    }
-
-    const base = baseFacets;
-    const computedFacets: BusinessFacets = {
-      totalBusinesses: filtered.length,
-      verifiedCount: filtered.filter((b) => b.isVerified || b.tier === "Verified" || b.tier === "Premium").length,
-      unverifiedCount: filtered.filter((b) => !b.isVerified && b.tier !== "Verified" && b.tier !== "Premium").length,
-      businessCategories: (base?.businessCategories || []).map((bc) => ({
-        ...bc,
-        businessCount: typeCounts.get(bc.name) ?? 0,
-      })),
-      locations: Array.from(stateCounts.entries())
-        .map(([name, count]) => ({ name, slug: name.toLowerCase().replace(/\s+/g, "-"), count }))
-        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
-      cities: Array.from(cityCounts.entries())
-        .map(([name, info]) => ({ name, slug: name.toLowerCase().replace(/\s+/g, "-"), state: info.state, count: info.count }))
-        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
-      masterCategories: Array.from(masterCounts.entries())
-        .map(([name, count]) => ({ name, slug: name.toLowerCase().replace(/\s+/g, "-"), count }))
-        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)),
-    };
-
-    return { paged, total, pages, computedFacets };
-  }, [allBusinesses, filters, page, pageSize, baseFacets]);
-
   const debouncedQuery = useDebounce(filters.query, 250);
 
-  const loadBusinessesFromApi = useCallback(async () => {
+  const loadBusinesses = useCallback(async () => {
     abortControllerRef.current?.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
@@ -255,12 +170,15 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
   ]);
 
   useEffect(() => {
-    if (localResult) return; // Instant local filtering active
-    loadBusinessesFromApi();
+    if (skipInitialFetchRef.current) {
+      skipInitialFetchRef.current = false;
+      return;
+    }
+    loadBusinesses();
     return () => {
       abortControllerRef.current?.abort();
     };
-  }, [localResult, loadBusinessesFromApi]);
+  }, [loadBusinesses]);
 
   const resetFilters = useCallback(() => {
     setFiltersState(DEFAULT_FILTERS);
@@ -268,17 +186,16 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
   }, []);
 
   const refresh = useCallback(() => {
-    if (localResult) return;
     lastFacetKeyRef.current = null;
-    loadBusinessesFromApi();
-  }, [localResult, loadBusinessesFromApi]);
+    loadBusinesses();
+  }, [loadBusinesses]);
 
   return {
-    businesses: localResult ? localResult.paged : businesses,
-    facets: localResult ? localResult.computedFacets : facets ?? baseFacets,
-    totalCount: localResult ? localResult.total : totalCount,
-    isLoading: localResult ? false : isLoading,
-    isFetching: localResult ? false : isFetching,
+    businesses,
+    facets: facets ?? baseFacets,
+    totalCount,
+    isLoading,
+    isFetching,
     error,
     viewMode,
     setViewMode,
@@ -287,7 +204,7 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
     resetFilters,
     page,
     setPage,
-    totalPages: localResult ? localResult.pages : totalPages,
+    totalPages,
     refresh,
   };
 }

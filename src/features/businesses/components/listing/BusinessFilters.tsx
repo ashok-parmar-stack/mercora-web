@@ -42,7 +42,6 @@ export function BusinessFilters({
     businessCategory: true,
     location: true,
     masterCategory: true,
-    verification: true,
   });
 
   const toggleSection = (section: keyof typeof openSections) => {
@@ -122,7 +121,6 @@ export function BusinessFilters({
     filters.location !== "all",
     filters.city !== "all",
     filters.category !== "all",
-    filters.verifiedOnly,
   ].filter(Boolean).length;
 
   return (
@@ -242,6 +240,7 @@ export function BusinessFilters({
         icon={<LayoutGrid className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />}
         isOpen={openSections.masterCategory}
         onToggle={() => toggleSection("masterCategory")}
+        hasBorder={false}
       >
         <div className="pt-1">
           <Select
@@ -250,29 +249,6 @@ export function BusinessFilters({
             onChange={(e) => onFilterChange({ category: e.target.value })}
             aria-label="Filter by master category"
             options={masterCategoryOptions}
-          />
-        </div>
-      </FilterAccordionSection>
-
-      <FilterAccordionSection
-        title="Verification Status"
-        icon={<ShieldCheck className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />}
-        isOpen={openSections.verification}
-        onToggle={() => toggleSection("verification")}
-        hasBorder={false}
-      >
-        <div className="space-y-2 pt-1">
-          <FilterCheckboxOption
-            label="Verified Only"
-            count={facets?.verifiedCount}
-            checked={filters.verifiedOnly}
-            onSelect={() => onFilterChange({ verifiedOnly: true })}
-          />
-          <FilterCheckboxOption
-            label="All Businesses"
-            count={facets?.totalBusinesses}
-            checked={!filters.verifiedOnly}
-            onSelect={() => onFilterChange({ verifiedOnly: false })}
           />
         </div>
       </FilterAccordionSection>

@@ -231,11 +231,12 @@ export function AdminBusinessForm({
       formData.append("folder", "businesses");
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const data = await res.json();
-      if (!res.ok || !data?.url) {
+      const uploadedUrl = data?.data?.url || data?.url;
+      if (!res.ok || !uploadedUrl) {
         throw new Error(data?.error || `Failed to upload ${target} image.`);
       }
-      if (target === "logo") setLogoUrl(data.url);
-      else setImageUrl(data.url);
+      if (target === "logo") setLogoUrl(uploadedUrl);
+      else setImageUrl(uploadedUrl);
     } catch (err: any) {
       setValidationError(err?.message || "Image upload failed.");
     } finally {

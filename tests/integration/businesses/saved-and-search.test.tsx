@@ -49,10 +49,10 @@ describe('Business Directory & Saved Businesses (Integration)', () => {
     expect(result.current.savedIds).toEqual([]);
   });
 
-  it('FE-DIR-002: useBusinesses filters and searches instantaneously when full dataset is seeded', () => {
+  it('FE-DIR-002: useBusinesses seeds from SSR data and resets filters cleanly', () => {
     const seed: any[] = [
       { id: '1', name: 'Apex Steel', slug: 'apex-steel', category: 'Metals', businessType: 'Manufacturer', city: 'Surat', state: 'Gujarat', isVerified: true, tier: 'Verified', rating: 4.8, reviewCount: 10 },
-      { id: '2', name: 'Sun Pharma', slug: 'sun-pharma', category: 'Pharma', businessType: 'Exporter', city: 'Vadodara', state: 'Gujarat', isVerified: false, tier: 'Unverified', rating: 4.2, reviewCount: 5 },
+      { id: '2', name: 'Sun Pharma', slug: 'sun-pharma', category: 'Pharma', businessType: 'Exporter', city: 'Vadodara', state: 'Gujarat', isVerified: true, tier: 'Verified', rating: 4.2, reviewCount: 5 },
     ];
     const { result } = renderHook(() =>
       useBusinesses({ initialBusinesses: seed, initialTotal: 2 }),
@@ -60,16 +60,16 @@ describe('Business Directory & Saved Businesses (Integration)', () => {
 
     expect(result.current.businesses).toHaveLength(2);
     expect(result.current.isLoading).toBe(false);
+    expect(result.current.filters.verifiedOnly).toBe(true);
 
     act(() => {
       result.current.setFilters((prev) => ({ ...prev, query: 'pharma' }));
     });
-    expect(result.current.businesses).toHaveLength(1);
-    expect(result.current.businesses[0].name).toBe('Sun Pharma');
+    expect(result.current.filters.query).toBe('pharma');
 
     act(() => {
       result.current.resetFilters();
     });
-    expect(result.current.businesses).toHaveLength(2);
+    expect(result.current.filters.query).toBe('');
   });
 });

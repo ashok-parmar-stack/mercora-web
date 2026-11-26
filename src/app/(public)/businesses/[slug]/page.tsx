@@ -11,7 +11,7 @@ import { BusinessOverview } from "@/features/businesses/components/details/Busin
 import { BusinessProducts } from "@/features/businesses/components/details/BusinessProducts";
 import { BusinessLocation } from "@/features/businesses/components/details/BusinessLocation";
 import { BusinessContactPanel } from "@/features/businesses/components/details/BusinessContactPanel";
-import { BusinessSourceInfo } from "@/features/businesses/components/details/BusinessSourceInfo";
+import { ShareBusinessModal } from "@/features/businesses/components/details/ShareBusinessModal";
 import { ContactInquiryModal } from "@/features/enquiries/components/ContactInquiryModal";
 import { SavedBusinessesDrawer } from "@/features/saved-businesses/components/SavedBusinessesDrawer";
 import { useBusinessDetails } from "@/features/businesses/hooks/use-business-details";
@@ -31,14 +31,22 @@ export default function BusinessProfileDetailPage() {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string | undefined>();
-  const [shareCopied, setShareCopied] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-  const handleShare = () => {
-    if (typeof window !== "undefined") {
-      navigator.clipboard?.writeText(window.location.href);
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2500);
+  const handleShare = async () => {
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function" && business) {
+      try {
+        await navigator.share({
+          title: business.name,
+          text: `${business.name} — ${business.businessType}`,
+          url: window.location.href,
+        });
+        return;
+      } catch {
+        // Fallback to ShareBusinessModal if cancelled or unsupported
+      }
     }
+    setIsShareModalOpen(true);
   };
 
   return (
@@ -74,11 +82,6 @@ export default function BusinessProfileDetailPage() {
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {shareCopied && (
-          <div className="mb-4 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-            {APP_MESSAGES.success.linkCopied}
-          </div>
-        )}
         {isLoading ? (
           <LoadingState message="Loading business profile..." />
         ) : error || !business ? (
@@ -148,9 +151,6 @@ export default function BusinessProfileDetailPage() {
                     )}
                   </div>
                 )}
-
-                {/* Source & Verification Info Box */}
-                <BusinessSourceInfo business={business} />
               </div>
 
               {/* Right Sidebar: Contact Panel */}
@@ -177,13 +177,21 @@ export default function BusinessProfileDetailPage() {
       />
 
       {business && (
-        <ContactInquiryModal
-          isOpen={isInquiryModalOpen}
-          onClose={() => setIsInquiryModalOpen(false)}
-          businessId={business.id}
-          businessName={business.name}
-          productName={selectedProduct}
-        />
+        <>
+          <ContactInquiryModal
+            isOpen={isInquiryModalOpen}
+            onClose={() => setIsInquiryModalOpen(false)}
+            businessId={business.id}
+            businessName={business.name}
+            productName={selectedProduct}
+          />
+          <ShareBusinessModal
+            isOpen={isShareModalOpen}
+            onClose={() => setIsShareModalOpen(false)}
+            businessName={business.name}
+            businessSummary={`${business.businessType} • ${business.city}, ${business.state}`}
+          />
+        </>
       )}
 
       <Footer />
