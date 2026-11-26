@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, SetStateAction } from "react";
+import { useState, useEffect, useCallback, useRef, SetStateAction } from "react";
 import {
   Business,
   BusinessFacets,
@@ -10,6 +10,7 @@ import {
 import { fetchBusinessFacets, fetchBusinesses } from "../api/business-api";
 import { useDebounce } from "@/hooks/use-debounce";
 import { formatUserFriendlyError } from "@/config/messages";
+import { isAbortError } from "@/lib/api-abort";
 
 export interface UseBusinessesOptions {
   initialBusinesses?: Business[];
@@ -33,11 +34,15 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(!options.initialBusinesses?.length);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>("card");
   const [page, setPage] = useState<number>(1);
 
   const [filters, setFiltersState] = useState<BusinessFiltersState>(DEFAULT_FILTERS);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const lastFacetKeyRef = useRef<string | null>(null);
+  const hasLoadedOnceRef = useRef<boolean>(Boolean(options.initialBusinesses?.length));
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -67,11 +72,19 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
     setPage(1);
   }, []);
 
-  const debouncedQuery = useDebounce(filters.query, 300);
+  const debouncedQuery = useDebounce(filters.query, 250);
 
   const loadBusinesses = useCallback(async () => {
-    setIsLoading(true);
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    if (!hasLoadedOnceRef.current) {
+      setIsLoading(true);
+    }
+    setIsFetching(true);
     setError(null);
+
     const sharedParams = {
       query: debouncedQuery,
       category: filters.category !== "all" ? filters.category : undefined,
@@ -81,6 +94,9 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
       verifiedOnly: filters.verifiedOnly,
     };
 
+    const facetKey = JSON.stringify(sharedParams);
+    const shouldFetchFacets = facetKey !== lastFacetKeyRef.current;
+
     try {
       const [res, facetsRes] = await Promise.all([
         fetchBusinesses({
@@ -88,17 +104,25 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
           sortBy: filters.sortBy,
           page,
           limit: pageSize,
+          signal: controller.signal,
         }),
-        fetchBusinessFacets(sharedParams).catch(() => null),
+        shouldFetchFacets
+          ? fetchBusinessFacets({ ...sharedParams, signal: controller.signal }).catch(() => null)
+          : Promise.resolve(null),
       ]);
 
+      if (controller.signal.aborted) return;
+
+      hasLoadedOnceRef.current = true;
       setBusinesses(res.data || []);
       setTotalCount(res.total ?? 0);
       setTotalPages(res.totalPages || Math.max(1, Math.ceil((res.total ?? 0) / pageSize)));
       if (facetsRes) {
+        lastFacetKeyRef.current = facetKey;
         setFacets(facetsRes);
       }
     } catch (err: unknown) {
+      if (isAbortError(err) || controller.signal.aborted) return;
       setBusinesses([]);
       setTotalCount(0);
       setTotalPages(1);
@@ -109,7 +133,10 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
         )
       );
     } finally {
-      setIsLoading(false);
+      if (!controller.signal.aborted) {
+        setIsLoading(false);
+        setIsFetching(false);
+      }
     }
   }, [
     debouncedQuery,
@@ -125,6 +152,9 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
 
   useEffect(() => {
     loadBusinesses();
+    return () => {
+      abortControllerRef.current?.abort();
+    };
   }, [loadBusinesses]);
 
   const resetFilters = useCallback(() => {
@@ -132,11 +162,17 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
     setPage(1);
   }, []);
 
+  const refresh = useCallback(() => {
+    lastFacetKeyRef.current = null;
+    loadBusinesses();
+  }, [loadBusinesses]);
+
   return {
     businesses,
     facets,
     totalCount,
     isLoading,
+    isFetching,
     error,
     viewMode,
     setViewMode,
@@ -146,6 +182,6 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
     page,
     setPage,
     totalPages,
-    refresh: loadBusinesses,
+    refresh,
   };
 }

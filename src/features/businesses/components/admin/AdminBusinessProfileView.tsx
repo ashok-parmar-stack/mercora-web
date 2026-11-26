@@ -216,9 +216,9 @@ export function AdminBusinessProfileView({
                 </div>
               </div>
               <div>
-                <p className="text-xs text-text-muted">GSTIN / CIN</p>
+                <p className="text-xs text-text-muted">GSTIN / PAN / CIN</p>
                 <p className="font-mono text-xs mt-1">
-                  GSTIN: {business.gstin || "—"} | CIN: {business.cin || "—"}
+                  GSTIN: {business.gstin || "—"} | PAN: {business.pan || "—"} | CIN: {business.cin || "—"}
                 </p>
               </div>
             </CardContent>

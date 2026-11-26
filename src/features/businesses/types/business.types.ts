@@ -64,6 +64,7 @@ export interface Business {
   website: string;
   address: string;
   gstin: string;
+  pan?: string;
   cin: string;
   source?: string;
   sourceId?: string;
