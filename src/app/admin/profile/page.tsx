@@ -109,9 +109,18 @@ export default function AdminProfilePage() {
     bio: string;
     timezone: string;
   }) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    updateUser({ name: data.name, email: data.email, phone: data.phone });
-    addToast("success", "Profile Updated", "Your administrator profile has been saved successfully.");
+    try {
+      if (user?.id) {
+        await apiHttpClient.patch(`/users/${user.id}`, {
+          name: data.name,
+          phone: data.phone,
+        });
+      }
+      updateUser({ name: data.name, email: data.email, phone: data.phone });
+      addToast("success", "Profile Updated", "Your administrator profile has been saved successfully.");
+    } catch (err: any) {
+      addToast("error", "Update Failed", extractErrorMessage(err, "Could not save profile changes."));
+    }
   };
 
   const handleLogout = async () => {
@@ -159,8 +168,8 @@ export default function AdminProfilePage() {
 
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-6 md:p-7 shadow-xs">
         <ProfileHeroCard
-          name={user?.name || "Ashok Parmar"}
-          email={user?.email || "ashokparmar72038@gmail.com"}
+          name={user?.name || "Administrator"}
+          email={user?.email || ""}
           company="Mercora Enterprise Global"
           roleName={activePersona.roleName}
           avatarUrl={avatarUrl}
@@ -198,12 +207,12 @@ export default function AdminProfilePage() {
 
       {activeTab === "profile" && (
         <ProfileGeneralTab
-          initialName={user?.name || "Ashok Parmar"}
-          initialEmail={user?.email || "ashokparmar72038@gmail.com"}
-          initialPhone={user?.phone || "+91 98765 43210"}
+          initialName={user?.name || "Administrator"}
+          initialEmail={user?.email || ""}
+          initialPhone={user?.phone || ""}
           initialCompany="Mercora Enterprise Global"
-          initialDesignation="Lead Systems Architect"
-          initialBio="Senior Core Platform Engineer overseeing global B2B trade intelligence, distributed databases, and high-security access controls."
+          initialDesignation={activePersona.roleName}
+          initialBio=""
           initialTimezone="Asia/Kolkata (IST, UTC+5:30)"
           avatarUrl={avatarUrl}
           roleName={activePersona.roleName}

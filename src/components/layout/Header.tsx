@@ -102,12 +102,12 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                   <Button
                     variant="outline"
                     size="sm"
+                    leftIcon={<ShieldCheck className="w-4 h-4 text-primary shrink-0" />}
                     className="hidden xl:inline-flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold border-border bg-surface text-text-secondary hover:text-primary hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-2xs select-none"
                     asChild
                   >
                     <Link href="/admin" title="Open Admin Console">
-                      <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
-                      <span>Admin Console</span>
+                      Admin Console
                     </Link>
                   </Button>
                 )}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { MapPin, ArrowRight, Search } from "lucide-react";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import {
   EmptyState,
   LoadingState,
@@ -162,6 +163,7 @@ export default function LocationsDirectoryPage() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   );
 }

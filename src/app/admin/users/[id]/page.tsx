@@ -88,7 +88,7 @@ export default function UserDetailPage() {
   const userKey = encodeURIComponent(user.slug || user.id);
 
   return (
-    <div className="flex flex-col gap-6 max-w-5xl">
+    <div className="flex flex-col gap-6 w-full">
       <PageHeader
         title={fullName}
         description={`User account details, assigned roles, and permission policies for ${user.email}.`}

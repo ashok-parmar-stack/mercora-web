@@ -165,7 +165,7 @@ export default function UserPermissionsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-5xl">
+    <div className="flex flex-col gap-6 w-full">
       <PageHeader
         title={`Permission Overrides: ${user?.firstName || user?.email}`}
         description="Configure granular User-Based Access Control (UBAC) overrides that take precedence over role permissions."

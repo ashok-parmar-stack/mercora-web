@@ -14,7 +14,7 @@ import {
 } from "@/components/common";
 import { useAbortableFetch } from "@/lib/hooks/useAbortableFetch";
 import { useTableState } from "@/lib/hooks/useTableState";
-import { adminV1Client } from "@/lib/http/client";
+import { adminV1Client, extractErrorMessage } from "@/lib/http/client";
 import { useUIStore } from "../../../lib/store/ui-store";
 import { EmailTemplate, emailTemplateColumns } from "./email-template-columns";
 
@@ -154,9 +154,15 @@ export default function EmailTemplatesPage() {
         entityType="email template"
         onConfirm={async () => {
           if (deletingTemplate) {
-            setData((prev) => prev.filter((item) => item.id !== deletingTemplate.id));
-            addToast("success", "Template Deleted", `${deletingTemplate.name} removed.`);
-            setDeletingTemplate(null);
+            try {
+              await adminV1Client.delete(`/email-templates/${deletingTemplate.id}`);
+              setData((prev) => prev.filter((item) => item.id !== deletingTemplate.id));
+              addToast("success", "Template Deleted", `${deletingTemplate.name} removed.`);
+            } catch (err: any) {
+              addToast("error", "Delete Failed", extractErrorMessage(err, "Could not delete template."));
+            } finally {
+              setDeletingTemplate(null);
+            }
           }
         }}
       />
@@ -169,10 +175,16 @@ export default function EmailTemplatesPage() {
         entityType="email template"
         onConfirm={async () => {
           if (bulkDeletingIds) {
-            setData((prev) => prev.filter((d) => !bulkDeletingIds.includes(d.id)));
-            clearSelection("email-templates-table");
-            addToast("success", "Bulk Action", `Deleted ${bulkDeletingIds.length} email templates.`);
-            setBulkDeletingIds(null);
+            try {
+              await adminV1Client.post("/email-templates/bulk-delete", { ids: bulkDeletingIds });
+              setData((prev) => prev.filter((d) => !bulkDeletingIds.includes(d.id)));
+              clearSelection("email-templates-table");
+              addToast("success", "Bulk Action", `Deleted ${bulkDeletingIds.length} email templates.`);
+            } catch (err: any) {
+              addToast("error", "Bulk Delete Failed", extractErrorMessage(err, "Could not delete templates."));
+            } finally {
+              setBulkDeletingIds(null);
+            }
           }
         }}
       />
@@ -186,16 +198,25 @@ export default function EmailTemplatesPage() {
         targetStatus={bulkStatusConfirm?.targetStatus || "ACTIVE"}
         onConfirm={async () => {
           if (bulkStatusConfirm) {
-            setData((prev) =>
-              prev.map((t) =>
-                bulkStatusConfirm.ids.includes(t.id)
-                  ? { ...t, status: bulkStatusConfirm.targetStatus }
-                  : t
-              )
-            );
-            clearSelection("email-templates-table");
-            addToast("success", "Status Updated", `Updated status for ${bulkStatusConfirm.ids.length} email templates.`);
-            setBulkStatusConfirm(null);
+            try {
+              await adminV1Client.patch("/email-templates/bulk-status", {
+                ids: bulkStatusConfirm.ids,
+                status: bulkStatusConfirm.targetStatus,
+              });
+              setData((prev) =>
+                prev.map((t) =>
+                  bulkStatusConfirm.ids.includes(t.id)
+                    ? { ...t, status: bulkStatusConfirm.targetStatus }
+                    : t
+                )
+              );
+              clearSelection("email-templates-table");
+              addToast("success", "Status Updated", `Updated status for ${bulkStatusConfirm.ids.length} email templates.`);
+            } catch (err: any) {
+              addToast("error", "Update Failed", extractErrorMessage(err, "Could not update template status."));
+            } finally {
+              setBulkStatusConfirm(null);
+            }
           }
         }}
       />

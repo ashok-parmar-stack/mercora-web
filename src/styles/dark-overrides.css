@@ -89,74 +89,74 @@ html.dark body {
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
- * DARK MODE: Clean Monochrome Adaptation (OLED Black & Charcoal)
+ * DARK MODE: Wine / Plum Theme Adaptation (Aligned with theme.css)
  * ══════════════════════════════════════════════════════════════════════════ */
 
-/* Soft background tints → subtle monochrome overlay in dark */
+/* Soft background tints → theme primary-soft overlay in dark */
 .dark .bg-brand-50,
 .dark .bg-brand-50\/20,
 .dark .bg-brand-50\/30,
 .dark .bg-brand-50\/40,
 .dark .bg-brand-50\/70,
 .dark .bg-brand-100 {
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: var(--primary-soft) !important;
 }
 
-/* Brand borders → subtle slate / monochrome in dark */
+/* Brand borders → theme border in dark */
 .dark .border-brand-100,
 .dark .border-brand-200,
 .dark .border-brand-200\/80,
 .dark .border-brand-200\/90,
 .dark .border-brand-300 {
-  border-color: var(--border, #2d2d2d) !important;
+  border-color: var(--border) !important;
 }
 
-/* Brand text → pure white in dark */
+/* Brand text → theme primary in dark */
 .dark .text-brand-300,
 .dark .text-brand-400,
 .dark .text-brand-600,
 .dark .text-brand-700,
 .dark .text-brand-950 {
-  color: #ffffff !important;
+  color: var(--primary) !important;
 }
 
-/* Brand hover states → crisp monochrome hover in dark */
+/* Brand hover states → theme-aware hover in dark */
 .dark .hover\:bg-brand-50:hover,
 .dark .hover\:bg-brand-100:hover {
-  background-color: rgba(255, 255, 255, 0.12) !important;
+  background-color: var(--accent-soft) !important;
 }
 
 .dark .hover\:text-brand-600:hover,
 .dark .hover\:text-brand-700:hover {
-  color: #ffffff !important;
+  color: var(--primary-hover) !important;
 }
 
 .dark .hover\:border-brand-300:hover,
 .dark .hover\:border-brand-600:hover {
-  border-color: var(--border-hover, #444444) !important;
+  border-color: var(--primary) !important;
 }
 
-/* Focus rings → pure white in dark */
+/* Focus rings → theme ring in dark */
 .dark .focus\:ring-brand-100:focus,
 .dark .ring-brand-100,
 .dark .ring-brand-900\/30 {
-  --tw-ring-color: rgba(255, 255, 255, 0.25) !important;
+  --tw-ring-color: var(--ring) !important;
 }
 
 .dark .border-brand-500:not(button):not([class*="bg-brand-5"]):not([class*="bg-brand-6"]) {
-  border-color: var(--border-hover, #444444) !important;
+  border-color: var(--border-hover) !important;
 }
 
 /* Brand-tinted badge counters in dark */
 .dark .bg-brand-900\/40,
 .dark .bg-brand-950\/40 {
-  background-color: rgba(255, 255, 255, 0.10) !important;
+  background-color: var(--primary-soft) !important;
 }
 
 .dark .border-brand-800\/50,
 .dark .border-brand-800\/60,
 .dark .border-brand-900\/40 {
-  border-color: var(--border, #2d2d2d) !important;
+  border-color: var(--border) !important;
 }
 
 .dark .bg-blue-50 {

@@ -185,9 +185,13 @@ export async function proxy(request: NextRequest) {
     if (isAuthRoute) {
       if (session.authenticated) {
         const defaultTarget = isAdminRole(session.user) ? '/admin' : '/dashboard';
-        const redirectUrl = request.nextUrl.searchParams.get('redirect') || defaultTarget;
+        const rawRedirect = request.nextUrl.searchParams.get('redirect');
+        const safeRedirect =
+          rawRedirect && rawRedirect.startsWith('/') && !rawRedirect.startsWith('//') && !rawRedirect.includes('\\')
+            ? rawRedirect
+            : defaultTarget;
         return applyRefreshedCookies(
-          NextResponse.redirect(new URL(redirectUrl, request.url)),
+          NextResponse.redirect(new URL(safeRedirect, request.url)),
           session,
           isSecure,
         );

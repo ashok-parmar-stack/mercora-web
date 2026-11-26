@@ -57,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const sizeStyles = {
       sm: "h-9 px-3.5 text-xs rounded-lg gap-1.5",
       md: "h-10 px-4 text-sm rounded-lg gap-2 font-medium",
-      lg: "h-11.5 px-5 text-sm sm:text-base rounded-xl gap-2.5 font-semibold",
+      lg: "h-11 px-5 text-sm sm:text-base rounded-xl gap-2.5 font-semibold",
     };
 
     const combinedClassName = cn(
@@ -77,7 +77,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               {leftIcon}
             </span>
           )}
-          <span className="relative z-10">{child.props.children}</span>
+          <span className="relative z-10 inline-flex items-center justify-center gap-1.5">
+            {child.props.children}
+          </span>
           {!isBusy && rightIcon && (
             <span className="flex-shrink-0 flex items-center transition-transform duration-200">
               {rightIcon}

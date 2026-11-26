@@ -10,7 +10,6 @@ import {
   Image as ImageIcon,
   Mail,
   MapPin,
-  Package,
   Pencil,
   Phone,
   ShieldCheck,
@@ -23,7 +22,6 @@ import {
   CardContent,
   EmptyState,
   PageHeader,
-  Pagination,
 } from "@/components/common";
 import { Business } from "../../types/business.types";
 import { BusinessStatusBadge } from "./BusinessStatusBadge";
@@ -34,7 +32,6 @@ type ProfileTab =
   | "business-info"
   | "contact"
   | "location"
-  | "products"
   | "verification"
   | "media"
   | "team"
@@ -45,7 +42,6 @@ const TABS: Array<{ id: ProfileTab; label: string; icon: React.ComponentType<any
   { id: "business-info", label: "Business Info", icon: FileText },
   { id: "contact", label: "Contact & Legal", icon: Phone },
   { id: "location", label: "Address & Location", icon: MapPin },
-  { id: "products", label: "Products & Services", icon: Package },
   { id: "verification", label: "Verification", icon: ShieldCheck },
   { id: "media", label: "Media & Gallery", icon: ImageIcon },
   { id: "team", label: "Users & Team", icon: Users },
@@ -62,13 +58,7 @@ export function AdminBusinessProfileView({
   onRefresh,
 }: AdminBusinessProfileViewProps) {
   const [activeTab, setActiveTab] = useState<ProfileTab>("overview");
-  const [productPage, setProductPage] = useState(1);
   const [isVerifyOpen, setIsVerifyOpen] = useState(false);
-
-  const products = business.products || [];
-  const pageSize = 6;
-  const totalProductPages = Math.max(1, Math.ceil(products.length / pageSize));
-  const pagedProducts = products.slice((productPage - 1) * pageSize, productPage * pageSize);
 
   return (
     <div className="flex flex-col gap-6">
@@ -146,13 +136,9 @@ export function AdminBusinessProfileView({
                 <span className="text-text-secondary">Established</span>
                 <span className="font-semibold">{business.establishedYear || "—"}</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-border">
+              <div className="flex justify-between py-1.5">
                 <span className="text-text-secondary">Employees</span>
                 <span className="font-semibold">{business.employeeCount || "—"}</span>
-              </div>
-              <div className="flex justify-between py-1.5">
-                <span className="text-text-secondary">Products</span>
-                <span className="font-semibold">{products.length}</span>
               </div>
             </CardContent>
           </Card>
@@ -281,43 +267,6 @@ export function AdminBusinessProfileView({
             </div>
           </CardContent>
         </Card>
-      )}
-
-      {activeTab === "products" && (
-        <div className="space-y-4">
-          {pagedProducts.length === 0 ? (
-            <EmptyState
-              title="No products listed"
-              description="This business has not added any products or services yet."
-            />
-          ) : (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {pagedProducts.map((p) => (
-                  <Card key={p.id}>
-                    <CardContent className="p-4 space-y-2">
-                      <p className="font-bold text-sm text-foreground">{p.name}</p>
-                      <p className="text-xs text-primary font-medium">{p.category}</p>
-                      <p className="text-xs text-text-secondary line-clamp-2">
-                        {p.description || "No description"}
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              {totalProductPages > 1 && (
-                <div className="flex justify-center">
-                  <Pagination
-                    currentPage={productPage}
-                    totalPages={totalProductPages}
-                    pageSize={pageSize}
-                    onPageChange={setProductPage}
-                  />
-                </div>
-              )}
-            </>
-          )}
-        </div>
       )}
 
       {activeTab === "verification" && (

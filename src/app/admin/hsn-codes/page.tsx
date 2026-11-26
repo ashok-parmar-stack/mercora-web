@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Hash, RefreshCw, Layers } from "lucide-react";
 import { useHsnCodes } from "../../../lib/hooks/useHsnCodes";
+import { useDebounce } from "../../../hooks/use-debounce";
 import { HsnCode, HsnCodeCategoryMapping, ProductCategory } from "@mercora/shared-types";
 import { PageHeader } from "../../../components/layout/PageHeader";
 import { DataTable, BulkAction } from "../../../components/data-table/DataTable";
@@ -42,23 +43,17 @@ export default function HsnCodesAdminPage() {
   const [deleteConfirmHsn, setDeleteConfirmHsn] = useState<HsnCode | null>(null);
   const [bulkDeletingIds, setBulkDeletingIds] = useState<string[] | null>(null);
 
-  // Data Fetching Hook
+  const debouncedSearch = useDebounce(searchTerm, 350);
+
+  // Data Fetching Hook (auto-fetches when debouncedSearch or filters change)
   const { hsnCodes, isLoading, pagination, refetch, sync, remove } = useHsnCodes({
     page: 1,
-    limit: 1000,
-    search: searchTerm || undefined,
+    limit: 50,
+    search: debouncedSearch || undefined,
     level: selectedLevel !== "ALL" ? (selectedLevel as any) : undefined,
     source: selectedSource !== "ALL" ? selectedSource : undefined,
   });
   const total = pagination?.total ?? hsnCodes.length;
-
-  // Debounced search
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      refetch();
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [searchTerm, selectedLevel, selectedSource, refetch]);
 
   // Handle Sync
   const handleTriggerSync = async () => {

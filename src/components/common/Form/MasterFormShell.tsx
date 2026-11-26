@@ -44,11 +44,11 @@ export function MasterFormShell({
 }: MasterFormShellProps) {
   return (
     <div className="w-full flex flex-col gap-6">
-      <div className="w-full bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col gap-6">
-        <div className="border-b border-gray-100 pb-4 flex items-center justify-between gap-3">
+      <div className="w-full bg-surface border border-border rounded-2xl p-6 sm:p-8 shadow-xs flex flex-col gap-6">
+        <div className="border-b border-border pb-4 flex items-center justify-between gap-3">
           <div>
-            <h3 className="font-extrabold text-base text-gray-900">{title}</h3>
-            {subtitle && <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>}
+            <h3 className="font-extrabold text-base text-foreground">{title}</h3>
+            {subtitle && <p className="text-xs text-text-secondary mt-0.5">{subtitle}</p>}
           </div>
           <Badge variant="brand" size="sm">
             {badgeLabel}
@@ -66,8 +66,8 @@ export function MasterFormShell({
           {children}
 
           {statusSection && (
-            <div className="sm:col-span-2 flex flex-col gap-2 p-4 rounded-xl border border-gray-100 bg-gray-50/60">
-              <label className="text-xs font-bold text-gray-700">{statusSection.label}</label>
+            <div className="sm:col-span-2 flex flex-col gap-2 p-4 rounded-xl border border-border bg-surface-hover/50">
+              <label className="text-xs font-bold text-foreground">{statusSection.label}</label>
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <div className="flex items-center gap-3">
                   <button
@@ -102,7 +102,7 @@ export function MasterFormShell({
             </div>
           )}
 
-          <div className="border-t border-gray-100 pt-6 flex items-center justify-between gap-3">
+          <div className="border-t border-border pt-6 flex items-center justify-between gap-3">
             {onCancel ? (
               <Button type="button" variant="secondary" size="md" onClick={onCancel}>
                 <ArrowLeft className="w-4 h-4" />

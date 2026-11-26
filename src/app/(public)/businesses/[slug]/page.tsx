@@ -8,7 +8,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { BusinessProfileHeader } from "@/features/businesses/components/details/BusinessProfileHeader";
 import { BusinessOverview } from "@/features/businesses/components/details/BusinessOverview";
-import { BusinessProducts } from "@/features/businesses/components/details/BusinessProducts";
 import { BusinessLocation } from "@/features/businesses/components/details/BusinessLocation";
 import { BusinessContactPanel } from "@/features/businesses/components/details/BusinessContactPanel";
 import { ShareBusinessModal } from "@/features/businesses/components/details/ShareBusinessModal";
@@ -115,15 +114,6 @@ export default function BusinessProfileDetailPage() {
               {/* Left / Center Tab Content */}
               <div className="lg:col-span-2 space-y-6">
                 {activeTab === "overview" && <BusinessOverview business={business} />}
-                {activeTab === "products" && (
-                  <BusinessProducts
-                    products={business.products || []}
-                    onEnquire={(p) => {
-                      setSelectedProduct(p.name);
-                      setIsInquiryModalOpen(true);
-                    }}
-                  />
-                )}
                 {activeTab === "contact" && (
                   <BusinessContactPanel
                     business={business}

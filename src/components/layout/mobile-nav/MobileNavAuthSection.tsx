@@ -32,36 +32,40 @@ export function MobileNavAuthSection({
   if (isAuth) {
     const canAccessAdmin = isAdminRole(user);
     return (
-      <div className="pt-4 border-t border-border flex flex-col gap-3 pb-6">
-        <div className="p-3.5 rounded-2xl bg-surface border border-border shadow-xs flex items-center gap-3">
-          <div className="w-11 h-11 rounded-xl bg-primary text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-xs">
-            {avatarInitials}
-          </div>
-          <div className="min-w-0 flex-1 text-left">
-            <p className="text-sm font-bold text-text-primary truncate">
-              {user?.name || "Authenticated User"}
-            </p>
-            <p className="text-xs text-text-muted truncate mt-0.5">
-              {user?.email || ""}
-            </p>
-            <div className="mt-1.5 flex items-center gap-1.5">
-              <Badge variant="brand" size="sm">
-                {roleLabel}
-              </Badge>
+      <div className="flex flex-col gap-3">
+        {/* User Identity Card */}
+        <div className="rounded-2xl border border-border bg-surface shadow-2xs overflow-hidden">
+          <div className="px-4 py-3.5 flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-primary text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-xs">
+              {avatarInitials}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-sm font-bold text-text-primary truncate">
+                  {user?.name || "Authenticated User"}
+                </p>
+                <Badge variant="brand" size="sm">
+                  {roleLabel}
+                </Badge>
+              </div>
+              <p className="text-xs text-text-muted truncate mt-0.5">
+                {user?.email || ""}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
+        {/* Actions */}
+        <div className="flex flex-col gap-2.5">
           <Button
             variant="primary"
             size="lg"
-            className="w-full justify-center shadow-xs font-bold"
+            className="w-full justify-center shadow-xs font-semibold"
+            leftIcon={<ShieldCheck className="w-4 h-4 shrink-0" />}
             asChild
           >
             <Link href={canAccessAdmin ? "/admin" : "/dashboard"} onClick={onClose}>
-              <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span>{canAccessAdmin ? "Open Admin Console" : "Open Dashboard"}</span>
+              {canAccessAdmin ? "Open Admin Console" : "Open Dashboard"}
             </Link>
           </Button>
 
@@ -69,12 +73,12 @@ export function MobileNavAuthSection({
             <Button
               variant="outline"
               size="md"
-              className="justify-center text-xs"
+              className="h-10 justify-center"
+              leftIcon={<Settings className="w-4 h-4 text-text-muted shrink-0" />}
               asChild
             >
               <Link href={canAccessAdmin ? "/admin/profile" : "/profile"} onClick={onClose}>
-                <Settings className="w-3.5 h-3.5 text-text-muted shrink-0" />
-                <span>Settings</span>
+                Settings
               </Link>
             </Button>
 
@@ -83,10 +87,10 @@ export function MobileNavAuthSection({
               variant="outline"
               size="md"
               onClick={onLogout}
-              className="justify-center text-xs text-destructive hover:bg-destructive/10 hover:border-destructive/30"
+              leftIcon={<LogOut className="w-4 h-4 shrink-0" />}
+              className="h-10 justify-center text-destructive hover:bg-destructive/10 hover:border-destructive/30"
             >
-              <LogOut className="w-3.5 h-3.5 shrink-0" />
-              <span>Sign Out</span>
+              Sign Out
             </Button>
           </div>
         </div>
@@ -95,32 +99,32 @@ export function MobileNavAuthSection({
   }
 
   return (
-    <div className="pt-4 border-t border-border flex flex-col gap-3 pb-6">
-      <div className="px-1 text-xs text-text-muted mb-0.5 text-left">
-        Join verified B2B trade network:
+    <div className="flex flex-col gap-3">
+      <div className="px-1 text-xs text-text-muted">
+        Join Mercora's verified B2B trade network:
       </div>
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2">
         <Button
           variant="primary"
           size="lg"
-          className="w-full justify-center shadow-xs font-bold"
+          className="w-full justify-center shadow-xs font-semibold"
+          leftIcon={<UserPlus className="w-4 h-4 shrink-0" />}
           asChild
         >
           <Link href="/register" onClick={onClose}>
-            <UserPlus className="w-4 h-4 shrink-0" />
-            <span>Create Free Account</span>
+            Create Free Account
           </Link>
         </Button>
 
         <Button
           variant="outline"
-          size="md"
+          size="lg"
           className="w-full justify-center"
+          leftIcon={<LogIn className="w-4 h-4 shrink-0" />}
           asChild
         >
           <Link href="/login" onClick={onClose}>
-            <LogIn className="w-4 h-4 shrink-0" />
-            <span>Sign In</span>
+            Sign In
           </Link>
         </Button>
       </div>

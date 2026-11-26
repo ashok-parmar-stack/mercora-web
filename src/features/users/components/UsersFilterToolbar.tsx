@@ -37,6 +37,7 @@ export function UsersFilterToolbar({
         <Select
           value={roleFilter}
           onChange={(e) => onRoleFilterChange(e.target.value)}
+          selectSize="sm"
           aria-label="Filter by role"
         >
           <option value="ALL">All Roles</option>
@@ -54,6 +55,7 @@ export function UsersFilterToolbar({
           <Select
             value={statusFilter}
             onChange={(e) => onStatusFilterChange(e.target.value)}
+            selectSize="sm"
             aria-label="Filter by status"
           >
             <option value="ALL">All Statuses</option>

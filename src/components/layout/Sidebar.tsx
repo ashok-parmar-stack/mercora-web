@@ -232,13 +232,6 @@ export const Sidebar: React.FC = () => {
           />
         </div>
       </aside>
-
-      {!isCollapsed && (
-        <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden animate-in fade-in duration-200 backdrop-blur-xs"
-          onClick={toggleSidebar}
-        />
-      )}
     </>
   );
 };

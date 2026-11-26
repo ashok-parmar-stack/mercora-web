@@ -48,7 +48,7 @@ export default function RolePermissionsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-5xl">
+    <div className="flex flex-col gap-6 w-full">
       <PageHeader
         title={`Permission Matrix: ${role?.name || idOrCode}`}
         description={`Configure active capability endpoints and role-level grants for [${role?.code || idOrCode}].`}

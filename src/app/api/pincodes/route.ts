@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerMe } from "@/lib/server-auth";
+import { isAdminRole } from "@/lib/auth-helpers";
 
 export interface PincodeRecord {
   id: string;
@@ -212,7 +214,27 @@ export async function GET(req: NextRequest) {
   });
 }
 
+async function requireAdminAuth(): Promise<NextResponse | null> {
+  const authCheck = await getServerMe();
+  const user = authCheck.data?.user;
+  if (!user) {
+    return NextResponse.json(
+      { success: false, message: "Authentication required." },
+      { status: 401 }
+    );
+  }
+  if (!isAdminRole(user)) {
+    return NextResponse.json(
+      { success: false, message: "Admin privileges required." },
+      { status: 403 }
+    );
+  }
+  return null;
+}
+
 export async function POST(req: NextRequest) {
+  const authError = await requireAdminAuth();
+  if (authError) return authError;
   try {
     const body = await req.json();
     if (!body.pincode || !/^\d{6}$/.test(body.pincode)) {
@@ -251,6 +273,8 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const authError = await requireAdminAuth();
+  if (authError) return authError;
   try {
     const body = await req.json();
     const ids: string[] = Array.isArray(body?.ids) ? body.ids : [];
@@ -287,6 +311,8 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const authError = await requireAdminAuth();
+  if (authError) return authError;
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   const idsParam = searchParams.get("ids");
