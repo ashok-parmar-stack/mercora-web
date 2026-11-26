@@ -18,11 +18,11 @@ export function BusinessBadge({
   if (!isVerified) {
     return (
       <span
-        className={`inline-flex items-center gap-1.5 font-bold text-text-muted bg-surface/95 backdrop-blur-md border border-border rounded-full shadow-2xs select-none ${
-          size === "sm" ? "px-2.5 py-1 text-[10px]" : "px-3 py-1.5 text-xs"
+        className={`inline-flex items-center gap-1.5 font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full select-none ${
+          size === "sm" ? "px-2.5 py-0.5 text-[11px]" : "px-3 py-1 text-xs"
         } ${className}`}
       >
-        <span>Unverified</span>
+        <span>Registered</span>
       </span>
     );
   }
@@ -32,16 +32,16 @@ export function BusinessBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-bold rounded-full shadow-2xs backdrop-blur-md select-none ${
+      className={`inline-flex items-center gap-1.5 font-bold rounded-full border select-none ${
         isPremium
-          ? "bg-surface/95 text-status-warning border border-status-warning-border"
-          : "bg-surface/95 text-status-success border border-status-success-border"
-      } ${size === "sm" ? "px-2.5 py-1 text-[10px]" : "px-3 py-1.5 text-xs"} ${className}`}
+          ? "bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-800"
+          : "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800"
+      } ${size === "sm" ? "px-2.5 py-0.5 text-[11px]" : "px-3 py-1 text-xs"} ${className}`}
     >
       {isPremium ? (
-        <Award className={`${iconSize} text-status-warning flex-shrink-0`} />
+        <Award className={`${iconSize} text-amber-600 dark:text-amber-400 flex-shrink-0`} />
       ) : (
-        <ShieldCheck className={`${iconSize} text-status-success flex-shrink-0`} />
+        <ShieldCheck className={`${iconSize} text-emerald-600 dark:text-emerald-400 flex-shrink-0`} />
       )}
       <span>{isPremium ? "Premium Verified" : "Verified Business"}</span>
     </span>

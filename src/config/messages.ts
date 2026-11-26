@@ -124,3 +124,112 @@ export const APP_MESSAGES = {
 } as const;
 
 export type AppMessages = typeof APP_MESSAGES;
+
+/**
+ * Converts low-level network or HTTP error objects/strings into plain-language messages.
+ */
+export function formatUserFriendlyError(
+  error: unknown,
+  fallback: string = MESSAGES.common.somethingWentWrong
+): string {
+  const raw =
+    typeof error === "string"
+      ? error
+      : error instanceof Error
+      ? error.message
+      : "";
+  const trimmed = raw.trim();
+  if (!trimmed) return fallback;
+
+  const lower = trimmed.toLowerCase();
+  if (
+    lower.includes("network error") ||
+    lower.includes("econnrefused") ||
+    lower.includes("failed to fetch") ||
+    lower.includes("timeout") ||
+    lower.includes("network_error")
+  ) {
+    return "We couldn't connect to the server right now. Please check your connection and try again.";
+  }
+  if (/request failed \((5\d\d)\)|status code 5\d\d|internal server error/i.test(trimmed)) {
+    return "The service is temporarily unavailable. Please try again in a moment.";
+  }
+  if (/request failed \((404)\)|status code 404/i.test(trimmed)) {
+    return "The requested directory information could not be found.";
+  }
+  if (/request failed \((401|403)\)|status code (401|403)/i.test(trimmed)) {
+    return MESSAGES.auth.unauthorized;
+  }
+  return trimmed;
+}
+
+export interface DirectoryEmptyContext {
+  query?: string;
+  businessType?: string;
+  category?: string;
+  location?: string;
+  city?: string;
+  verifiedOnly?: boolean;
+  totalAvailable?: number;
+}
+
+/**
+ * Generates contextual, user-friendly empty directory state copy explaining active filters.
+ */
+export function getDirectoryEmptyMessage(ctx: DirectoryEmptyContext): {
+  title: string;
+  description: string;
+} {
+  const activeLabels: string[] = [];
+  if (ctx.query?.trim()) activeLabels.push(`search "${ctx.query.trim()}"`);
+  if (ctx.businessType && ctx.businessType !== "all") {
+    activeLabels.push(`category "${ctx.businessType}"`);
+  }
+  if (ctx.category && ctx.category !== "all") {
+    activeLabels.push(`sector "${ctx.category}"`);
+  }
+  const hasCity = Boolean(ctx.city && ctx.city !== "all");
+  const hasState = Boolean(ctx.location && ctx.location !== "all");
+  if (hasCity || hasState) {
+    const locParts = [
+      hasCity ? ctx.city : undefined,
+      hasState ? ctx.location : undefined,
+    ].filter(Boolean);
+    activeLabels.push(`location "${locParts.join(", ")}"`);
+  }
+  if (ctx.verifiedOnly) activeLabels.push("Verified Only");
+
+  const availableNote =
+    typeof ctx.totalAvailable === "number" && ctx.totalAvailable > 0
+      ? ` There ${ctx.totalAvailable === 1 ? "is" : "are"} ${ctx.totalAvailable} ${
+          ctx.totalAvailable === 1 ? "business" : "businesses"
+        } available across all categories.`
+      : "";
+
+  if (ctx.query?.trim()) {
+    return {
+      title: `No businesses match "${ctx.query.trim()}"`,
+      description: `We couldn't find any matching listings for your ${activeLabels.join(", ")}. Check the spelling, try a broader keyword, or clear your filters.${availableNote}`,
+    };
+  }
+
+  if (activeLabels.length === 1 && ctx.businessType && ctx.businessType !== "all") {
+    return {
+      title: `No ${ctx.businessType} listings available yet`,
+      description: `Verified businesses under "${ctx.businessType}" are currently onboarding.${availableNote}`,
+    };
+  }
+
+  if (activeLabels.length > 0) {
+    return {
+      title: "No businesses match these filters",
+      description: `No listings matched ${activeLabels.join(" + ")}. Try removing one filter or clearing all filters to browse the full directory.${availableNote}`,
+    };
+  }
+
+  return {
+    title: "No Businesses Listed Yet",
+    description:
+      "The directory does not have any active business listings yet. Register a verified business or check back soon.",
+  };
+}

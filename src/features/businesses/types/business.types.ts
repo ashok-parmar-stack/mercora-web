@@ -56,9 +56,11 @@ export interface Business {
   address: string;
   gstin: string;
   cin: string;
-  source: string;
-  sourceId: string;
-  lastUpdated: string;
+  source?: string;
+  sourceId?: string;
+  lastUpdated?: string;
+  updatedAt?: string;
+  createdAt?: string;
   products: BusinessProduct[];
   reviews?: BusinessReview[];
 }
@@ -70,9 +72,37 @@ export interface BusinessFiltersState {
   query: string;
   category: string;
   location: string;
+  city: string;
   businessType: string;
   verifiedOnly: boolean;
   sortBy: SortOption;
+}
+
+export interface BusinessFacetCategory {
+  id: string;
+  name: string;
+  slug: string;
+  code: string;
+  icon?: string;
+  displayOrder: number;
+  businessCount: number;
+}
+
+export interface BusinessFacetOption {
+  name: string;
+  slug: string;
+  state?: string;
+  count: number;
+}
+
+export interface BusinessFacets {
+  totalBusinesses: number;
+  verifiedCount: number;
+  unverifiedCount: number;
+  businessCategories: BusinessFacetCategory[];
+  locations: BusinessFacetOption[];
+  cities: BusinessFacetOption[];
+  masterCategories: BusinessFacetOption[];
 }
 
 export interface EnquirySubmission {

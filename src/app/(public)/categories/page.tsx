@@ -10,7 +10,7 @@ import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusiness
 import { fetchCategories } from "@/features/categories/category-api";
 import { CategoryItem } from "@/features/categories/types";
 import { PAGE_METADATA } from "@/config/page-metadata";
-import { MESSAGES } from "@/config/messages";
+import { MESSAGES, formatUserFriendlyError } from "@/config/messages";
 
 export default function CategoriesDirectoryPage() {
   const { savedCount } = useSavedBusinesses();
@@ -28,7 +28,12 @@ export default function CategoriesDirectoryPage() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err?.message || "Failed to load categories");
+        setError(
+          formatUserFriendlyError(
+            err,
+            "Unable to load industry categories right now. Please try again."
+          )
+        );
         setLoading(false);
       });
   }, []);
@@ -103,7 +108,9 @@ export default function CategoriesDirectoryPage() {
                     {cat.name}
                   </h2>
                   <p className="text-xs text-text-muted mt-1 font-normal">
-                    {cat.count ? `${cat.count}+ verified suppliers` : "Verified suppliers & manufacturers"}
+                    {cat.count > 0
+                      ? `${cat.count} verified ${cat.count === 1 ? "business" : "businesses"}`
+                      : "Onboarding verified businesses"}
                   </p>
                 </div>
                 <div className="mt-6 flex items-center gap-1 text-xs font-semibold text-primary">

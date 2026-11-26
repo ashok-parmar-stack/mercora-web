@@ -1,42 +1,55 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Home, ArrowLeft, Layers } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { BusinessCard } from "@/features/businesses/components/listing/BusinessCard";
-import { EmptyState, LoadingState } from "@/components/common";
+import { EmptyState, ErrorState, LoadingState } from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { fetchBusinesses } from "@/features/businesses/api/business-api";
+import { fetchCategoryBySlug } from "@/features/categories/category-api";
 import { Business } from "@/features/businesses/types/business.types";
+import { formatUserFriendlyError } from "@/config/messages";
 
 export default function CategoryDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = (params?.slug as string) || "";
-  const decodedCategory = slug === "ceramics-tiles" ? "Ceramics & Tiles" : decodeURIComponent(slug).replace(/-/g, " ");
+  const fallbackName = decodeURIComponent(slug).replace(/-/g, " ");
   const { savedCount } = useSavedBusinesses();
 
+  const [categoryName, setCategoryName] = useState<string>(fallbackName);
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadCategoryBusinesses = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const cat = await fetchCategoryBySlug(slug).catch(() => null);
+      const queryCategory = cat?.name || fallbackName;
+      setCategoryName(queryCategory);
+      const res = await fetchBusinesses({ category: queryCategory, limit: 50 });
+      setBusinesses(res.data || []);
+    } catch (err) {
+      setBusinesses([]);
+      setError(
+        formatUserFriendlyError(
+          err,
+          `We couldn't load businesses for ${fallbackName} right now. Please try again.`
+        )
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [slug, fallbackName]);
 
   useEffect(() => {
-    let active = true;
-    setLoading(true);
-    fetchBusinesses({ category: decodedCategory, limit: 50 })
-      .then((res) => {
-        if (active) {
-          setBusinesses(res.data || []);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [decodedCategory]);
+    void loadCategoryBusinesses();
+  }, [loadCategoryBusinesses]);
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
@@ -54,7 +67,7 @@ export default function CategoryDetailPage() {
             </Link>
             <span>/</span>
             <span className="text-text-primary font-bold capitalize">
-              {decodedCategory}
+              {categoryName}
             </span>
           </nav>
 
@@ -75,7 +88,7 @@ export default function CategoryDetailPage() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-text-primary capitalize">
-              {decodedCategory} Businesses
+              {categoryName} Businesses
             </h1>
             <p className="text-sm text-text-secondary mt-0.5">
               Showing verified manufacturers, suppliers, and distributors in this industrial sector.
@@ -84,15 +97,19 @@ export default function CategoryDetailPage() {
         </div>
 
         {loading ? (
-          <LoadingState message={`Finding verified suppliers in ${decodedCategory}...`} />
+          <LoadingState message={`Finding verified businesses in ${categoryName}...`} />
+        ) : error ? (
+          <ErrorState
+            title="Unable to Load Category Businesses"
+            message={error}
+            onRetry={loadCategoryBusinesses}
+          />
         ) : businesses.length === 0 ? (
           <EmptyState
-            title={`No businesses found in ${decodedCategory}`}
-            description="We haven't indexed manufacturers in this specific category yet. Browse our comprehensive directory to discover related sectors."
+            title={`No businesses listed in ${categoryName} yet`}
+            description="Verified businesses in this industry sector are currently onboarding. Browse the full directory to explore active suppliers across other sectors."
             actionLabel="Browse All Businesses"
-            onAction={() => {
-              window.location.href = "/businesses";
-            }}
+            onAction={() => router.push("/businesses")}
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

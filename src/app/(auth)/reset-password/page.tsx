@@ -3,7 +3,7 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Eye, EyeOff, CheckCircle2, AlertTriangle, ShieldCheck, ArrowLeft, ArrowRight, Lock, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2, AlertTriangle, ShieldCheck, ArrowLeft, ArrowRight, Lock } from 'lucide-react';
 import { resetPasswordServerAction } from '@/app/actions/auth-actions';
 import { Logo } from '@/components/Logo';
 import { Input, Button, Card } from '@/components/common';
@@ -266,13 +266,7 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-[300px] flex items-center justify-center">
-          <Loader2 className="w-6 h-6 text-[#7F1D3F] animate-spin" />
-        </div>
-      }
-    >
+    <Suspense fallback={null}>
       <ResetPasswordForm />
     </Suspense>
   );

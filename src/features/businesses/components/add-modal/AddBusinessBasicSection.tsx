@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Building2,
   MapPin,
@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Input, Select } from "@/components/common";
 import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
+import { fetchCategories } from "@/features/categories/category-api";
 import { CATEGORY_ICON_LOOKUP, COMMON_CATEGORIES } from "./add-business.types";
 import { CategoryOperationalFields } from "./CategoryOperationalFields";
 
@@ -60,6 +61,26 @@ export function AddBusinessBasicSection({
   setAddress,
 }: AddBusinessBasicSectionProps) {
   const { categories } = useBusinessCategories();
+  const [dynamicSectorNames, setDynamicSectorNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    fetchCategories()
+      .then((cats) => {
+        if (!active) return;
+        const names = (cats || []).map((c) => c.name).filter(Boolean);
+        setDynamicSectorNames(names);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const sectorOptions = useMemo(() => {
+    const merged = Array.from(new Set([...dynamicSectorNames, ...COMMON_CATEGORIES]));
+    return merged.map((cat) => ({ value: cat, label: cat }));
+  }, [dynamicSectorNames]);
 
   // Root categories (Active only)
   const rootCategories = useMemo(() => {
@@ -203,7 +224,7 @@ export function AddBusinessBasicSection({
           label="Master Industry Category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          options={COMMON_CATEGORIES.map((cat) => ({ value: cat, label: cat }))}
+          options={sectorOptions}
         />
       </div>
 

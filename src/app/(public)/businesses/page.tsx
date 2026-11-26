@@ -18,15 +18,18 @@ import {
 } from "@/components/common";
 import { useBusinesses } from "@/features/businesses/hooks/use-businesses";
 import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
+import { useTaxonomyStore } from "@/lib/store/taxonomy-store";
 import { Business } from "@/features/businesses/types/business.types";
 import { SavedBusinessesDrawer } from "@/features/saved-businesses/components/SavedBusinessesDrawer";
 import { ContactInquiryModal } from "@/features/enquiries/components/ContactInquiryModal";
 import { AddBusinessModal } from "@/features/businesses/components/AddBusinessModal";
+import { getDirectoryEmptyMessage } from "@/config/messages";
 import { SlidersHorizontal, X } from "lucide-react";
 
 export default function BusinessesDiscoveryPage() {
   const {
     businesses,
+    facets,
     totalCount,
     isLoading,
     error,
@@ -58,6 +61,60 @@ export default function BusinessesDiscoveryPage() {
   const startItem = totalCount === 0 ? 0 : (page - 1) * 12 + 1;
   const endItem = Math.min(page * 12, totalCount);
 
+  const activeFilterPills: Array<{ key: string; label: string; onClear: () => void }> = [];
+  if (filters.query.trim()) {
+    activeFilterPills.push({
+      key: "query",
+      label: `Search: "${filters.query.trim()}"`,
+      onClear: () => setFilters((prev) => ({ ...prev, query: "" })),
+    });
+  }
+  if (filters.businessType && filters.businessType !== "all") {
+    activeFilterPills.push({
+      key: "businessType",
+      label: `Category: ${filters.businessType}`,
+      onClear: () => setFilters((prev) => ({ ...prev, businessType: "all" })),
+    });
+  }
+  if (filters.location && filters.location !== "all") {
+    activeFilterPills.push({
+      key: "location",
+      label: `State: ${filters.location}`,
+      onClear: () => setFilters((prev) => ({ ...prev, location: "all", city: "all" })),
+    });
+  }
+  if (filters.city && filters.city !== "all") {
+    activeFilterPills.push({
+      key: "city",
+      label: `City: ${filters.city}`,
+      onClear: () => setFilters((prev) => ({ ...prev, city: "all" })),
+    });
+  }
+  if (filters.category && filters.category !== "all") {
+    activeFilterPills.push({
+      key: "category",
+      label: `Sector: ${filters.category}`,
+      onClear: () => setFilters((prev) => ({ ...prev, category: "all" })),
+    });
+  }
+  if (filters.verifiedOnly) {
+    activeFilterPills.push({
+      key: "verifiedOnly",
+      label: "Verified Only",
+      onClear: () => setFilters((prev) => ({ ...prev, verifiedOnly: false })),
+    });
+  }
+
+  const emptyMessage = getDirectoryEmptyMessage({
+    query: filters.query,
+    businessType: filters.businessType,
+    category: filters.category,
+    location: filters.location,
+    city: filters.city,
+    verifiedOnly: filters.verifiedOnly,
+    totalAvailable: facets?.totalBusinesses,
+  });
+
   return (
     <div className="min-h-screen bg-background text-text-primary flex flex-col font-sans transition-colors">
       <Header savedCount={savedIds.length} />
@@ -67,12 +124,8 @@ export default function BusinessesDiscoveryPage() {
         <BusinessSearch
           query={filters.query}
           onQueryChange={(q) => setFilters((prev) => ({ ...prev, query: q }))}
-          selectedCategory={filters.businessType}
-          onCategoryChange={(type) => setFilters((prev) => ({ ...prev, businessType: type }))}
-          location={filters.location}
-          onLocationChange={(loc) => setFilters((prev) => ({ ...prev, location: loc }))}
           onSubmit={refresh}
-          totalFound={totalCount}
+          totalFound={facets?.totalBusinesses ?? totalCount}
         />
 
         {/* 2. Main Two-Column Content: Left Filter Sidebar + Right Results */}
@@ -81,6 +134,7 @@ export default function BusinessesDiscoveryPage() {
           <div className="hidden lg:block w-72 xl:w-80 flex-shrink-0 sticky top-24">
             <BusinessFilters
               filters={filters}
+              facets={facets}
               onFilterChange={(partial) => setFilters((prev) => ({ ...prev, ...partial }))}
               onReset={resetFilters}
               onApply={refresh}
@@ -95,7 +149,9 @@ export default function BusinessesDiscoveryPage() {
                 <p className="text-sm font-bold text-text-primary tracking-tight">
                   {isLoading
                     ? "Searching verified businesses..."
-                    : `Showing ${startItem}–${endItem} of ${totalCount.toLocaleString()} businesses`}
+                    : totalCount === 0
+                      ? "No matching businesses found"
+                      : `Showing ${startItem}–${endItem} of ${totalCount.toLocaleString()} businesses`}
                 </p>
               </div>
 
@@ -124,6 +180,7 @@ export default function BusinessesDiscoveryPage() {
                     options={[
                       { value: "relevance", label: "Sort: Most Relevant" },
                       { value: "rating", label: "Sort: Highest Rated" },
+                      { value: "reviews", label: "Sort: Most Reviewed" },
                       { value: "established", label: "Sort: Established Year" },
                     ]}
                   />
@@ -134,6 +191,30 @@ export default function BusinessesDiscoveryPage() {
               </div>
             </div>
 
+            {activeFilterPills.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-text-muted">Active filters:</span>
+                {activeFilterPills.map((pill) => (
+                  <button
+                    key={pill.key}
+                    type="button"
+                    onClick={pill.onClear}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FCECEE] dark:bg-primary-soft text-[#7F1D3F] dark:text-primary border border-[#EACCCE] dark:border-primary/30 hover:opacity-85 transition-opacity cursor-pointer"
+                  >
+                    <span>{pill.label}</span>
+                    <X className="w-3 h-3" />
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="text-xs font-bold text-text-secondary hover:text-primary underline ml-1 cursor-pointer"
+                >
+                  Clear all
+                </button>
+              </div>
+            )}
+
             {/* Results Grid / Table */}
             {isLoading ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -143,16 +224,16 @@ export default function BusinessesDiscoveryPage() {
               </div>
             ) : error ? (
               <ErrorState
-                title="Unable to Load Businesses"
+                title="Unable to Load Directory"
                 message={error}
                 onRetry={refresh}
               />
             ) : businesses.length === 0 ? (
               <EmptyState
-                title="No Businesses Found"
-                description="Try adjusting your category selection, location, or search keywords."
-                actionLabel="Clear Filters"
-                onAction={resetFilters}
+                title={emptyMessage.title}
+                description={emptyMessage.description}
+                actionLabel={activeFilterPills.length > 0 ? "Clear All Filters" : undefined}
+                onAction={activeFilterPills.length > 0 ? resetFilters : undefined}
               />
             ) : viewMode === "card" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -211,8 +292,10 @@ export default function BusinessesDiscoveryPage() {
             </div>
             <BusinessFilters
               filters={filters}
+              facets={facets}
               onFilterChange={(partial) => setFilters((prev) => ({ ...prev, ...partial }))}
               onReset={resetFilters}
+              showApplyButton
               onApply={() => {
                 refresh();
                 setShowMobileFilter(false);
@@ -242,7 +325,10 @@ export default function BusinessesDiscoveryPage() {
       <AddBusinessModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
-        onBusinessCreated={refresh}
+        onBusinessCreated={() => {
+          useTaxonomyStore.getState().invalidateTaxonomy();
+          refresh();
+        }}
       />
 
       <Footer />

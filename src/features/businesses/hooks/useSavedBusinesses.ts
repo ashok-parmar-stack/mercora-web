@@ -1,58 +1,94 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "mercora_saved_businesses";
-const SYNC_EVENT = "mercora:saved-businesses-changed";
+const EMPTY_IDS: string[] = [];
 
-function readSavedIds(): string[] {
-  if (typeof window === "undefined") return [];
+let cachedRaw: string | null | undefined;
+let cachedIds: string[] = EMPTY_IDS;
+const listeners = new Set<() => void>();
+
+function readSavedIdsSnapshot(): string[] {
+  if (typeof window === "undefined") return EMPTY_IDS;
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return [];
-    const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? parsed.filter((id) => typeof id === "string") : [];
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw === cachedRaw) return cachedIds;
+    cachedRaw = raw;
+    if (!raw) {
+      cachedIds = EMPTY_IDS;
+      return cachedIds;
+    }
+    const parsed = JSON.parse(raw);
+    cachedIds = Array.isArray(parsed)
+      ? parsed.filter((id) => typeof id === "string")
+      : EMPTY_IDS;
+    return cachedIds;
   } catch {
-    return [];
+    return cachedIds;
+  }
+}
+
+function getServerSnapshot(): string[] {
+  return EMPTY_IDS;
+}
+
+function subscribe(callback: () => void): () => void {
+  listeners.add(callback);
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key && event.key !== STORAGE_KEY) return;
+    cachedRaw = undefined;
+    callback();
+  };
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("storage", handleStorage);
+  }
+
+  return () => {
+    listeners.delete(callback);
+    if (typeof window !== "undefined") {
+      window.removeEventListener("storage", handleStorage);
+    }
+  };
+}
+
+function notifySubscribers() {
+  for (const listener of listeners) {
+    listener();
   }
 }
 
 export function useSavedBusinesses() {
-  const [savedIds, setSavedIds] = useState<string[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const savedIds = useSyncExternalStore(
+    subscribe,
+    readSavedIdsSnapshot,
+    getServerSnapshot
+  );
 
-  useEffect(() => {
-    setSavedIds(readSavedIds());
-    setIsHydrated(true);
-
-    const handleSync = (event: Event) => {
-      if (event instanceof StorageEvent && event.key && event.key !== STORAGE_KEY) {
-        return;
-      }
-      setSavedIds(readSavedIds());
-    };
-
-    window.addEventListener("storage", handleSync);
-    window.addEventListener(SYNC_EVENT, handleSync);
-    return () => {
-      window.removeEventListener("storage", handleSync);
-      window.removeEventListener(SYNC_EVENT, handleSync);
-    };
-  }, []);
+  const isHydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const toggleSave = useCallback((businessId: string) => {
-    setSavedIds((prev) => {
-      const updated = prev.includes(businessId)
-        ? prev.filter((id) => id !== businessId)
-        : [...prev, businessId];
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-        window.dispatchEvent(new Event(SYNC_EVENT));
-      } catch {
-        // Ignore storage quota / private-browsing failures
-      }
-      return updated;
-    });
+    const current = readSavedIdsSnapshot();
+    const updated = current.includes(businessId)
+      ? current.filter((id) => id !== businessId)
+      : [...current, businessId];
+
+    try {
+      const serialized = JSON.stringify(updated);
+      localStorage.setItem(STORAGE_KEY, serialized);
+      cachedRaw = serialized;
+      cachedIds = updated;
+    } catch {
+      cachedIds = updated;
+    }
+
+    notifySubscribers();
   }, []);
 
   const isSaved = useCallback(

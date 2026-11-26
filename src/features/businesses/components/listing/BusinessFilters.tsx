@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Building2,
   Filter,
@@ -10,11 +10,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Select } from "@/components/common";
-import { BusinessFiltersState } from "../../types/business.types";
+import { BusinessFacets, BusinessFiltersState } from "../../types/business.types";
 import { useBusinessCategories } from "@/features/business-categories/hooks/use-business-categories";
-import { fetchCategories } from "@/features/categories/category-api";
-import { CategoryItem } from "@/features/categories/types";
-import { getLocationStates, State } from "@/lib/geography-api";
+import { resolveLocationFilterUpdate } from "../../utils/business-filters";
 import {
   FilterAccordionSection,
   FilterCheckboxOption,
@@ -22,20 +20,22 @@ import {
 
 export interface BusinessFiltersProps {
   filters: BusinessFiltersState;
+  facets?: BusinessFacets | null;
   onFilterChange: (filters: Partial<BusinessFiltersState>) => void;
   onReset: () => void;
   onApply?: () => void;
+  showApplyButton?: boolean;
 }
 
 export function BusinessFilters({
   filters,
+  facets,
   onFilterChange,
   onReset,
   onApply,
+  showApplyButton = false,
 }: BusinessFiltersProps) {
-  const { categories: businessCategories } = useBusinessCategories();
-  const [masterCategories, setMasterCategories] = useState<CategoryItem[]>([]);
-  const [states, setStates] = useState<State[]>([]);
+  const { categories: storeCategories, loading: taxonomyLoading } = useBusinessCategories();
   const [showAllCategories, setShowAllCategories] = useState(false);
 
   const [openSections, setOpenSections] = useState({
@@ -45,18 +45,6 @@ export function BusinessFilters({
     verification: true,
   });
 
-  useEffect(() => {
-    fetchCategories()
-      .then((cats) => setMasterCategories(cats || []))
-      .catch((err) => console.error("Failed to load master categories for filter:", err));
-
-    getLocationStates()
-      .then((items) => {
-        if (Array.isArray(items)) setStates(items);
-      })
-      .catch((err) => console.error("Failed to load states for filter:", err));
-  }, []);
-
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
@@ -65,12 +53,77 @@ export function BusinessFilters({
     onFilterChange({ businessType: filters.businessType === type ? "all" : type });
   };
 
-  const rootCategories = businessCategories.filter(
-    (c) => !c.parentId && c.isActive !== false
-  );
-  const displayedCategories = showAllCategories
-    ? rootCategories
-    : rootCategories.slice(0, 4);
+  const rootCategories = (
+    facets?.businessCategories && facets.businessCategories.length > 0
+      ? facets.businessCategories
+      : storeCategories.filter((c) => !c.parentId && c.isActive !== false)
+  )
+    .slice()
+    .sort((a, b) => (b.businessCount ?? 0) - (a.businessCount ?? 0));
+
+  const populatedCategories = rootCategories.filter((c) => (c.businessCount ?? 0) > 0);
+  const defaultVisible = populatedCategories.length > 0 ? populatedCategories : rootCategories.slice(0, 6);
+  const displayedCategories = showAllCategories ? rootCategories : defaultVisible;
+  const hiddenCount = Math.max(0, rootCategories.length - defaultVisible.length);
+
+  const stateOptions = [
+    { value: "all", label: "All States" },
+    ...(facets?.locations || []).map((loc) => ({
+      value: loc.name,
+      label: `${loc.name} (${loc.count})`,
+    })),
+    ...(filters.location &&
+    filters.location !== "all" &&
+    !(facets?.locations || []).some(
+      (l) => l.name.toLowerCase() === filters.location.toLowerCase()
+    )
+      ? [{ value: filters.location, label: `${filters.location} (0)` }]
+      : []),
+  ];
+
+  const cityOptions = [
+    {
+      value: "all",
+      label:
+        filters.location && filters.location !== "all"
+          ? `All Cities in ${filters.location}`
+          : "All Cities",
+    },
+    ...(facets?.cities || []).map((c) => ({
+      value: c.name,
+      label: `${c.name} (${c.count})`,
+    })),
+    ...(filters.city &&
+    filters.city !== "all" &&
+    !(facets?.cities || []).some(
+      (c) => c.name.toLowerCase() === filters.city.toLowerCase()
+    )
+      ? [{ value: filters.city, label: `${filters.city} (0)` }]
+      : []),
+  ];
+
+  const masterCategoryOptions = [
+    { value: "all", label: "All Industry Sectors" },
+    ...(facets?.masterCategories || []).map((mc) => ({
+      value: mc.name,
+      label: `${mc.name} (${mc.count})`,
+    })),
+    ...(filters.category &&
+    filters.category !== "all" &&
+    !(facets?.masterCategories || []).some(
+      (mc) => mc.name.toLowerCase() === filters.category.toLowerCase()
+    )
+      ? [{ value: filters.category, label: `${filters.category} (0)` }]
+      : []),
+  ];
+
+  const activeFilterCount = [
+    filters.businessType !== "all",
+    filters.location !== "all",
+    filters.city !== "all",
+    filters.category !== "all",
+    filters.verifiedOnly,
+  ].filter(Boolean).length;
 
   return (
     <aside className="w-full bg-surface rounded-2xl border border-border p-5 shadow-xs space-y-5">
@@ -79,14 +132,16 @@ export function BusinessFilters({
           <Filter className="w-4 h-4 text-[#7F1D3F] dark:text-primary" />
           <span>Filters</span>
         </div>
-        <button
-          type="button"
-          onClick={onReset}
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] dark:text-primary hover:underline cursor-pointer"
-        >
-          <RotateCcw className="w-3 h-3" />
-          <span>Clear All</span>
-        </button>
+        {activeFilterCount > 0 && (
+          <button
+            type="button"
+            onClick={onReset}
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#7F1D3F] dark:text-primary hover:underline cursor-pointer"
+          >
+            <RotateCcw className="w-3 h-3" />
+            <span>Clear All ({activeFilterCount})</span>
+          </button>
+        )}
       </div>
 
       <FilterAccordionSection
@@ -96,49 +151,89 @@ export function BusinessFilters({
         onToggle={() => toggleSection("businessCategory")}
       >
         <div className="space-y-2 pt-1">
-          {displayedCategories.map((cat) => (
-            <FilterCheckboxOption
-              key={cat.id || cat.slug}
-              label={cat.name}
-              count={cat.businessCount ?? 0}
-              checked={
-                filters.businessType === cat.name ||
-                filters.businessType === cat.slug ||
-                filters.businessType.toLowerCase() === cat.name.toLowerCase()
-              }
-              onSelect={() => toggleBusinessType(cat.name)}
-            />
-          ))}
+          {displayedCategories.length === 0 ? (
+            <p className="text-xs text-text-muted py-1">
+              {taxonomyLoading
+                ? "Loading live categories..."
+                : "No active categories are available right now."}
+            </p>
+          ) : (
+            displayedCategories.map((cat) => (
+              <FilterCheckboxOption
+                key={cat.id || cat.slug}
+                label={cat.name}
+                count={cat.businessCount ?? 0}
+                checked={
+                  filters.businessType === cat.name ||
+                  filters.businessType === cat.slug ||
+                  filters.businessType.toLowerCase() === cat.name.toLowerCase()
+                }
+                onSelect={() => toggleBusinessType(cat.name)}
+              />
+            ))
+          )}
 
-          {rootCategories.length > 4 && (
+          {hiddenCount > 0 && (
             <button
               type="button"
               onClick={() => setShowAllCategories(!showAllCategories)}
               className="text-xs font-bold text-[#7F1D3F] dark:text-primary hover:underline pt-1 pl-1 cursor-pointer block"
             >
-              {showAllCategories ? "− Show Less" : "+ Show More"}
+              {showAllCategories
+                ? "− Show Active Only"
+                : `+ Show More Categories (${hiddenCount})`}
             </button>
           )}
         </div>
       </FilterAccordionSection>
 
       <FilterAccordionSection
-        title="Location"
+        title="State & City"
         icon={<MapPin className="w-3.5 h-3.5 text-text-muted group-hover:text-primary" />}
         isOpen={openSections.location}
         onToggle={() => toggleSection("location")}
       >
-        <div className="pt-1">
-          <Select
-            value={filters.location}
-            selectSize="sm"
-            onChange={(e) => onFilterChange({ location: e.target.value })}
-            aria-label="Filter by location"
-            options={[
-              { value: "all", label: "Select Location" },
-              ...states.map((st) => ({ value: st.name, label: st.name })),
-            ]}
-          />
+        <div className="pt-1 space-y-2.5">
+          <div>
+            <label className="block text-[11px] font-semibold text-text-muted mb-1">
+              State
+            </label>
+            <Select
+              value={filters.location}
+              selectSize="sm"
+              onChange={(e) =>
+                onFilterChange(
+                  resolveLocationFilterUpdate(
+                    filters,
+                    { location: e.target.value },
+                    facets?.cities || []
+                  )
+                )
+              }
+              aria-label="Filter by state"
+              options={stateOptions}
+            />
+          </div>
+          <div>
+            <label className="block text-[11px] font-semibold text-text-muted mb-1">
+              City
+            </label>
+            <Select
+              value={filters.city}
+              selectSize="sm"
+              onChange={(e) =>
+                onFilterChange(
+                  resolveLocationFilterUpdate(
+                    filters,
+                    { city: e.target.value },
+                    facets?.cities || []
+                  )
+                )
+              }
+              aria-label="Filter by city"
+              options={cityOptions}
+            />
+          </div>
         </div>
       </FilterAccordionSection>
 
@@ -154,10 +249,7 @@ export function BusinessFilters({
             selectSize="sm"
             onChange={(e) => onFilterChange({ category: e.target.value })}
             aria-label="Filter by master category"
-            options={[
-              { value: "all", label: "Select Category" },
-              ...masterCategories.map((mc) => ({ value: mc.name, label: mc.name })),
-            ]}
+            options={masterCategoryOptions}
           />
         </div>
       </FilterAccordionSection>
@@ -172,25 +264,29 @@ export function BusinessFilters({
         <div className="space-y-2 pt-1">
           <FilterCheckboxOption
             label="Verified Only"
+            count={facets?.verifiedCount}
             checked={filters.verifiedOnly}
             onSelect={() => onFilterChange({ verifiedOnly: true })}
           />
           <FilterCheckboxOption
             label="All Businesses"
+            count={facets?.totalBusinesses}
             checked={!filters.verifiedOnly}
             onSelect={() => onFilterChange({ verifiedOnly: false })}
           />
         </div>
       </FilterAccordionSection>
 
-      <button
-        type="button"
-        onClick={onApply}
-        className="w-full py-3 px-4 rounded-xl bg-[#7F1D3F] hover:bg-[#681532] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
-      >
-        <Filter className="w-3.5 h-3.5" />
-        <span>Apply Filters</span>
-      </button>
+      {showApplyButton && (
+        <button
+          type="button"
+          onClick={onApply}
+          className="w-full py-3 px-4 rounded-xl bg-[#7F1D3F] hover:bg-[#681532] text-white text-xs font-bold flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+        >
+          <Filter className="w-3.5 h-3.5" />
+          <span>Show Matching Businesses</span>
+        </button>
+      )}
     </aside>
   );
 }

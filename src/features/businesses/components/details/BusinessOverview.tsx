@@ -9,13 +9,13 @@ export interface BusinessOverviewProps {
 export function BusinessOverview({ business }: BusinessOverviewProps) {
   const specs = [
     { label: "Business Type", value: business.businessType },
-    { label: "Industry", value: business.industry },
+    { label: "Industry", value: business.industry || business.category },
     { label: "Establishment", value: String(business.establishedYear) },
     { label: "Company Size", value: `${business.employeeCount} Employees` },
     { label: "Ownership", value: business.ownershipType || "Private Limited" },
-    { label: "Annual Turnover", value: business.annualTurnover || "₹10 - 50 Cr" },
-    { label: "GSTIN", value: business.gstin },
-    { label: "CIN", value: business.cin },
+    ...(business.annualTurnover ? [{ label: "Annual Turnover", value: business.annualTurnover }] : []),
+    ...(business.gstin ? [{ label: "GSTIN", value: business.gstin }] : []),
+    ...(business.cin ? [{ label: "CIN", value: business.cin }] : []),
   ];
 
   return (

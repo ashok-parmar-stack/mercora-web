@@ -1,42 +1,50 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Home, ArrowLeft, MapPin } from "lucide-react";
 import { Header } from "@/components/layout/Header";
 import { BusinessCard } from "@/features/businesses/components/listing/BusinessCard";
-import { EmptyState, LoadingState } from "@/components/common";
+import { EmptyState, ErrorState, LoadingState } from "@/components/common";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { fetchBusinesses } from "@/features/businesses/api/business-api";
 import { Business } from "@/features/businesses/types/business.types";
+import { formatUserFriendlyError } from "@/config/messages";
 
 export default function LocationDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = (params?.slug as string) || "";
   const decodedLocation = decodeURIComponent(slug).replace(/-/g, " ");
   const { savedCount } = useSavedBusinesses();
 
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadLocationBusinesses = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchBusinesses({ location: decodedLocation, limit: 50 });
+      setBusinesses(res.data || []);
+    } catch (err) {
+      setBusinesses([]);
+      setError(
+        formatUserFriendlyError(
+          err,
+          `Unable to load businesses for ${decodedLocation} right now. Please try again.`
+        )
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [decodedLocation]);
 
   useEffect(() => {
-    let active = true;
-    setLoading(true);
-    fetchBusinesses({ city: decodedLocation, limit: 50 })
-      .then((res) => {
-        if (active) {
-          setBusinesses(res.data || []);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [decodedLocation]);
+    void loadLocationBusinesses();
+  }, [loadLocationBusinesses]);
 
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] flex flex-col font-sans transition-colors">
@@ -84,15 +92,19 @@ export default function LocationDetailPage() {
         </div>
 
         {loading ? (
-          <LoadingState message={`Finding verified suppliers in ${decodedLocation}...`} />
+          <LoadingState message={`Finding verified businesses in ${decodedLocation}...`} />
+        ) : error ? (
+          <ErrorState
+            title="Unable to Load Location Businesses"
+            message={error}
+            onRetry={loadLocationBusinesses}
+          />
         ) : businesses.length === 0 ? (
           <EmptyState
-            title={`No businesses found in ${decodedLocation}`}
-            description="We haven't indexed manufacturers in this specific city yet. Browse our comprehensive directory to discover suppliers across other regions."
+            title={`No businesses listed in ${decodedLocation} yet`}
+            description="Verified businesses in this region are currently onboarding. Browse our directory to discover verified partners across active hubs."
             actionLabel="Browse All Businesses"
-            onAction={() => {
-              window.location.href = "/businesses";
-            }}
+            onAction={() => router.push("/businesses")}
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

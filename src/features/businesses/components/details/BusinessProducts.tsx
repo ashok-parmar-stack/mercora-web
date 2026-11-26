@@ -45,9 +45,13 @@ export function BusinessProducts({ products, onEnquire }: BusinessProductsProps)
           >
             <div className="relative h-44 w-full bg-background-secondary overflow-hidden">
               <Image
-                src={product.imageUrl}
+                src={
+                  product.imageUrl ||
+                  "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80"
+                }
                 alt={product.name}
                 fill
+                unoptimized
                 sizes="(max-width: 768px) 100vw, 33vw"
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -61,6 +65,11 @@ export function BusinessProducts({ products, onEnquire }: BusinessProductsProps)
                 <h3 className="text-sm font-bold text-text-primary group-hover:text-primary transition-colors mt-0.5 line-clamp-1">
                   {product.name}
                 </h3>
+                {product.description && (
+                  <p className="text-xs text-text-secondary mt-1 line-clamp-2">
+                    {product.description}
+                  </p>
+                )}
                 {product.priceRange && (
                   <p className="text-xs font-semibold text-status-success mt-1">
                     {product.priceRange}

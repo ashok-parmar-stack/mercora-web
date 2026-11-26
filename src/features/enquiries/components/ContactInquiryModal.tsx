@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
-import { Send, CheckCircle2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { submitEnquiry } from "../../businesses/api/business-api";
-import { APP_MESSAGES } from "@/config/messages";
+import { APP_MESSAGES, formatUserFriendlyError } from "@/config/messages";
 import {
   Dialog,
   DialogContent,
@@ -38,9 +38,26 @@ export function ContactInquiryModal({
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setErrorMsg(null);
+      setIsSuccess(false);
+      setRequirement(
+        productName ? `Inquiring about quotation and technical specs for ${productName}.` : ""
+      );
+    }
+  }, [isOpen, productName]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
+    if (requirement.trim().length < 5) {
+      setErrorMsg("Please enter a brief description of your requirement (at least 5 characters).");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await submitEnquiry({
@@ -55,10 +72,19 @@ export function ContactInquiryModal({
       setIsSuccess(true);
       setTimeout(() => {
         setIsSuccess(false);
+        setName("");
+        setPhone("");
+        setEmail("");
+        setRequirement("");
         onClose();
-      }, 1800);
-    } catch {
-      // Handled gracefully
+      }, 1500);
+    } catch (err) {
+      setErrorMsg(
+        formatUserFriendlyError(
+          err,
+          "Unable to submit your inquiry right now. Please check your details and try again."
+        )
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -90,6 +116,12 @@ export function ContactInquiryModal({
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4 text-xs mt-2">
+            {errorMsg && (
+              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{errorMsg}</span>
+              </div>
+            )}
             {productName && (
               <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/40 text-red-700 dark:text-red-300 font-semibold">
                 Product of interest: {productName}

@@ -9,6 +9,7 @@ import { AddBusinessModalProps, ProductItem } from "./add-modal/add-business.typ
 import { AddBusinessBasicSection } from "./add-modal/AddBusinessBasicSection";
 import { AddBusinessDetailsSection } from "./add-modal/AddBusinessDetailsSection";
 import { AddBusinessProductsSection } from "./add-modal/AddBusinessProductsSection";
+import { formatUserFriendlyError } from "@/config/messages";
 
 export function AddBusinessModal({
   isOpen,
@@ -123,9 +124,13 @@ export function AddBusinessModal({
         onBusinessCreated?.();
         onClose();
       }, 1200);
-    } catch (err: any) {
-      console.error("[Add Business Error]", err);
-      setError(err?.message || "Failed to create business profile. Please try again.");
+    } catch (err: unknown) {
+      setError(
+        formatUserFriendlyError(
+          err,
+          "Could not save your business profile right now. Please review your details and try again."
+        )
+      );
     } finally {
       setIsSubmitting(false);
     }

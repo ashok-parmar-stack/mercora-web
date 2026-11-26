@@ -12,7 +12,13 @@ import {
   uploadFileToBucket,
 } from '../src/lib/storage';
 import { APP_CONFIG } from '../src/config/app.config';
-import { APP_MESSAGES, MESSAGES } from '../src/config/messages';
+import {
+  APP_MESSAGES,
+  MESSAGES,
+  formatUserFriendlyError,
+  getDirectoryEmptyMessage,
+} from '../src/config/messages';
+import { resolveLocationFilterUpdate } from '../src/features/businesses/utils/business-filters';
 import { ROLES, STAFF_ADMIN_ROLES as CONFIG_STAFF_ROLES } from '../src/config/permissions.config';
 
 describe('Auth Helpers', () => {
@@ -79,5 +85,44 @@ describe('Centralized Configuration', () => {
     assert.ok(MESSAGES.common.saveSuccess);
     assert.ok(APP_MESSAGES.confirmations.clearFilters);
     assert.equal(APP_CONFIG.upload.maxFileSizeMB, 5);
+  });
+
+  it('formats technical errors into user-friendly directory messages', () => {
+    const netMsg = formatUserFriendlyError(new Error('Network Error'));
+    assert.match(netMsg, /couldn't connect to the server/i);
+
+    const serverMsg = formatUserFriendlyError('Request failed (500)');
+    assert.match(serverMsg, /temporarily unavailable/i);
+
+    const emptyMsg = getDirectoryEmptyMessage({
+      businessType: 'Logistics Provider',
+      city: 'Anand',
+      location: 'Gujarat',
+      totalAvailable: 25,
+    });
+    assert.match(emptyMsg.title, /No businesses match these filters/);
+    assert.match(emptyMsg.description, /Anand, Gujarat/);
+    assert.match(emptyMsg.description, /25 businesses available/);
+  });
+
+  it('keeps State and City filters consistent with cascading business rules', () => {
+    const cities = [
+      { name: 'Surat', slug: 'surat', state: 'Gujarat', count: 3 },
+      { name: 'Mumbai', slug: 'mumbai', state: 'Maharashtra', count: 2 },
+    ];
+
+    const inferred = resolveLocationFilterUpdate(
+      { location: 'all', city: 'all' },
+      { city: 'Mumbai' },
+      cities,
+    );
+    assert.deepEqual(inferred, { location: 'Maharashtra', city: 'Mumbai' });
+
+    const switchedState = resolveLocationFilterUpdate(
+      { location: 'Maharashtra', city: 'Mumbai' },
+      { location: 'Gujarat' },
+      cities,
+    );
+    assert.deepEqual(switchedState, { location: 'Gujarat', city: 'all' });
   });
 });

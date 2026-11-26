@@ -13,6 +13,19 @@ export function BusinessSourceInfo({ business }: BusinessSourceInfoProps) {
     `${business.name}, ${business.city}, ${business.state}`
   )}`;
 
+  const formattedUpdatedAt =
+    business.lastUpdated ||
+    (business.updatedAt
+      ? new Date(business.updatedAt).toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        })
+      : "Verified Record");
+
+  const sourceName = business.source || "Mercora Verified Directory";
+  const recordId = business.sourceId || business.id;
+
   return (
     <div className="bg-surface rounded-3xl border border-border p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-5">
       <div className="flex items-start gap-4">
@@ -23,21 +36,23 @@ export function BusinessSourceInfo({ business }: BusinessSourceInfoProps) {
         <div>
           <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
             <span>{APP_HEADERS.businessDetails.sections.verificationSource}</span>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-status-success-bg text-status-success border border-status-success-border">
-              Verified
-            </span>
+            {business.isVerified !== false && (
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-status-success-bg text-status-success border border-status-success-border">
+                {business.tier || "Verified"}
+              </span>
+            )}
           </h3>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-text-muted mt-1">
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5 text-text-muted" />
-              <span>Last Updated: {business.lastUpdated}</span>
+              <span>Last Updated: {formattedUpdatedAt}</span>
             </span>
             <span>·</span>
             <span className="flex items-center gap-1">
               <Database className="w-3.5 h-3.5 text-text-muted" />
               <span>
-                Source: <strong className="text-text-primary font-semibold">{business.source}</strong> (ID: {business.sourceId})
+                Source: <strong className="text-text-primary font-semibold">{sourceName}</strong> (ID: {recordId})
               </span>
             </span>
           </div>

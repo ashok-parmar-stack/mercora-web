@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Navigation, MapPin, Loader2, Maximize2, X } from "lucide-react";
+import { Navigation, MapPin, Loader2, Maximize2 } from "lucide-react";
 import { Business } from "../../types/business.types";
 import { Button } from "@/components/common";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
 import { APP_HEADERS } from "@/config/headers.config";
 
 export interface BusinessLocationProps {
@@ -94,10 +95,32 @@ export function BusinessLocation({ business }: BusinessLocationProps) {
         <div>
           <span className="font-bold text-text-primary block">Official Registered Site</span>
           <p className="text-text-secondary mt-0.5 font-normal leading-relaxed">
-            {business.address}, {business.city}, {business.state} — PIN {business.pincode}, India.
+            {[business.address, business.city, business.state, business.pincode ? `PIN ${business.pincode}` : undefined]
+              .filter(Boolean)
+              .join(", ")}
           </p>
         </div>
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl p-6">
+          <DialogHeader>
+            <DialogTitle>{business.name} — Operational Location</DialogTitle>
+          </DialogHeader>
+          <div className="w-full h-[65vh] rounded-2xl overflow-hidden border border-border mt-2">
+            <iframe
+              src={iframeSrc}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full h-full"
+              title={`Expanded map for ${business.name}`}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

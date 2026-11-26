@@ -1,4 +1,56 @@
-import { Business, BusinessFiltersState } from "../types/business.types";
+import {
+  Business,
+  BusinessFacetOption,
+  BusinessFiltersState,
+} from "../types/business.types";
+
+/**
+ * Applies cascading State <-> City business rules:
+ * - Selecting a State clears incompatible City unless the selected City already belongs to that State.
+ * - Selecting a City when State is "all" automatically aligns State from known facet metadata.
+ */
+export function resolveLocationFilterUpdate(
+  current: Pick<BusinessFiltersState, "location" | "city">,
+  update: { location?: string; city?: string },
+  cities: BusinessFacetOption[] = []
+): Pick<BusinessFiltersState, "location" | "city"> {
+  if (update.location !== undefined) {
+    const nextLocation = update.location;
+    if (nextLocation === "all") {
+      return { location: "all", city: update.city ?? "all" };
+    }
+    const existingCity = update.city ?? current.city;
+    const cityMeta = cities.find(
+      (c) => c.name.toLowerCase() === existingCity.toLowerCase()
+    );
+    const keepCity =
+      existingCity !== "all" &&
+      cityMeta?.state &&
+      cityMeta.state.toLowerCase() === nextLocation.toLowerCase();
+    return {
+      location: nextLocation,
+      city: keepCity ? existingCity : "all",
+    };
+  }
+
+  if (update.city !== undefined) {
+    const nextCity = update.city;
+    if (nextCity === "all") {
+      return { location: current.location, city: "all" };
+    }
+    const cityMeta = cities.find(
+      (c) => c.name.toLowerCase() === nextCity.toLowerCase()
+    );
+    const inferredState =
+      current.location === "all" && cityMeta?.state ? cityMeta.state : current.location;
+    return {
+      location: inferredState,
+      city: nextCity,
+    };
+  }
+
+  return { location: current.location, city: current.city };
+}
 
 export function filterBusinesses(businesses: Business[], filters: Partial<BusinessFiltersState>): Business[] {
   return businesses.filter((b) => {
@@ -13,6 +65,18 @@ export function filterBusinesses(businesses: Business[], filters: Partial<Busine
 
     if (filters.category && filters.category !== "all" && filters.category !== "All") {
       if (b.category.toLowerCase() !== filters.category.toLowerCase() && b.industry.toLowerCase() !== filters.category.toLowerCase()) {
+        return false;
+      }
+    }
+
+    if (filters.location && filters.location !== "all") {
+      if (b.state.toLowerCase() !== filters.location.toLowerCase()) {
+        return false;
+      }
+    }
+
+    if (filters.city && filters.city !== "all") {
+      if (b.city.toLowerCase() !== filters.city.toLowerCase()) {
         return false;
       }
     }

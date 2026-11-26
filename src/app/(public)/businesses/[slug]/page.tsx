@@ -18,7 +18,7 @@ import { useBusinessDetails } from "@/features/businesses/hooks/use-business-det
 import { useSavedBusinesses } from "@/features/saved-businesses/hooks/use-saved-businesses";
 import { LoadingState } from "@/components/common/LoadingState";
 import { ErrorState } from "@/components/common/ErrorState";
-import { APP_MESSAGES } from "@/config/messages";
+import { APP_MESSAGES, formatUserFriendlyError } from "@/config/messages";
 
 export default function BusinessProfileDetailPage() {
   const params = useParams();
@@ -31,11 +31,13 @@ export default function BusinessProfileDetailPage() {
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string | undefined>();
+  const [shareCopied, setShareCopied] = useState(false);
 
   const handleShare = () => {
     if (typeof window !== "undefined") {
       navigator.clipboard?.writeText(window.location.href);
-      alert(APP_MESSAGES.success.linkCopied);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2500);
     }
   };
 
@@ -72,12 +74,21 @@ export default function BusinessProfileDetailPage() {
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {shareCopied && (
+          <div className="mb-4 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+            {APP_MESSAGES.success.linkCopied}
+          </div>
+        )}
         {isLoading ? (
           <LoadingState message="Loading business profile..." />
         ) : error || !business ? (
           <ErrorState
             title="Business Not Found"
-            message={error || APP_MESSAGES.errors.businessNotFound}
+            message={
+              error
+                ? formatUserFriendlyError(error, APP_MESSAGES.errors.businessNotFound)
+                : APP_MESSAGES.errors.businessNotFound
+            }
             onRetry={refresh}
           />
         ) : (
@@ -110,16 +121,31 @@ export default function BusinessProfileDetailPage() {
                     }}
                   />
                 )}
-                {activeTab === "contact" && <BusinessLocation business={business} />}
+                {activeTab === "contact" && (
+                  <BusinessContactPanel
+                    business={business}
+                    onOpenInquiry={() => {
+                      setSelectedProduct(undefined);
+                      setIsInquiryModalOpen(true);
+                    }}
+                  />
+                )}
                 {activeTab === "location" && <BusinessLocation business={business} />}
                 {activeTab === "reviews" && (
-                  <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8">
-                    <h3 className="text-base font-bold text-text-primary mb-2">
+                  <div className="bg-surface rounded-3xl border border-border p-6 sm:p-8 space-y-2">
+                    <h3 className="text-base font-bold text-text-primary">
                       Buyer Ratings &amp; Reviews
                     </h3>
-                    <p className="text-xs text-text-muted">
-                      {business.reviewCount} verified commercial ratings recorded.
-                    </p>
+                    {business.reviewCount > 0 ? (
+                      <p className="text-sm text-text-secondary">
+                        Rated <strong className="text-text-primary">{business.rating} / 5</strong> across{" "}
+                        <strong className="text-text-primary">{business.reviewCount}</strong> verified commercial ratings.
+                      </p>
+                    ) : (
+                      <p className="text-xs text-text-muted">
+                        No buyer reviews recorded yet for this business.
+                      </p>
+                    )}
                   </div>
                 )}
 
@@ -149,6 +175,16 @@ export default function BusinessProfileDetailPage() {
         savedBusinesses={business ? [business] : []}
         onRemove={toggleSave}
       />
+
+      {business && (
+        <ContactInquiryModal
+          isOpen={isInquiryModalOpen}
+          onClose={() => setIsInquiryModalOpen(false)}
+          businessId={business.id}
+          businessName={business.name}
+          productName={selectedProduct}
+        />
+      )}
 
       <Footer />
     </div>

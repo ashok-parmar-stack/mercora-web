@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Bookmark, ExternalLink, Trash2 } from "lucide-react";
+import { Bookmark, ExternalLink, GitCompare, Trash2 } from "lucide-react";
 import { Business } from "../../businesses/types/business.types";
 import { EmptyState } from "@/components/common/EmptyState";
 import { APP_MESSAGES } from "@/config/messages";
@@ -93,7 +93,17 @@ export function SavedBusinessesDrawer({
           </div>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
+          {savedBusinesses.length >= 2 && (
+            <Link
+              href="/saved-businesses?compare=true"
+              onClick={onClose}
+              className="w-full py-2.5 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors"
+            >
+              <GitCompare className="w-4 h-4" />
+              <span>Compare Saved ({savedBusinesses.length})</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={onClose}

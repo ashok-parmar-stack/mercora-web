@@ -14,6 +14,7 @@ import {
 import { apiHttpClient } from "@/lib/http/client";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { PAGE_METADATA } from "@/config/page-metadata";
+import { formatUserFriendlyError } from "@/config/messages";
 
 interface CityItem {
   id: string;
@@ -24,23 +25,6 @@ interface CityItem {
   locationType?: string;
   businessCount?: number;
 }
-
-const FALLBACK_CLUSTERS: CityItem[] = [
-  { id: "ahmedabad", name: "Ahmedabad", slug: "ahmedabad", code: "AMD", state: "Gujarat", locationType: "Industrial Machinery & Engineering Hub" },
-  { id: "surat", name: "Surat", slug: "surat", code: "ST", state: "Gujarat", locationType: "Textiles, Diamonds & Apparel Hub" },
-  { id: "vadodara", name: "Vadodara", slug: "vadodara", code: "BRC", state: "Gujarat", locationType: "Pharmaceuticals, Chemicals & Power Hub" },
-  { id: "morbi", name: "Morbi", slug: "morbi", code: "MRB", state: "Gujarat", locationType: "Ceramics, Tiles & Sanitaryware Capital" },
-  { id: "rajkot", name: "Rajkot", slug: "rajkot", code: "RJT", state: "Gujarat", locationType: "Auto Components, Casting & Forging Hub" },
-  { id: "gandhinagar", name: "Gandhinagar", slug: "gandhinagar", code: "GND", state: "Gujarat", locationType: "Electronics, IT & Finance Hub" },
-  { id: "bharuch", name: "Bharuch", slug: "bharuch", code: "BH", state: "Gujarat", locationType: "Chemicals, Petrochemicals & Dyes" },
-  { id: "ankleshwar", name: "Ankleshwar", slug: "ankleshwar", code: "ANK", state: "Gujarat", locationType: "Chemical & Bulk Drug Industrial Estate" },
-  { id: "vapi", name: "Vapi", slug: "vapi", code: "VP", state: "Gujarat", locationType: "Chemical, Paper & Plastics Hub" },
-  { id: "jamnagar", name: "Jamnagar", slug: "jamnagar", code: "JAM", state: "Gujarat", locationType: "Brass Components & Refining" },
-  { id: "bhavnagar", name: "Bhavnagar", slug: "bhavnagar", code: "BHV", state: "Gujarat", locationType: "Ship Recycling & Plastic Machinery" },
-  { id: "pune", name: "Pune", slug: "pune", code: "PN", state: "Maharashtra", locationType: "Automobile & Heavy Engineering Corridor" },
-  { id: "mumbai", name: "Mumbai", slug: "mumbai", code: "BOM", state: "Maharashtra", locationType: "Commercial & Financial Headquarters" },
-  { id: "bengaluru", name: "Bengaluru", slug: "bengaluru", code: "BLR", state: "Karnataka", locationType: "Aerospace, Technology & Precision Engineering" },
-];
 
 export default function LocationsDirectoryPage() {
   const { savedCount } = useSavedBusinesses();
@@ -56,23 +40,24 @@ export default function LocationsDirectoryPage() {
       const res = await apiHttpClient.get<any>("/locations/cities");
       const json = res.data;
       const list = Array.isArray(json) ? json : json?.data || [];
-      if (list.length > 0) {
-        const formatted: CityItem[] = list.map((item: any) => ({
-          id: item.id || item.slug,
-          name: item.name,
-          code: item.code,
-          slug: item.slug || (item.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-          state: (typeof item.state === "object" ? item.state?.name : item.state) || item.stateName || "Gujarat",
-          locationType: item.locationType || "Industrial Hub",
-          businessCount: typeof item.businessCount === "number" ? item.businessCount : undefined,
-        }));
-        setLocations(formatted);
-        return;
-      }
-      setLocations(FALLBACK_CLUSTERS);
-    } catch (err: any) {
-      console.warn("Locations API fetch failed, using baseline clusters:", err);
-      setLocations(FALLBACK_CLUSTERS);
+      const formatted: CityItem[] = list.map((item: any) => ({
+        id: item.id || item.slug,
+        name: item.name,
+        code: item.code,
+        slug: item.slug || (item.name || "").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        state: (typeof item.state === "object" ? item.state?.name : item.state) || item.stateName || "",
+        locationType: item.locationType || "Commercial Cluster",
+        businessCount: typeof item.businessCount === "number" ? item.businessCount : 0,
+      }));
+      setLocations(formatted);
+    } catch (err: unknown) {
+      setLocations([]);
+      setError(
+        formatUserFriendlyError(
+          err,
+          "Unable to load industrial locations right now. Please try again."
+        )
+      );
     } finally {
       setLoading(false);
     }
