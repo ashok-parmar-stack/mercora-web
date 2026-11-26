@@ -27,7 +27,7 @@ const DEFAULT_FILTERS: BusinessFiltersState = {
   location: "all",
   city: "all",
   businessType: "all",
-  verifiedOnly: false,
+  verifiedOnly: true,
   sortBy: "relevance",
 };
 
@@ -71,8 +71,7 @@ export function useBusinesses(options: UseBusinessesOptions = {}) {
         (options.initialFilters.category || "all") === "all" &&
         (options.initialFilters.location || "all") === "all" &&
         (options.initialFilters.city || "all") === "all" &&
-        (options.initialFilters.businessType || "all") === "all" &&
-        !options.initialFilters.verifiedOnly));
+        (options.initialFilters.businessType || "all") === "all"));
 
   const [allBusinesses] = useState<Business[]>(canFilterLocally ? serverList : []);
   const [businesses, setBusinesses] = useState<Business[]>(
