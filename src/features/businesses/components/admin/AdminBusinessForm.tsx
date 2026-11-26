@@ -7,6 +7,8 @@ import {
   Building2,
   Check,
   CheckCircle2,
+  Eye,
+  EyeOff,
   FileCheck,
   Image as ImageIcon,
   Layers,
@@ -14,6 +16,7 @@ import {
   Phone,
   Plus,
   Save,
+  Trash2,
   Upload,
 } from "lucide-react";
 import {
@@ -329,9 +332,11 @@ export function AdminBusinessForm({
   };
 
   const displayError = validationError || error;
+  const isCustomerVisible = tier === "Verified" || tier === "Premium";
+  const ActiveStepIcon = SEVEN_STEPS[step].icon;
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-6xl">
+    <div className="flex flex-col gap-6 w-full max-w-7xl">
       <PageHeader
         title={mode === "edit" ? `Edit ${initialData?.name || "Business"}` : "Add New Business"}
         description="Complete the 7-step business onboarding profile."
@@ -363,9 +368,9 @@ export function AdminBusinessForm({
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[290px_1fr] gap-6 items-start">
         {/* Left Vertical Stepper (Desktop lg+) */}
-        <Card className="hidden lg:block lg:col-span-4 border border-border bg-surface sticky top-24">
+        <Card className="hidden lg:block border border-border bg-surface sticky top-24">
           <CardContent className="p-4 space-y-1.5">
             <div className="px-2 pb-3 mb-2 border-b border-border">
               <div className="flex items-center justify-between text-xs font-semibold text-text-secondary mb-1.5">
@@ -428,16 +433,35 @@ export function AdminBusinessForm({
         </Card>
 
         {/* Right Form Panel */}
-        <Card className="lg:col-span-8 border border-border bg-surface">
-          <CardContent className="p-6">
+        <Card className="border border-border bg-surface">
+          <CardContent className="p-6 sm:p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="pb-3 border-b border-border">
-                <p className="text-xs font-semibold text-primary uppercase tracking-wider">
-                  Step {step + 1} of {SEVEN_STEPS.length}
-                </p>
-                <h2 className="text-lg font-extrabold text-foreground mt-0.5">
-                  {SEVEN_STEPS[step].title}
-                </h2>
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-border">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                    <ActiveStepIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-[11px] font-semibold text-primary uppercase tracking-wider">
+                      Step {step + 1} of {SEVEN_STEPS.length}
+                    </p>
+                    <h2 className="text-lg font-extrabold text-foreground leading-tight">
+                      {SEVEN_STEPS[step].title}
+                    </h2>
+                  </div>
+                </div>
+                {mode === "edit" && (
+                  <span
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border shrink-0 ${
+                      isCustomerVisible
+                        ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/25"
+                        : "bg-amber-500/10 text-amber-400 border-amber-500/25"
+                    }`}
+                  >
+                    {isCustomerVisible ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                    {tier}
+                  </span>
+                )}
               </div>
 
               {displayError && (
@@ -472,17 +496,40 @@ export function AdminBusinessForm({
                     />
                   </div>
                   {mode === "edit" && (
-                    <Select
-                      label="Visibility & Verification Status"
-                      value={tier}
-                      onChange={(e) => setTier(e.target.value)}
-                      helperText="Verified & Premium businesses are visible on the public customer directory. Unverified & Standard stay Admin-only."
-                    >
-                      <option value="Verified">Verified (Visible to Customers)</option>
-                      <option value="Premium">Premium (Visible to Customers)</option>
-                      <option value="Standard">Standard (Admin Only)</option>
-                      <option value="Unverified">Unverified (Admin Only)</option>
-                    </Select>
+                    <div className="p-4 rounded-xl border border-border bg-surface-hover/25 space-y-2.5">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="text-xs font-semibold text-foreground">
+                          Directory Visibility &amp; Verification Status
+                        </span>
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
+                            isCustomerVisible
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/25"
+                              : "bg-amber-500/10 text-amber-400 border-amber-500/25"
+                          }`}
+                        >
+                          {isCustomerVisible ? (
+                            <>
+                              <Eye className="w-3 h-3" /> Visible to Customers
+                            </>
+                          ) : (
+                            <>
+                              <EyeOff className="w-3 h-3" /> Admin Only
+                            </>
+                          )}
+                        </span>
+                      </div>
+                      <Select
+                        value={tier}
+                        onChange={(e) => setTier(e.target.value)}
+                        helperText="Verified & Premium businesses appear on the public /businesses directory. Unverified & Standard stay hidden in Admin."
+                      >
+                        <option value="Verified">Verified (Visible to Customers)</option>
+                        <option value="Premium">Premium (Visible to Customers)</option>
+                        <option value="Standard">Standard (Admin Only)</option>
+                        <option value="Unverified">Unverified (Admin Only)</option>
+                      </Select>
+                    </div>
                   )}
                   <Textarea
                     label="Short Description"
@@ -559,13 +606,59 @@ export function AdminBusinessForm({
                       </Button>
                     </div>
 
-                    <div className="space-y-3">
+                    <div className="space-y-3.5">
                       {contacts.map((c, idx) => (
                         <div
                           key={c.id}
-                          className="grid grid-cols-1 sm:grid-cols-12 gap-3 p-3.5 rounded-xl border border-border bg-surface-hover/30 items-end"
+                          className={`rounded-xl border p-4 space-y-3.5 transition-colors ${
+                            c.isPrimary
+                              ? "border-primary/40 bg-primary/5"
+                              : "border-border bg-surface-hover/25"
+                          }`}
                         >
-                          <div className="sm:col-span-3">
+                          <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-border/60">
+                            <div className="flex items-center gap-2.5">
+                              <span className="text-xs font-bold text-text-secondary">
+                                Contact #{idx + 1}
+                              </span>
+                              <label
+                                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold border cursor-pointer transition-colors ${
+                                  c.isPrimary
+                                    ? "bg-primary text-primary-foreground border-primary"
+                                    : "bg-surface border-border text-text-secondary hover:border-primary/40"
+                                }`}
+                              >
+                                <input
+                                  type="radio"
+                                  name="primary-contact"
+                                  className="sr-only"
+                                  checked={Boolean(c.isPrimary)}
+                                  onChange={() =>
+                                    setContacts((prev) =>
+                                      prev.map((item, i) => ({ ...item, isPrimary: i === idx }))
+                                    )
+                                  }
+                                />
+                                <span>{c.isPrimary ? "Primary Contact" : "Set as Primary"}</span>
+                              </label>
+                            </div>
+
+                            {contacts.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setContacts((prev) => prev.filter((_, i) => i !== idx))
+                                }
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-text-secondary hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+                                title="Remove contact"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Remove</span>
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <Select
                               label="Role"
                               selectSize="sm"
@@ -585,8 +678,6 @@ export function AdminBusinessForm({
                               <option value="Support">Support</option>
                               <option value="Accounts">Accounts</option>
                             </Select>
-                          </div>
-                          <div className="sm:col-span-3">
                             <Input
                               label="Contact Name"
                               inputSize="sm"
@@ -600,8 +691,6 @@ export function AdminBusinessForm({
                                 )
                               }
                             />
-                          </div>
-                          <div className="sm:col-span-3">
                             <Input
                               label="Phone Number *"
                               inputSize="sm"
@@ -615,33 +704,6 @@ export function AdminBusinessForm({
                                 )
                               }
                             />
-                          </div>
-                          <div className="sm:col-span-3 flex items-center justify-between gap-2">
-                            <label className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground cursor-pointer">
-                              <input
-                                type="radio"
-                                name="primary-contact"
-                                checked={Boolean(c.isPrimary)}
-                                onChange={() =>
-                                  setContacts((prev) =>
-                                    prev.map((item, i) => ({ ...item, isPrimary: i === idx }))
-                                  )
-                                }
-                              />
-                              <span>Primary</span>
-                            </label>
-                            {contacts.length > 1 && (
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  setContacts((prev) => prev.filter((_, i) => i !== idx))
-                                }
-                              >
-                                Remove
-                              </Button>
-                            )}
                           </div>
                         </div>
                       ))}
@@ -919,7 +981,7 @@ export function AdminBusinessForm({
               )}
 
               {/* Footer Actions */}
-              <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-border">
+              <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-5 border-t border-border">
                 <div className="flex items-center gap-2">
                   <Button variant="outline" asChild>
                     <Link href={cancelHref}>Cancel</Link>
@@ -931,7 +993,17 @@ export function AdminBusinessForm({
                   )}
                 </div>
 
-                <div>
+                <div className="flex items-center gap-2.5 justify-end">
+                  {mode === "edit" && step < SEVEN_STEPS.length - 1 && (
+                    <Button
+                      type="submit"
+                      variant="outline"
+                      isLoading={isSubmitting}
+                      leftIcon={<Save className="w-4 h-4" />}
+                    >
+                      Save Changes
+                    </Button>
+                  )}
                   {step < SEVEN_STEPS.length - 1 ? (
                     <Button type="button" variant="primary" onClick={handleNext}>
                       Next Step
