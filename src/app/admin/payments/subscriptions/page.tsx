@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { Crown, RefreshCw, Edit3, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { Crown, RefreshCw, Edit3, CheckCircle2, AlertCircle } from "lucide-react";
 import {
   PageHeader,
   Badge,
@@ -11,10 +11,11 @@ import {
   Select,
   Textarea,
   ErrorState,
+  Modal,
   type Column,
 } from "@/components/common";
-import { Modal } from "@/components/ui/Modal";
 import { extractErrorMessage } from "@/lib/http/client";
+import { formatCurrencyMinor } from "@/lib/format";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { hasPermission } from "@/lib/auth-helpers";
 import {
@@ -151,7 +152,7 @@ export default function AdminSubscriptionsPage() {
             {sub.planSnapshot?.name || sub.planId}
           </p>
           <p className="text-xs text-text-muted">
-            ₹{Number((sub.amountMinor || 0) / 100).toLocaleString("en-IN")} •{" "}
+            {formatCurrencyMinor(sub.amountMinor, sub.currency)} •{" "}
             {sub.planSnapshot?.billingInterval}
           </p>
         </div>
@@ -222,9 +223,14 @@ export default function AdminSubscriptionsPage() {
               variant="outline"
               disabled={runningMaintenance}
               onClick={handleMaintenance}
+              title="Run lifecycle & reconciliation sweep"
+              leftIcon={
+                <RefreshCw
+                  className={`w-3.5 h-3.5 ${runningMaintenance ? "animate-spin" : ""}`}
+                />
+              }
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${runningMaintenance ? "animate-spin" : ""}`} />
-              <span>Run Lifecycle &amp; Reconciliation Sweep</span>
+              {runningMaintenance ? "Running Sweep..." : "Run Maintenance Sweep"}
             </Button>
           ) : undefined
         }
@@ -263,6 +269,7 @@ export default function AdminSubscriptionsPage() {
           <div className="flex flex-wrap items-center gap-2">
             <div className="w-40">
               <Select
+                selectSize="sm"
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
@@ -280,6 +287,7 @@ export default function AdminSubscriptionsPage() {
             </div>
             <div className="w-44">
               <Select
+                selectSize="sm"
                 value={planId}
                 onChange={(e) => {
                   setPlanId(e.target.value);
@@ -294,6 +302,7 @@ export default function AdminSubscriptionsPage() {
             <Button
               size="sm"
               variant={expiringOnly ? "primary" : "outline"}
+              className="whitespace-nowrap"
               onClick={() => {
                 setExpiringOnly((prev) => !prev);
                 setPage(1);
@@ -309,6 +318,7 @@ export default function AdminSubscriptionsPage() {
                 <Button
                   size="sm"
                   variant="outline"
+                  leftIcon={<Edit3 className="w-3.5 h-3.5" />}
                   onClick={() => {
                     setEditingSub(sub);
                     setNextStatus(sub.status);
@@ -316,8 +326,7 @@ export default function AdminSubscriptionsPage() {
                     setReason("");
                   }}
                 >
-                  <Edit3 className="w-3.5 h-3.5" />
-                  <span>Manage</span>
+                  Manage
                 </Button>
               )
             : undefined
@@ -378,9 +387,8 @@ export default function AdminSubscriptionsPage() {
             <Button type="button" variant="outline" onClick={() => setEditingSub(null)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" disabled={saving}>
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-              <span>Apply Update</span>
+            <Button type="submit" variant="primary" isLoading={saving} loadingText="Applying...">
+              Apply Update
             </Button>
           </div>
         </form>

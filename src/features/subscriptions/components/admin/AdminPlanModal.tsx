@@ -11,8 +11,7 @@ import {
   X,
   ChevronDown,
 } from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
-import { Badge, Button, Input, Select, Switch, Textarea } from "@/components/common";
+import { Badge, Button, Input, Modal, Select, Switch, Textarea } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
 import {
   createAdminPlan,

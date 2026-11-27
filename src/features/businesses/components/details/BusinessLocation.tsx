@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { Navigation, MapPin, Loader2, Maximize2 } from "lucide-react";
 import { Business } from "../../types/business.types";
-import { Button } from "@/components/common";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
+import { Button, Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/common";
 import { APP_HEADERS } from "@/config/headers.config";
 
 export interface BusinessLocationProps {

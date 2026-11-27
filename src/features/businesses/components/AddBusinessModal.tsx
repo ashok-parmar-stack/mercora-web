@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/common";
 import { Button } from "@/components/common";
 import { createBusiness } from "../api/business-api";
 import { AddBusinessModalProps, ProductItem } from "./add-modal/add-business.types";

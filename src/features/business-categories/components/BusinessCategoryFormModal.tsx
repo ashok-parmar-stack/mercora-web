@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { AlertCircle, Layers, Plus, Pencil } from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/common";
 import {
   Button,
   Input,

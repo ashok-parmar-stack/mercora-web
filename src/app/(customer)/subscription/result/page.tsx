@@ -212,7 +212,7 @@ function PaymentResultContent() {
                   <div className="flex justify-between">
                     <span className="text-text-muted">Amount</span>
                     <strong className="font-data text-text-primary">
-                      {formatInrMinor(statusData.amountMinor)}
+                      {formatInrMinor(statusData.amountMinor, statusData.currency)}
                     </strong>
                   </div>
                   <div className="flex justify-between">

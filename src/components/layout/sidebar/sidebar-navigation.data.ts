@@ -82,13 +82,20 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
         children: [
           { href: "/admin/payments", label: "Overview", icon: BarChart3 },
           { href: "/admin/payments/transactions", label: "Transactions", icon: ListChecks },
-          { href: "/admin/payments/refunds", label: "Refunds", icon: RotateCcw },
           { href: "/admin/payments/invoices", label: "Invoices", icon: Receipt },
-          { href: "/admin/payments/subscriptions", label: "Subscriptions", icon: Crown },
-          { href: "/admin/payments/plans", label: "Subscription Plans", icon: Layers },
-          { href: "/admin/payments/settings", label: "Payment Settings", icon: Sliders },
+          { href: "/admin/payments/refunds", label: "Refunds", icon: RotateCcw },
         ],
       },
+      {
+        id: "subscriptions",
+        label: "Subscriptions",
+        icon: Crown,
+        children: [
+          { href: "/admin/payments/subscriptions", label: "Active Subscriptions", icon: Crown },
+          { href: "/admin/payments/plans", label: "Subscription Plans", icon: Layers },
+        ],
+      },
+      { href: "/admin/payments/settings", label: "Payment Settings", icon: Sliders },
     ],
   },
   {

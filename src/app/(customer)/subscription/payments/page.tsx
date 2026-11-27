@@ -100,7 +100,7 @@ export default function BusinessPaymentHistoryPage() {
         sortAccessor: (p) => p.amountMinor,
         render: (p) => (
           <span className="text-xs font-bold font-data text-text-primary">
-            {formatInrMinor(p.amountMinor)}
+            {formatInrMinor(p.amountMinor, p.currency)}
           </span>
         ),
       },

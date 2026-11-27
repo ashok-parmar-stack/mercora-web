@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TableHeader, TableRow, TableHead } from "@/components/ui/Table";
+import { TableHeader, TableRow, TableHead } from "../Table";
 import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Column, SortDir } from "./types";

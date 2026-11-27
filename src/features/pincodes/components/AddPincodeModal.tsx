@@ -6,7 +6,7 @@ import {
   createPincode,
   lookupIndiaPostExternal,
 } from "@/features/pincodes/api/pincode-api";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/common";
 import { Button, Input, Select } from "@/components/common";
 import { useUIStore } from "@/lib/store/ui-store";
 

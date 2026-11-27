@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { NavSingleItem } from "./sidebar-navigation.data";
-import { Badge } from "@/components/ui/Badge";
+import { Badge } from "@/components/common";
 
 interface SidebarSingleItemProps {
   entry: NavSingleItem;

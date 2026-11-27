@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { ShieldCheck, AlertCircle } from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/common";
 import { Button, Select, Textarea } from "@/components/common";
 import { Business } from "../../types/business.types";
 import {

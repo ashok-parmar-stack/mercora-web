@@ -219,8 +219,11 @@ describe("PlanCatalogSection (Unit - Section 14G)", () => {
 
     expect(new Set(allHrefs).size).toBe(allHrefs.length);
     const paymentsSection = ADMIN_NAV_SECTIONS.find((s) => s.label === "Billing & Payments");
+    expect(paymentsSection?.items).toHaveLength(3);
     const paymentsGroup = paymentsSection?.items[0];
-    expect(paymentsGroup && isGroupItem(paymentsGroup) ? paymentsGroup.children : []).toHaveLength(7);
+    const subscriptionsGroup = paymentsSection?.items[1];
+    expect(paymentsGroup && isGroupItem(paymentsGroup) ? paymentsGroup.children : []).toHaveLength(4);
+    expect(subscriptionsGroup && isGroupItem(subscriptionsGroup) ? subscriptionsGroup.children : []).toHaveLength(2);
     expect(allHrefs).not.toContain("/admin/payments/successful");
     expect(allHrefs).not.toContain("/admin/payments/pending");
     expect(allHrefs).not.toContain("/admin/payments/failed");

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { BarChart3, CheckCircle2, MapPin, ShieldAlert } from "lucide-react";
+import { Tooltip } from "@/components/common";
 import { useAbortableFetch } from "@/lib/hooks/useAbortableFetch";
 import { fetchBusinessFacets } from "@/features/businesses/api/business-api";
 import type { BusinessFacets } from "@/features/businesses/types/business.types";
@@ -168,7 +169,7 @@ export function DashboardAnalyticsCharts() {
                     Math.round((cat.businessCount / maxCategoryCount) * 100)
                   );
                   return (
-                    <div key={cat.id} className="flex flex-col gap-1" title={`${cat.name}: ${cat.businessCount}`}>
+                    <div key={cat.id} className="flex flex-col gap-1">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-text-secondary truncate pr-2">{cat.name}</span>
                         <span className="font-semibold text-text-primary font-data">
@@ -205,7 +206,7 @@ export function DashboardAnalyticsCharts() {
                 topLocations.map((loc) => {
                   const widthPct = Math.max(6, Math.round((loc.count / maxLocationCount) * 100));
                   return (
-                    <div key={loc.slug || loc.name} className="flex flex-col gap-1" title={`${loc.name}: ${loc.count}`}>
+                    <div key={loc.slug || loc.name} className="flex flex-col gap-1">
                       <div className="flex items-center justify-between text-xs">
                         <span className="text-text-secondary truncate pr-2">{loc.name}</span>
                         <span className="font-semibold text-text-primary font-data">{loc.count}</span>
@@ -242,25 +243,31 @@ export function DashboardAnalyticsCharts() {
             {/* Stacked Severity Bar */}
             <div className="h-3 w-full rounded-full bg-surface-hover overflow-hidden flex">
               {infoCount > 0 && (
-                <div
-                  className="bg-info h-full"
-                  style={{ width: `${(infoCount / auditTotal) * 100}%` }}
-                  title={`INFO: ${infoCount}`}
-                />
+                <Tooltip
+                  content={`Info: ${infoCount}`}
+                  triggerClassName="h-full"
+                  triggerStyle={{ width: `${(infoCount / auditTotal) * 100}%` }}
+                >
+                  <div className="bg-info h-full w-full" />
+                </Tooltip>
               )}
               {warnCount > 0 && (
-                <div
-                  className="bg-warning h-full"
-                  style={{ width: `${(warnCount / auditTotal) * 100}%` }}
-                  title={`WARNING: ${warnCount}`}
-                />
+                <Tooltip
+                  content={`Warning: ${warnCount}`}
+                  triggerClassName="h-full"
+                  triggerStyle={{ width: `${(warnCount / auditTotal) * 100}%` }}
+                >
+                  <div className="bg-warning h-full w-full" />
+                </Tooltip>
               )}
               {critCount > 0 && (
-                <div
-                  className="bg-destructive h-full"
-                  style={{ width: `${(critCount / auditTotal) * 100}%` }}
-                  title={`CRITICAL: ${critCount}`}
-                />
+                <Tooltip
+                  content={`Critical: ${critCount}`}
+                  triggerClassName="h-full"
+                  triggerStyle={{ width: `${(critCount / auditTotal) * 100}%` }}
+                >
+                  <div className="bg-destructive h-full w-full" />
+                </Tooltip>
               )}
             </div>
 

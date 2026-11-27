@@ -13,6 +13,7 @@ import {
   type Column,
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
+import { formatCurrencyAmount } from "@/lib/format";
 import { fetchAdminRefunds } from "@/features/subscriptions/api/subscription-api";
 import type { RefundRecord } from "@/features/subscriptions/types";
 
@@ -87,7 +88,7 @@ export default function AdminRefundsPage() {
       header: "Amount",
       render: (r) => (
         <span className="font-semibold text-text-primary">
-          ₹{Number(r.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+          {formatCurrencyAmount(r.amount, r.currency, { alwaysShowDecimals: true })}
         </span>
       ),
     },
@@ -158,6 +159,7 @@ export default function AdminRefundsPage() {
         filterSlot={
           <div className="w-44">
             <Select
+              selectSize="sm"
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value);
@@ -173,10 +175,14 @@ export default function AdminRefundsPage() {
           </div>
         }
         renderActions={(r) => (
-          <Button size="sm" variant="outline" asChild>
+          <Button
+            size="sm"
+            variant="outline"
+            leftIcon={<Eye className="w-3.5 h-3.5" />}
+            asChild
+          >
             <Link href={`/admin/payments/transactions/${r.paymentId}`}>
-              <Eye className="w-3.5 h-3.5" />
-              <span>Transaction</span>
+              Transaction
             </Link>
           </Button>
         )}

@@ -13,6 +13,7 @@ import {
   type Column,
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
+import { formatCurrencyAmount } from "@/lib/format";
 import {
   downloadInvoicePdf,
   fetchAdminInvoices,
@@ -102,8 +103,8 @@ export default function AdminInvoicesPage() {
       header: "Subtotal + GST",
       render: (inv) => (
         <div className="text-xs text-text-secondary">
-          <div>₹{Number(inv.subtotal).toLocaleString("en-IN")}</div>
-          <div className="text-text-muted">GST: ₹{Number(inv.taxAmount).toLocaleString("en-IN")}</div>
+          <div>{formatCurrencyAmount(inv.subtotal, inv.currency)}</div>
+          <div className="text-text-muted">GST: {formatCurrencyAmount(inv.taxAmount, inv.currency)}</div>
         </div>
       ),
     },
@@ -112,7 +113,7 @@ export default function AdminInvoicesPage() {
       header: "Total",
       render: (inv) => (
         <span className="font-semibold text-text-primary">
-          ₹{Number(inv.totalAmount).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+          {formatCurrencyAmount(inv.totalAmount, inv.currency, { alwaysShowDecimals: true })}
         </span>
       ),
     },
@@ -169,6 +170,7 @@ export default function AdminInvoicesPage() {
         filterSlot={
           <div className="w-44">
             <Select
+              selectSize="sm"
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value);

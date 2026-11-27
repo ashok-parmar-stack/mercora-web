@@ -20,8 +20,8 @@ import {
   Textarea,
   Skeleton,
   ErrorState,
+  Modal,
 } from "@/components/common";
-import { Modal } from "@/components/ui/Modal";
 import { extractErrorMessage } from "@/lib/http/client";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { hasPermission } from "@/lib/auth-helpers";
@@ -146,15 +146,19 @@ export default function AdminPaymentDetailPage() {
                 variant="outline"
                 disabled={downloading}
                 onClick={handleDownloadInvoice}
+                leftIcon={<Download className="w-3.5 h-3.5" />}
               >
-                <Download className="w-3.5 h-3.5" />
-                <span>{downloading ? "Downloading..." : "Invoice PDF"}</span>
+                {downloading ? "Downloading..." : "Invoice PDF"}
               </Button>
             )}
             {canRefund && isRefundable && (
-              <Button size="sm" variant="danger" onClick={handleOpenRefund}>
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Issue Refund</span>
+              <Button
+                size="sm"
+                variant="danger"
+                onClick={handleOpenRefund}
+                leftIcon={<RotateCcw className="w-3.5 h-3.5" />}
+              >
+                Issue Refund
               </Button>
             )}
           </div>

@@ -115,7 +115,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {leftIcon}
           </span>
         )}
-        <span className="relative z-10">
+        <span className="relative z-10 inline-flex items-center justify-center gap-1.5">
           {isBusy && loadingText ? loadingText : children}
         </span>
         {!isBusy && rightIcon && (

@@ -12,6 +12,8 @@ export interface TooltipProps {
   position?: "top" | "bottom" | "left" | "right";
   delayMs?: number;
   className?: string;
+  triggerClassName?: string;
+  triggerStyle?: React.CSSProperties;
 }
 
 export function Tooltip({
@@ -21,6 +23,8 @@ export function Tooltip({
   position,
   delayMs = 120,
   className,
+  triggerClassName,
+  triggerStyle,
 }: TooltipProps) {
   const effectiveSide = side ?? position ?? "top";
   const [isVisible, setIsVisible] = useState(false);
@@ -71,7 +75,8 @@ export function Tooltip({
       ref={triggerRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="inline-flex"
+      style={triggerStyle}
+      className={cn("inline-flex", triggerClassName)}
     >
       {children}
 

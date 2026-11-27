@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
 import { syncIndiaPostPincode } from "@/features/pincodes/api/pincode-api";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/common";
 import { Button, Input } from "@/components/common";
 import { useUIStore } from "@/lib/store/ui-store";
 

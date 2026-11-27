@@ -5,15 +5,15 @@ import { Send, CheckCircle2, AlertCircle } from "lucide-react";
 import { submitEnquiry } from "../../businesses/api/business-api";
 import { APP_MESSAGES, formatUserFriendlyError } from "@/config/messages";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/Dialog";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/Button";
+  Input,
+  Textarea,
+} from "@/components/common";
 
 export interface ContactInquiryModalProps {
   isOpen: boolean;

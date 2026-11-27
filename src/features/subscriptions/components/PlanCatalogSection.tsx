@@ -356,7 +356,7 @@ export function PlanCatalogSection({
                         isFlagship ? "text-white" : "text-primary"
                       }`}
                     >
-                      {formatInrMinor(plan.priceMinor)}
+                      {formatInrMinor(plan.priceMinor, plan.currency)}
                     </span>
                     {hasComparePrice && (
                       <span
@@ -364,7 +364,7 @@ export function PlanCatalogSection({
                           isFlagship ? "text-white/55" : "text-text-muted"
                         }`}
                       >
-                        {formatInrMinor(plan.originalPriceMinor!)}
+                        {formatInrMinor(plan.originalPriceMinor!, plan.currency)}
                       </span>
                     )}
                     <span
@@ -380,7 +380,7 @@ export function PlanCatalogSection({
                     <span
                       className={isFlagship ? "text-white/75" : "text-text-muted"}
                     >
-                      Est. {formatInrMinor(plan.totalPriceMinor)} incl.{" "}
+                      Est. {formatInrMinor(plan.totalPriceMinor, plan.currency)} incl.{" "}
                       {(plan.gstRateBps / 100).toFixed(0)}% GST
                     </span>
                     {savingsPercent > 0 && (
@@ -650,7 +650,7 @@ export function PlanCatalogSection({
                           key={p.id}
                           className="py-3 px-4 font-bold text-primary font-data"
                         >
-                          {formatInrMinor(p.priceMinor)}
+                          {formatInrMinor(p.priceMinor, p.currency)}
                         </td>
                       ))}
                     </tr>

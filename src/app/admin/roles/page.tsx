@@ -177,7 +177,7 @@ export default function RolesListPage() {
                     setStatusFilter(e.target.value);
                     setPage(1);
                   }}
-                  selectSize="md"
+                  selectSize="sm"
                 >
                   <option value="ALL">All Statuses</option>
                   {statuses.map((s) => (
@@ -189,7 +189,7 @@ export default function RolesListPage() {
               </div>
             )}
 
-            <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none bg-surface h-10 px-3 rounded-lg border border-border hover:bg-surface-hover hover:border-border-hover transition-colors shadow-2xs">
+            <label className="flex items-center gap-2 text-xs font-semibold text-foreground cursor-pointer select-none bg-surface h-9 px-3 rounded-lg border border-border hover:bg-surface-hover hover:border-border-hover transition-colors shadow-2xs">
               <input
                 type="checkbox"
                 checked={includeDeleted}

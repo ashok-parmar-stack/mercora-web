@@ -13,7 +13,7 @@ export const DataTableEmptyState: React.FC<DataTableEmptyStateProps> = ({
   description = "There are no entries matching your current filters.",
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16 px-4 max-w-sm mx-auto text-center select-none">
+    <div className="flex flex-col items-center justify-center gap-3 py-12 px-4 max-w-sm mx-auto text-center select-none">
       <div className="w-12 h-12 rounded-2xl bg-surface-hover flex items-center justify-center text-muted-foreground border border-border">
         <Inbox className="w-6 h-6 stroke-[1.75]" />
       </div>

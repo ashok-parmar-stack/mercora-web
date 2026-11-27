@@ -52,6 +52,8 @@ import type {
 } from "@/features/subscriptions/types";
 import {
   formatInrMinor,
+  getCurrencySymbol,
+  normalizeCurrencyCode,
   formatLimitValue,
   loadRazorpayCheckoutScript,
 } from "@/features/subscriptions/utils/razorpay-checkout";
@@ -668,7 +670,7 @@ function SubscriptionCheckoutContent() {
                   <span>Razorpay Verified Payment Gateway</span>
                 </span>
                 <Badge variant="info" size="sm">
-                  INR (₹)
+                  {normalizeCurrencyCode(plan?.currency)} ({getCurrencySymbol(plan?.currency)})
                 </Badge>
               </div>
 
@@ -735,7 +737,7 @@ function SubscriptionCheckoutContent() {
                     <div className="flex justify-between text-text-muted">
                       <span>Compare MRP</span>
                       <span className="line-through font-data">
-                        {formatInrMinor(compareMinor)}
+                        {formatInrMinor(compareMinor, plan?.currency)}
                       </span>
                     </div>
                   )}
@@ -745,14 +747,14 @@ function SubscriptionCheckoutContent() {
                       Plan Price (Excl. GST)
                     </span>
                     <span className="font-semibold text-text-primary font-data">
-                      {formatInrMinor(baseMinor)}
+                      {formatInrMinor(baseMinor, plan?.currency)}
                     </span>
                   </div>
 
                   {savingsMinor > 0 && (
                     <div className="flex justify-between text-status-success font-medium">
                       <span>Membership Savings</span>
-                      <span className="font-data">-{formatInrMinor(savingsMinor)}</span>
+                      <span className="font-data">-{formatInrMinor(savingsMinor, plan?.currency)}</span>
                     </div>
                   )}
 
@@ -763,7 +765,7 @@ function SubscriptionCheckoutContent() {
                           CGST ({halfGstPercent}%) — {billingState}
                         </span>
                         <span className="font-semibold text-text-primary font-data">
-                          {formatInrMinor(cgstMinor)}
+                          {formatInrMinor(cgstMinor, plan?.currency)}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -771,7 +773,7 @@ function SubscriptionCheckoutContent() {
                           SGST ({halfGstPercent}%) — {billingState}
                         </span>
                         <span className="font-semibold text-text-primary font-data">
-                          {formatInrMinor(sgstMinor)}
+                          {formatInrMinor(sgstMinor, plan?.currency)}
                         </span>
                       </div>
                     </>
@@ -781,7 +783,7 @@ function SubscriptionCheckoutContent() {
                         IGST ({gstPercent}%) — {billingState}
                       </span>
                       <span className="font-semibold text-text-primary font-data">
-                        {formatInrMinor(igstMinor)}
+                        {formatInrMinor(igstMinor, plan?.currency)}
                       </span>
                     </div>
                   )}
@@ -805,7 +807,7 @@ function SubscriptionCheckoutContent() {
                     </span>
                   </div>
                   <span className="text-2xl font-black text-primary font-data">
-                    {formatInrMinor(totalMinor)}
+                    {formatInrMinor(totalMinor, plan?.currency)}
                   </span>
                 </div>
 

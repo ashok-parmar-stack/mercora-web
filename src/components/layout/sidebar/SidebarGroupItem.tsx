@@ -26,7 +26,7 @@ function isChildRouteActive(
 ): boolean {
   if (!pathname) return false;
   if (pathname === childHref) return true;
-  if (childHref === "/admin") return false;
+  if (childHref === "/admin" || childHref === "/admin/payments") return false;
   if (!pathname.startsWith(`${childHref}/`)) return false;
   // Do not mark a parent overview route (e.g. /admin/payments) active when a deeper sibling route matches
   return !siblings.some(

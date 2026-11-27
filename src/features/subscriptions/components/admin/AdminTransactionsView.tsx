@@ -14,6 +14,7 @@ import {
   type Column,
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
+import { formatCurrencyAmount } from "@/lib/format";
 import {
   downloadInvoicePdf,
   exportAdminPaymentsCsv,
@@ -144,11 +145,11 @@ export function AdminTransactionsView({
       render: (p) => (
         <div>
           <p className="font-semibold text-text-primary">
-            ₹{Number(p.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+            {formatCurrencyAmount(p.amount, p.currency, { alwaysShowDecimals: true })}
           </p>
           {p.refundedAmount > 0 && (
             <p className="text-[11px] text-destructive">
-              Refunded: ₹{Number(p.refundedAmount).toLocaleString("en-IN")}
+              Refunded: {formatCurrencyAmount(p.refundedAmount, p.currency)}
             </p>
           )}
         </div>
@@ -273,6 +274,7 @@ export function AdminTransactionsView({
             {!fixedStatus && (
               <div className="w-40">
                 <Select
+                  selectSize="sm"
                   value={status}
                   onChange={(e) => {
                     setStatus(e.target.value);
@@ -291,6 +293,7 @@ export function AdminTransactionsView({
             )}
             <div className="w-36">
               <Select
+                selectSize="sm"
                 value={method}
                 onChange={(e) => {
                   setMethod(e.target.value);
@@ -307,6 +310,7 @@ export function AdminTransactionsView({
             </div>
             <div className="w-44">
               <Select
+                selectSize="sm"
                 value={planId}
                 onChange={(e) => {
                   setPlanId(e.target.value);
@@ -320,6 +324,7 @@ export function AdminTransactionsView({
             </div>
             <div className="w-36">
               <Input
+                inputSize="sm"
                 type="date"
                 aria-label="From date"
                 value={fromDate}
@@ -331,6 +336,7 @@ export function AdminTransactionsView({
             </div>
             <div className="w-36">
               <Input
+                inputSize="sm"
                 type="date"
                 aria-label="To date"
                 value={toDate}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Table, TableBody, TableRow, TableCell } from "@/components/ui/Table";
+import { Table, TableBody, TableRow, TableCell } from "../Table";
 import { useUIStore } from "@/lib/store/ui-store";
 import { Column, DataTableProps, SortDir } from "./types";
 import { DataTableToolbar } from "./DataTableToolbar";
@@ -213,7 +213,7 @@ export function DataTable<T>({
               ))
             ) : paginatedData.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={colSpan} className="py-12 text-center">
+                <TableCell colSpan={colSpan} className="p-0 text-center">
                   <DataTableEmptyState title={emptyTitle} description={emptyDescription} />
                 </TableCell>
               </TableRow>

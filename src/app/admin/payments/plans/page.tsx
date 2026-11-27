@@ -19,10 +19,11 @@ import {
   ErrorState,
   EmptyState,
   Checkbox,
+  Modal,
   Switch,
 } from "@/components/common";
-import { Modal } from "@/components/ui/Modal";
 import { extractErrorMessage } from "@/lib/http/client";
+import { formatCurrencyAmount } from "@/lib/format";
 import {
   fetchAdminPlans,
   fetchAdminSystemPlanTemplates,
@@ -213,11 +214,11 @@ export default function AdminSubscriptionPlansPage() {
                   <div>
                     <div className="flex items-baseline gap-2 flex-wrap">
                       <span className="text-2xl font-extrabold text-text-primary font-data">
-                        ₹{Number(plan.price).toLocaleString("en-IN")}
+                        {formatCurrencyAmount(plan.price, plan.currency)}
                       </span>
                       {plan.originalPrice && plan.originalPrice > plan.price && (
                         <span className="text-sm text-text-muted line-through font-data">
-                          ₹{Number(plan.originalPrice).toLocaleString("en-IN")}
+                          {formatCurrencyAmount(plan.originalPrice, plan.currency)}
                         </span>
                       )}
                       <span className="text-xs text-text-muted">
@@ -225,8 +226,8 @@ export default function AdminSubscriptionPlansPage() {
                       </span>
                     </div>
                     <p className="text-xs text-text-muted mt-0.5">
-                      Total incl. {(plan.gstRateBps / 100).toFixed(0)}% GST: ₹
-                      {Number(plan.totalPrice).toLocaleString("en-IN")}
+                      Total incl. {(plan.gstRateBps / 100).toFixed(0)}% GST:{" "}
+                      {formatCurrencyAmount(plan.totalPrice, plan.currency)}
                     </p>
                   </div>
 
@@ -289,30 +290,30 @@ export default function AdminSubscriptionPlansPage() {
                     <Button
                       size="sm"
                       variant="outline"
+                      leftIcon={<Edit2 className="w-3.5 h-3.5" />}
                       onClick={() => {
                         setEditingPlan(plan);
                         setModalOpen(true);
                       }}
                     >
-                      <Edit2 className="w-3.5 h-3.5" />
-                      <span>Edit</span>
+                      Edit
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
+                      leftIcon={<Users className="w-3.5 h-3.5" />}
                       onClick={() => setSubscribersPlan(plan)}
                     >
-                      <Users className="w-3.5 h-3.5" />
-                      <span>Subscribers</span>
+                      Subscribers
                     </Button>
                     <Button
                       size="sm"
                       variant={plan.isActive ? "ghost" : "primary"}
                       disabled={togglingId === plan.id}
+                      leftIcon={<Power className="w-3.5 h-3.5" />}
                       onClick={() => handleToggleActive(plan)}
                     >
-                      <Power className="w-3.5 h-3.5" />
-                      <span>{plan.isActive ? "Deactivate" : "Activate"}</span>
+                      {plan.isActive ? "Deactivate" : "Activate"}
                     </Button>
                   </div>
                 </div>

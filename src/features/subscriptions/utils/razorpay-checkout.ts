@@ -1,45 +1,14 @@
-export function formatInrMinor(amountMinor: number | null | undefined): string {
-  const rupees = Number(amountMinor || 0) / 100;
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    minimumFractionDigits: rupees % 1 === 0 ? 0 : 2,
-    maximumFractionDigits: 2,
-  }).format(rupees);
-}
-
-export function formatInrAmount(amount: number | null | undefined): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    minimumFractionDigits: Number(amount || 0) % 1 === 0 ? 0 : 2,
-    maximumFractionDigits: 2,
-  }).format(Number(amount || 0));
-}
-
-export function formatSubscriptionDate(dateStr?: string | null): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-export function formatDateTime(dateStr?: string | null): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+export {
+  formatCurrencyMinor,
+  formatCurrencyAmount,
+  formatCurrencyCompact,
+  getCurrencySymbol,
+  normalizeCurrencyCode,
+  formatInrMinor,
+  formatInrAmount,
+  formatShortDate as formatSubscriptionDate,
+  formatDateTime,
+} from "@/lib/format";
 
 export function formatLimitValue(value: number | null | undefined): string {
   if (value === null || value === undefined) return "—";

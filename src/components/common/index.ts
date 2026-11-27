@@ -40,6 +40,7 @@ export {
   ConfirmationDialog,
   type ConfirmationDialogProps,
 } from "./Dialog";
+export { Modal, type ModalProps } from "./Modal/Modal";
 export * from "./AlertDialog";
 export * from "./ConfirmDialog";
 

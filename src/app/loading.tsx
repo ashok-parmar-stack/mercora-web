@@ -1,5 +1,5 @@
 import React from 'react';
-import { LogoLoader } from '@/components/ui/Loading';
+import { LogoLoader } from '@/components/common';
 
 export default function RootLoading() {
   return (

@@ -250,7 +250,7 @@ function BusinessSubscriptionContent() {
                       </div>
                       {sub && (
                         <p className="text-xs text-text-secondary mt-1">
-                          Locked Price: {formatInrMinor(sub.amountMinor)} ({sub.planSnapshot.billingInterval})
+                          Locked Price: {formatInrMinor(sub.amountMinor, sub.currency)} ({sub.planSnapshot.billingInterval})
                         </p>
                       )}
                     </div>
@@ -518,7 +518,7 @@ function BusinessSubscriptionContent() {
                             </Badge>
                           </td>
                           <td className="py-3 px-4 font-data text-text-primary">
-                            {formatInrMinor(item.amountMinor)}
+                            {formatInrMinor(item.amountMinor, item.currency)}
                           </td>
                           <td className="py-3 px-4 text-text-secondary">
                             {formatSubscriptionDate(item.startsAt)}
@@ -554,7 +554,8 @@ function BusinessSubscriptionContent() {
         description={
           downgradeTarget
             ? `Your subscription will change to "${downgradeTarget.name}" (${formatInrMinor(
-                downgradeTarget.priceMinor
+                downgradeTarget.priceMinor,
+                downgradeTarget.currency
               )} + GST) at the end of your current billing period. You retain all current features until expiry.`
             : ""
         }

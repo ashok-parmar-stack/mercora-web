@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Check, Copy, Mail, MessageCircle, Share2 } from "lucide-react";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/common";
 import { Button } from "@/components/common";
 import { useUIStore } from "@/lib/store/ui-store";
 import { APP_MESSAGES } from "@/config/messages";

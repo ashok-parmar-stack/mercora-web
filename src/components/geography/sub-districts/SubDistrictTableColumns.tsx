@@ -4,7 +4,7 @@ import { Eye, Pencil, Trash2 } from "lucide-react";
 import { SubDistrict } from "@mercora/shared-types";
 import { Column } from "@/components/data-table/DataTable";
 import { StatusBadge } from "@/components/status/StatusBadge";
-import { Tooltip } from "@/components/ui/Tooltip";
+import { Tooltip } from "@/components/common";
 
 export function getSubDistrictColumns(): Column<SubDistrict>[] {
   return [

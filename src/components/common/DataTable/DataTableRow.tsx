@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { TableRow, TableCell } from "@/components/ui/Table";
+import { TableRow, TableCell } from "../Table";
 import { cn } from "@/lib/utils";
 import { Column } from "./types";
 
