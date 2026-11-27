@@ -7,8 +7,10 @@ import {
   Button,
   Input,
   Select,
+  SlugField,
   Textarea,
   Switch,
+  toSlugPreview,
 } from "@/components/common";
 import {
   BusinessCategoryItem,
@@ -56,6 +58,7 @@ export function BusinessCategoryFormModal({
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [slug, setSlug] = useState("");
+  const [autoSlug, setAutoSlug] = useState(true);
   const [parentId, setParentId] = useState("");
   const [description, setDescription] = useState("");
   const [icon, setIcon] = useState("Layers");
@@ -71,6 +74,7 @@ export function BusinessCategoryFormModal({
       setName(editingCategory.name);
       setCode(editingCategory.code || "");
       setSlug(editingCategory.slug || "");
+      setAutoSlug(false);
       setParentId(editingCategory.parentId || "");
       setDescription(editingCategory.description || "");
       setIcon(editingCategory.icon || "Layers");
@@ -80,6 +84,7 @@ export function BusinessCategoryFormModal({
       setName("");
       setCode("");
       setSlug("");
+      setAutoSlug(true);
       setParentId(prefilledParentId || "");
       setDescription("");
       setIcon("Layers");
@@ -91,12 +96,9 @@ export function BusinessCategoryFormModal({
   const handleNameChange = (val: string) => {
     setName(val);
     if (!editingCategory) {
-      setSlug(
-        val
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "")
-      );
+      if (autoSlug) {
+        setSlug(toSlugPreview(val));
+      }
       setCode(
         val
           .toUpperCase()
@@ -118,8 +120,8 @@ export function BusinessCategoryFormModal({
     try {
       const payload = {
         name: name.trim(),
-        code: code.trim() || name.toUpperCase().replace(/\s+/g, "_"),
-        slug: slug.trim() || name.toLowerCase().replace(/\s+/g, "-"),
+        code: code.trim() || undefined,
+        slug: slug.trim() ? toSlugPreview(slug) : undefined,
         parentId: parentId || null,
         description: description.trim() || undefined,
         icon,
@@ -183,18 +185,25 @@ export function BusinessCategoryFormModal({
         {/* Row 2: Code & URL Slug */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <Input
-            label="Category Code *"
+            label="Category Code (Optional)"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             placeholder="e.g. FREIGHT_FORWARDER"
-            required
           />
-          <Input
-            label="URL Slug *"
+          <SlugField
             value={slug}
-            onChange={(e) => setSlug(e.target.value.toLowerCase())}
+            onChange={(e) => {
+              setAutoSlug(false);
+              setSlug(e.target.value.toLowerCase());
+            }}
+            showAutoToggle={!editingCategory}
+            autoSync={autoSlug}
+            onToggleAutoSync={() => {
+              const next = !autoSlug;
+              setAutoSlug(next);
+              if (next) setSlug(toSlugPreview(name));
+            }}
             placeholder="e.g. freight-forwarder"
-            required
           />
         </div>
 

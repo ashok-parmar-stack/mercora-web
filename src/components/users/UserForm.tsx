@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { ArrowLeft, Save, User as UserIcon, Mail, Lock, Globe, Key } from "lucide-react";
+import { ArrowLeft, Save, User as UserIcon, Mail, Lock, Key } from "lucide-react";
 import { User, Role, Status } from "../../lib/admin-types";
 import { Input } from "../ui/Input";
 import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
+import { SlugField, toSlugPreview } from "../common/Form/SlugField";
 import { useUIStore } from "../../lib/store/ui-store";
 import { commonSchemas, VALIDATION_MESSAGES } from "../../lib/validation/messages";
 
@@ -54,6 +55,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const router = useRouter();
   const addToast = useUIStore((s) => s.addToast);
+  const [autoSlug, setAutoSlug] = useState(mode === "create");
 
   const {
     register,
@@ -106,7 +108,7 @@ export const UserForm: React.FC<UserFormProps> = ({
         password: data.password?.trim() || undefined,
         firstName: data.firstName?.trim() || undefined,
         lastName: data.lastName?.trim() || undefined,
-        slug: data.slug?.trim() || undefined,
+        slug: data.slug?.trim() ? toSlugPreview(data.slug) : undefined,
         roleId: data.roleId || undefined,
         statusId: data.statusId || undefined,
       } as any);
@@ -122,6 +124,16 @@ export const UserForm: React.FC<UserFormProps> = ({
   };
 
   const submitting = isSubmitting || isLoading;
+
+  const syncUserSlug = (nextFirst?: string, nextLast?: string, nextEmail?: string) => {
+    if (!autoSlug || mode !== "create") return;
+    const full = [nextFirst ?? watch("firstName"), nextLast ?? watch("lastName")]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+    const seed = full || (nextEmail ?? watch("email") ?? "").split("@")[0] || "";
+    setValue("slug", toSlugPreview(seed), { shouldValidate: true });
+  };
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="w-full flex flex-col gap-6" noValidate>
@@ -146,7 +158,9 @@ export const UserForm: React.FC<UserFormProps> = ({
           label="First Name"
           placeholder="e.g. John"
           leftIcon={<UserIcon className="w-4 h-4" />}
-          {...register("firstName")}
+          {...register("firstName", {
+            onChange: (e) => syncUserSlug(e.target.value, undefined, undefined),
+          })}
           error={errors.firstName?.message}
         />
 
@@ -154,7 +168,9 @@ export const UserForm: React.FC<UserFormProps> = ({
           label="Last Name"
           placeholder="e.g. Smith"
           leftIcon={<UserIcon className="w-4 h-4" />}
-          {...register("lastName")}
+          {...register("lastName", {
+            onChange: (e) => syncUserSlug(undefined, e.target.value, undefined),
+          })}
           error={errors.lastName?.message}
         />
       </div>
@@ -167,23 +183,31 @@ export const UserForm: React.FC<UserFormProps> = ({
           placeholder="john.smith@mercora.com"
           leftIcon={<Mail className="w-4 h-4" />}
           {...register("email", {
-            onChange: (e) => {
-              if (mode === "create" && !watch("slug")) {
-                const username = e.target.value.split("@")[0] || "";
-                setValue("slug", username.toLowerCase().replace(/[^a-z0-9_-]/g, "-"));
-              }
-            },
+            onChange: (e) => syncUserSlug(undefined, undefined, e.target.value),
           })}
           error={errors.email?.message}
         />
 
-        <Input
-          label="URL Slug (Permanent)"
+        <SlugField
+          label="URL Slug (Optional)"
+          prefix="@"
           placeholder="john-smith"
-          leftIcon={<Globe className="w-4 h-4" />}
-          {...register("slug")}
+          showAutoToggle={mode === "create"}
+          autoSync={autoSlug}
+          onToggleAutoSync={() => {
+            const next = !autoSlug;
+            setAutoSlug(next);
+            if (next) {
+              const full = [watch("firstName"), watch("lastName")].filter(Boolean).join(" ").trim();
+              const seed = full || (watch("email") || "").split("@")[0] || "";
+              setValue("slug", toSlugPreview(seed), { shouldValidate: true });
+            }
+          }}
+          {...register("slug", {
+            onChange: () => setAutoSlug(false),
+          })}
           error={errors.slug?.message}
-          helperText="Used for clean permalinks & API path access."
+          helperText="Auto-generated on backend if left blank, or customize manually."
         />
       </div>
 
