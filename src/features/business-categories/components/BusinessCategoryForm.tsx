@@ -10,8 +10,10 @@ import {
   Input,
   PageHeader,
   Select,
+  SlugField,
   Switch,
   Textarea,
+  toSlugPreview,
 } from "@/components/common";
 import {
   BusinessCategoryItem,
@@ -62,6 +64,7 @@ export function BusinessCategoryForm({
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [slug, setSlug] = useState("");
+  const [autoSlug, setAutoSlug] = useState(mode === "create");
   const [parentId, setParentId] = useState("");
   const [description, setDescription] = useState("");
   const [icon, setIcon] = useState("Layers");
@@ -88,12 +91,9 @@ export function BusinessCategoryForm({
   const handleNameChange = (val: string) => {
     setName(val);
     if (mode === "create") {
-      setSlug(
-        val
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "")
-      );
+      if (autoSlug) {
+        setSlug(toSlugPreview(val));
+      }
       setCode(
         val
           .toUpperCase()
@@ -113,7 +113,7 @@ export function BusinessCategoryForm({
     await onSubmit({
       name: name.trim(),
       code: code.trim() || undefined,
-      slug: slug.trim() || undefined,
+      slug: slug.trim() ? toSlugPreview(slug) : undefined,
       parentId: parentId || null,
       description: description.trim() || undefined,
       icon,
@@ -163,15 +163,24 @@ export function BusinessCategoryForm({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
-                label="Category Code *"
+                label="Category Code (Optional)"
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 placeholder="e.g. FREIGHT_FORWARDER"
               />
-              <Input
-                label="URL Slug *"
+              <SlugField
                 value={slug}
-                onChange={(e) => setSlug(e.target.value.toLowerCase())}
+                onChange={(e) => {
+                  setAutoSlug(false);
+                  setSlug(e.target.value.toLowerCase());
+                }}
+                showAutoToggle={mode === "create"}
+                autoSync={autoSlug}
+                onToggleAutoSync={() => {
+                  const next = !autoSlug;
+                  setAutoSlug(next);
+                  if (next) setSlug(toSlugPreview(name));
+                }}
                 placeholder="e.g. freight-forwarder"
               />
             </div>

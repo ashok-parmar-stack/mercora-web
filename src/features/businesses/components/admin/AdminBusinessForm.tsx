@@ -26,7 +26,9 @@ import {
   Input,
   PageHeader,
   Select,
+  SlugField,
   Textarea,
+  toSlugPreview,
 } from "@/components/common";
 import { Business, BusinessContact } from "../../types/business.types";
 import { useTaxonomyStore } from "@/lib/store/taxonomy-store";
@@ -75,6 +77,8 @@ export function AdminBusinessForm({
 
   // Step 1: Basic Business Information
   const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [autoSlug, setAutoSlug] = useState(mode === "create");
   const [establishedYear, setEstablishedYear] = useState("2020");
   const [employeeCount, setEmployeeCount] = useState("50-200");
   const [tier, setTier] = useState("Unverified");
@@ -161,6 +165,8 @@ export function AdminBusinessForm({
   useEffect(() => {
     if (mode === "edit" && initialData) {
       setName(initialData.name || "");
+      setSlug(initialData.slug || "");
+      setAutoSlug(false);
       setEstablishedYear(String(initialData.establishedYear || 2020));
       setEmployeeCount(initialData.employeeCount || "50-200");
       setTier(initialData.tier || "Unverified");
@@ -305,6 +311,7 @@ export function AdminBusinessForm({
 
     const payload: Record<string, unknown> = {
       name: name.trim(),
+      slug: slug.trim() ? toSlugPreview(slug) : undefined,
       businessType: resolvedBizType,
       category: category.trim(),
       categoryIds: categoryIds.length > 0 ? categoryIds : undefined,
@@ -474,13 +481,36 @@ export function AdminBusinessForm({
               {/* Step 1: Basic Business Information */}
               {step === 0 && (
                 <div className="space-y-4">
-                  <Input
-                    label="Business Name *"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Apex Steel & Alloys Pvt. Ltd."
-                    required
-                  />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Input
+                      label="Business Name *"
+                      value={name}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setName(val);
+                        if (mode === "create" && autoSlug) {
+                          setSlug(toSlugPreview(val));
+                        }
+                      }}
+                      placeholder="e.g. Apex Steel & Alloys Pvt. Ltd."
+                      required
+                    />
+                    <SlugField
+                      value={slug}
+                      onChange={(e) => {
+                        setAutoSlug(false);
+                        setSlug(e.target.value.toLowerCase());
+                      }}
+                      showAutoToggle={mode === "create"}
+                      autoSync={autoSlug}
+                      onToggleAutoSync={() => {
+                        const next = !autoSlug;
+                        setAutoSlug(next);
+                        if (next) setSlug(toSlugPreview(name));
+                      }}
+                      placeholder="e.g. apex-steel-alloys"
+                    />
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Input
                       label="Established Year"

@@ -4,13 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Sparkles } from "lucide-react";
 import {
   CreateProductCategoryInput,
   ProductCategory,
   UpdateProductCategoryInput,
 } from "@mercora/shared-types";
-import { Input, MasterFormShell, Select, Textarea } from "@/components/common";
+import { Input, MasterFormShell, Select, SlugField, Textarea, toSlugPreview } from "@/components/common";
 import { commonSchemas, VALIDATION_MESSAGES } from "@/lib/validation/messages";
 
 const categorySchema = z.object({
@@ -53,6 +52,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
     register,
     handleSubmit,
     setValue,
+    watch,
     reset,
     formState: { errors, isSubmitting: formSubmitting },
   } = useForm<CategoryFormData>({
@@ -88,7 +88,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       const payload = {
         name: data.name.trim(),
         code: data.code?.trim() || undefined,
-        slug: data.slug?.trim() || undefined,
+        slug: data.slug?.trim() ? toSlugPreview(data.slug) : undefined,
         description: data.description?.trim() || undefined,
         sortOrder: Number(data.sortOrder) || 0,
         status: data.status as any,
@@ -110,11 +110,7 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
   const handleNameChange = (val: string) => {
     if (autoSlug && mode === "create") {
-      setValue(
-        "slug",
-        val.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""),
-        { shouldValidate: true }
-      );
+      setValue("slug", toSlugPreview(val), { shouldValidate: true });
     }
   };
 
@@ -150,31 +146,21 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
             {...register("code")}
           />
 
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-gray-700">
-                URL Slug (Optional)
-              </label>
-              {mode === "create" && (
-                <button
-                  type="button"
-                  onClick={() => setAutoSlug(!autoSlug)}
-                  className="text-[11px] font-bold text-brand-600 hover:text-brand-700 cursor-pointer flex items-center gap-1"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  {autoSlug ? "Manual Edit" : "Auto Sync"}
-                </button>
-              )}
-            </div>
-            <Input
-              placeholder="vitrified-floor-tiles"
-              leftIcon={<span className="text-xs font-mono text-gray-400">/</span>}
-              error={errors.slug?.message}
-              helperText="SEO-friendly slug for routing and buyer discovery paths."
-              className="font-mono"
-              {...register("slug", { onChange: () => setAutoSlug(false) })}
-            />
-          </div>
+          <SlugField
+            placeholder="vitrified-floor-tiles"
+            showAutoToggle={mode === "create"}
+            autoSync={autoSlug}
+            onToggleAutoSync={() => {
+              const next = !autoSlug;
+              setAutoSlug(next);
+              if (next) {
+                setValue("slug", toSlugPreview(watch("name") || ""), { shouldValidate: true });
+              }
+            }}
+            error={errors.slug?.message}
+            helperText="SEO-friendly slug for routing and buyer discovery paths."
+            {...register("slug", { onChange: () => setAutoSlug(false) })}
+          />
         </div>
       </div>
 
