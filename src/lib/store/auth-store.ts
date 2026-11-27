@@ -111,7 +111,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const channel = new BroadcastChannel('mercora_auth_channel');
         channel.postMessage({ type: 'USER_UPDATED', user: updated });
         channel.close();
-      } catch (e) {}
+      } catch (e) {
+        console.warn('[AuthStore] Failed to persist updated user across storage:', e);
+      }
     }
 
     set({ user: updated, isAuthenticated: true });
@@ -127,7 +129,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         const channel = new BroadcastChannel('mercora_auth_channel');
         channel.postMessage({ type: 'LOGOUT' });
         channel.close();
-      } catch (e) {}
+      } catch (e) {
+        console.warn('[AuthStore] Failed to clear browser storage on logout:', e);
+      }
     }
 
     set({

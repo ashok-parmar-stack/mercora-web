@@ -328,7 +328,9 @@ export async function DELETE(req: NextRequest) {
       if (Array.isArray(body?.ids)) {
         idsToDelete = body.ids;
       }
-    } catch {}
+    } catch (err) {
+      console.warn("[Pincodes API] Ignoring invalid JSON body on DELETE:", err);
+    }
   }
 
   if (idsToDelete.length === 0) {
