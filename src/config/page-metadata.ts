@@ -41,6 +41,26 @@ export const PAGE_METADATA = {
     title: "Account Profile & Settings",
     description: "Manage your user profile, security credentials, and company preferences.",
   },
+  pricing: {
+    title: "Subscription Plans & Pricing — Mercora",
+    description: "Compare Starter, Pro, and Enterprise business subscription plans with transparent INR pricing and GST invoicing.",
+  },
+  subscription: {
+    title: "Subscription & Billing — Mercora",
+    description: "Manage your active business subscription plan, renewals, upgrades, entitlements, and billing history.",
+  },
+  checkout: {
+    title: "Subscription Checkout — Mercora",
+    description: "Review your selected business plan, GST breakdown, and complete secure payment via Razorpay.",
+  },
+  paymentHistory: {
+    title: "Payment History & Invoices — Mercora",
+    description: "View payment transactions, download GST tax invoices, and track subscription billing status.",
+  },
+  paymentResult: {
+    title: "Payment Verification & Status — Mercora",
+    description: "Verify Razorpay payment confirmation and view your updated business subscription activation status.",
+  },
 } as const;
 
 export function buildPageMetadata(key: keyof typeof PAGE_METADATA, customTitle?: string): Metadata {
