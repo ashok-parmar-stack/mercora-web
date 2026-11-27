@@ -55,6 +55,13 @@ describe('Next.js Proxy Auth Middleware (Unit)', () => {
     expect(res.headers.get('location')).toContain('/login?redirect=%2Fsaved-businesses');
   });
 
+  it('FE-SUB-001: redirects unauthenticated guest on /subscription to /login?redirect=/subscription', async () => {
+    const req = new NextRequest('http://localhost:9000/subscription');
+    const res = await proxy(req);
+    expect(res.status).toBe(307);
+    expect(res.headers.get('location')).toContain('/login?redirect=%2Fsubscription');
+  });
+
   it('FE-AUTH-006: deduplicates concurrent refresh requests and does not log out on transient 5xx', async () => {
     const fetchMock = vi.spyOn(global, 'fetch').mockImplementation(async (url) => {
       const u = String(url);

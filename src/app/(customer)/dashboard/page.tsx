@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Bookmark, MessageSquare, Building2, User, ArrowRight, ShieldCheck } from "lucide-react";
+import { Bookmark, MessageSquare, Building2, User, ArrowRight, ShieldCheck, CreditCard, Receipt } from "lucide-react";
 import { useSavedBusinesses } from "@/features/businesses/hooks/useSavedBusinesses";
 import { Button } from "@/components/common";
 import { PAGE_METADATA } from "@/config/page-metadata";
@@ -25,7 +25,37 @@ export default function CustomerDashboardPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link
+            href="/subscription"
+            className="p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all group"
+          >
+            <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <CreditCard className="w-5 h-5" />
+            </div>
+            <h2 className="text-base font-semibold text-text-primary group-hover:text-primary transition-colors">
+              Subscription &amp; Billing
+            </h2>
+            <p className="text-xs text-text-muted mt-1">
+              Manage plan entitlements, renewals &amp; upgrades
+            </p>
+          </Link>
+
+          <Link
+            href="/subscription/payments"
+            className="p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all group"
+          >
+            <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+              <Receipt className="w-5 h-5" />
+            </div>
+            <h2 className="text-base font-semibold text-text-primary group-hover:text-primary transition-colors">
+              Payments &amp; Invoices
+            </h2>
+            <p className="text-xs text-text-muted mt-1">
+              View Razorpay receipts &amp; download GST invoices
+            </p>
+          </Link>
+
           <Link
             href="/saved-businesses"
             className="p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all group"
@@ -52,24 +82,24 @@ export default function CustomerDashboardPage() {
               Quotations &amp; Inquiries
             </h2>
             <p className="text-xs text-text-muted mt-1">
-              Track active RFQs and vendor inquiries
+              Track active RFQs and received business leads
             </p>
           </Link>
+        </div>
 
-          <Link
-            href="/profile"
-            className="p-6 rounded-2xl bg-surface border border-border hover:border-primary/50 shadow-xs hover:shadow-md transition-all group"
-          >
-            <div className="w-11 h-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+        <div className="p-5 rounded-2xl bg-surface border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-xl bg-surface-hover flex items-center justify-center text-text-secondary">
               <User className="w-5 h-5" />
             </div>
-            <h2 className="text-base font-semibold text-text-primary group-hover:text-primary transition-colors">
-              Buyer Profile
-            </h2>
-            <p className="text-xs text-text-muted mt-1">
-              Company GSTIN, contacts &amp; preferences
-            </p>
-          </Link>
+            <div>
+              <h2 className="text-sm font-semibold text-text-primary">Buyer Profile &amp; Security</h2>
+              <p className="text-xs text-text-muted mt-0.5">Company GSTIN, contacts &amp; account preferences</p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" asChild>
+            <Link href="/profile">Open Profile</Link>
+          </Button>
         </div>
 
         <div className="p-6 rounded-2xl bg-surface border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">

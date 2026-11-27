@@ -24,13 +24,13 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDevelopment ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://checkout.razorpay.com${isDevelopment ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://images.unsplash.com https://*.google.com https://*.googleusercontent.com https://*.neon.tech https://*.aws.neon.tech https://*.amazonaws.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://cdn.razorpay.com https://*.google.com https://*.googleusercontent.com https://*.neon.tech https://*.aws.neon.tech https://*.amazonaws.com",
   "font-src 'self' data: https://fonts.gstatic.com",
-  "frame-src 'self' https://maps.google.com https://www.google.com https://*.google.com",
+  "frame-src 'self' https://api.razorpay.com https://checkout.razorpay.com https://maps.google.com https://www.google.com https://*.google.com",
   "object-src 'none'",
-  `connect-src 'self' https://*.neon.tech https://*.aws.neon.tech https://*.amazonaws.com${apiOrigin ? ` ${apiOrigin}` : ''}${isDevelopment ? ' ws: http://localhost:*' : ''}`,
+  `connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://*.neon.tech https://*.aws.neon.tech https://*.amazonaws.com${apiOrigin ? ` ${apiOrigin}` : ''}${isDevelopment ? ' ws: http://localhost:*' : ''}`,
   "media-src 'self' data: blob: https://*.neon.tech https://*.aws.neon.tech https://*.amazonaws.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",

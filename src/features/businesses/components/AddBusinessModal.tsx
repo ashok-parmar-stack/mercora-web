@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Sparkles, CheckCircle2, AlertCircle } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/common";
@@ -10,6 +11,7 @@ import { AddBusinessBasicSection } from "./add-modal/AddBusinessBasicSection";
 import { AddBusinessDetailsSection } from "./add-modal/AddBusinessDetailsSection";
 import { AddBusinessProductsSection } from "./add-modal/AddBusinessProductsSection";
 import { formatUserFriendlyError } from "@/config/messages";
+import { extractErrorMessage } from "@/lib/http/client";
 
 export function AddBusinessModal({
   isOpen,
@@ -125,9 +127,10 @@ export function AddBusinessModal({
         onClose();
       }, 1200);
     } catch (err: unknown) {
+      const apiMessage = extractErrorMessage(err);
       setError(
         formatUserFriendlyError(
-          err,
+          apiMessage || err,
           "Could not save your business profile right now. Please review your details and try again."
         )
       );
@@ -146,9 +149,19 @@ export function AddBusinessModal({
     >
       <form onSubmit={handleSubmit} className="space-y-6 pt-2 pb-1">
         {error && (
-          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
-            <span>{error}</span>
+          <div className="p-3.5 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{error}</span>
+            </div>
+            {/subscription|plan|upgrade|limit/i.test(error) && (
+              <Link
+                href="/subscription"
+                className="underline font-bold shrink-0 text-primary"
+              >
+                Upgrade Plan →
+              </Link>
+            )}
           </div>
         )}
 

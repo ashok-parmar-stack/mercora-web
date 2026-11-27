@@ -9,6 +9,7 @@ export interface AuthUser {
   companyId?: string;
   isEmailVerified: boolean;
   avatarUrl?: string;
+  effectivePermissions?: string[];
 }
 
 export interface ActiveSessionInfo {

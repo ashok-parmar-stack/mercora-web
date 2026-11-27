@@ -4,7 +4,6 @@ import {
   Users,
   Key,
   Layers,
-  Sparkles,
   Globe,
   MapPin,
   Map,
@@ -16,6 +15,13 @@ import {
   FileText,
   Mail,
   Briefcase,
+  CreditCard,
+  BarChart3,
+  RotateCcw,
+  Receipt,
+  Crown,
+  Sliders,
+  ListChecks,
   LucideIcon,
 } from "lucide-react";
 
@@ -64,6 +70,25 @@ export const ADMIN_NAV_SECTIONS: NavSection[] = [
     label: "Directory",
     items: [
       { href: "/admin/businesses", label: "Businesses", icon: Briefcase },
+    ],
+  },
+  {
+    label: "Billing & Payments",
+    items: [
+      {
+        id: "payments",
+        label: "Payments",
+        icon: CreditCard,
+        children: [
+          { href: "/admin/payments", label: "Overview", icon: BarChart3 },
+          { href: "/admin/payments/transactions", label: "Transactions", icon: ListChecks },
+          { href: "/admin/payments/refunds", label: "Refunds", icon: RotateCcw },
+          { href: "/admin/payments/invoices", label: "Invoices", icon: Receipt },
+          { href: "/admin/payments/subscriptions", label: "Subscriptions", icon: Crown },
+          { href: "/admin/payments/plans", label: "Subscription Plans", icon: Layers },
+          { href: "/admin/payments/settings", label: "Payment Settings", icon: Sliders },
+        ],
+      },
     ],
   },
   {

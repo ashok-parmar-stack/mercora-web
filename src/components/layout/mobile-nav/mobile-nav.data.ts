@@ -2,6 +2,7 @@ import {
   Layers,
   Sparkles,
   Building2,
+  CreditCard,
   LucideIcon,
 } from "lucide-react";
 import { APP_HEADERS } from "@/config/headers.config";
@@ -17,6 +18,7 @@ const ICON_BY_HREF: Record<string, LucideIcon> = {
   "/#platform": Layers,
   "/#how-it-works": Sparkles,
   "/businesses": Building2,
+  "/pricing": CreditCard,
 };
 
 export const PRIMARY_NAV_ITEMS: MobileNavItem[] = APP_HEADERS.navigation.links.map(

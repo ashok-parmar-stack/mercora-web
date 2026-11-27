@@ -19,6 +19,24 @@ interface SidebarGroupItemProps {
   onChildClick: () => void;
 }
 
+function isChildRouteActive(
+  childHref: string,
+  pathname: string | null,
+  siblings: Array<{ href: string }>,
+): boolean {
+  if (!pathname) return false;
+  if (pathname === childHref) return true;
+  if (childHref === "/admin") return false;
+  if (!pathname.startsWith(`${childHref}/`)) return false;
+  // Do not mark a parent overview route (e.g. /admin/payments) active when a deeper sibling route matches
+  return !siblings.some(
+    (other) =>
+      other.href !== childHref &&
+      other.href.startsWith(`${childHref}/`) &&
+      (pathname === other.href || pathname.startsWith(`${other.href}/`))
+  );
+}
+
 export function SidebarGroupItem({
   entry,
   pathname,
@@ -40,8 +58,8 @@ export function SidebarGroupItem({
     bottom?: number;
   } | null>(null);
 
-  const isAnyChildActive = entry.children.some(
-    (c) => pathname === c.href || (c.href !== "/admin" && pathname?.startsWith(c.href))
+  const isAnyChildActive = entry.children.some((c) =>
+    isChildRouteActive(c.href, pathname, entry.children)
   );
 
   const isMenuOpen = isCollapsed && (isHovered || isPinned);
@@ -134,9 +152,11 @@ export function SidebarGroupItem({
               <div className="flex flex-col gap-0.5 max-h-[calc(100vh-140px)] overflow-y-auto">
                 {entry.children.map((child) => {
                   const ChildIcon = child.icon;
-                  const isChildActive =
-                    pathname === child.href ||
-                    (child.href !== "/admin" && pathname?.startsWith(child.href));
+                  const isChildActive = isChildRouteActive(
+                    child.href,
+                    pathname,
+                    entry.children
+                  );
 
                   return (
                     <Link
@@ -214,9 +234,11 @@ export function SidebarGroupItem({
         <div className="ml-3.5 pl-3 border-l border-white/15 flex flex-col gap-0.5 mt-1 pt-0.5 pb-1 animate-in fade-in duration-150">
           {entry.children.map((child) => {
             const ChildIcon = child.icon;
-            const isChildActive =
-              pathname === child.href ||
-              (child.href !== "/admin" && pathname?.startsWith(child.href));
+            const isChildActive = isChildRouteActive(
+              child.href,
+              pathname,
+              entry.children
+            );
 
             return (
               <Link

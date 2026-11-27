@@ -11,6 +11,7 @@ export interface MinimalUserLike {
   name?: string | null;
   email?: string | null;
   role?: { id?: string; name?: string; code?: string } | string | null;
+  effectivePermissions?: string[] | null;
 }
 
 export function getUserRoleCode(user?: MinimalUserLike | null): string {
@@ -30,6 +31,26 @@ export function getUserDisplayRole(user?: MinimalUserLike | null): string {
 export function isAdminRole(user?: MinimalUserLike | null): boolean {
   const code = getUserRoleCode(user);
   return (STAFF_ADMIN_ROLES as readonly string[]).includes(code);
+}
+
+export function hasPermission(
+  user?: MinimalUserLike | null,
+  permission?: string,
+  options?: { allowAdminFallback?: boolean },
+): boolean {
+  if (!permission) return true;
+  const roleCode = getUserRoleCode(user);
+  if (roleCode === 'SUPER_ADMIN') return true;
+  if (Array.isArray(user?.effectivePermissions)) {
+    return (
+      user.effectivePermissions.includes('*') ||
+      user.effectivePermissions.includes(permission)
+    );
+  }
+  if (options?.allowAdminFallback) {
+    return isAdminRole(user);
+  }
+  return false;
 }
 
 export function getUserInitials(name?: string | null, fallback = 'U'): string {

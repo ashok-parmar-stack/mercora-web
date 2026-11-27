@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronDown,
   ArrowRight,
+  CreditCard,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { MainNavigation } from "./MainNavigation";
@@ -159,6 +160,13 @@ export function Header({ savedCount = 0 }: HeaderProps) {
                       Buyer Dashboard
                     </DropdownMenuItem>
                   )}
+
+                  <DropdownMenuItem
+                    onClick={() => router.push("/subscription")}
+                    icon={<CreditCard className="w-3.5 h-3.5 text-primary" />}
+                  >
+                    My Subscription
+                  </DropdownMenuItem>
 
                   <DropdownMenuItem
                     onClick={() => router.push(canAccessAdmin ? "/admin/profile" : "/profile")}

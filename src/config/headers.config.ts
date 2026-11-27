@@ -54,9 +54,11 @@ export const APP_HEADERS = {
       { label: "Platform", href: "/#platform" },
       { label: "How it works", href: "/#how-it-works" },
       { label: "Businesses", href: "/businesses" },
+      { label: "Pricing", href: "/pricing" },
     ],
     customerLinks: [
       { label: "Dashboard", href: "/dashboard" },
+      { label: "Subscription", href: "/subscription" },
       { label: "Saved Businesses", href: "/saved-businesses" },
       { label: "My Enquiries", href: "/enquiries" },
       { label: "Profile", href: "/profile" },
