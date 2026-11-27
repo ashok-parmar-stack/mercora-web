@@ -6,6 +6,7 @@ import { Eye, Pencil, ShieldCheck, Trash2, MapPin, Mail, Phone } from "lucide-re
 import { Column, Tooltip } from "@/components/common";
 import { Business } from "../../types/business.types";
 import { BusinessStatusBadge } from "./BusinessStatusBadge";
+import { formatLocalDate } from "@/lib/date";
 
 export function getAdminBusinessColumns(): Column<Business>[] {
   return [
@@ -95,7 +96,7 @@ export function getAdminBusinessColumns(): Column<Business>[] {
       sortable: true,
       render: (b) => (
         <span className="text-xs text-text-secondary whitespace-nowrap">
-          {b.createdAt ? new Date(b.createdAt).toLocaleDateString() : "—"}
+          {formatLocalDate(b.createdAt)}
         </span>
       ),
     },

@@ -13,6 +13,7 @@ import {
   RotateCcw,
   Trash2,
 } from "lucide-react";
+import { formatLocalDateTime } from "@/lib/date";
 import { Badge, ConfirmDialog, PageHeader } from "@/components/common";
 import { StatusBadge } from "@/components/status/StatusBadge";
 import { useUserDetails, useUsers } from "@/lib/hooks/useUsers";
@@ -175,7 +176,7 @@ export default function UserDetailPage() {
               <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0" />
               <div>
                 <strong>Soft-Deleted Account:</strong> This user was soft-deleted on{" "}
-                {user.deletedAt ? new Date(user.deletedAt).toLocaleString() : "an unknown date"}.
+                {formatLocalDateTime(user.deletedAt, { fallback: "an unknown date" })}.
                 System access and active session tokens are revoked.
               </div>
             </div>

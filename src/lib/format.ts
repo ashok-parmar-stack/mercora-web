@@ -1,3 +1,5 @@
+import { formatLocalDate, formatLocalDateTime } from "./date";
+
 const CURRENCY_LOCALE_MAP: Record<string, string> = {
   INR: "en-IN",
   USD: "en-US",
@@ -108,26 +110,22 @@ export function formatInrAmount(
   return formatCurrencyAmount(amount, options?.currency ?? "INR", options);
 }
 
+export {
+  getUserTimezone,
+  toUTC,
+  toLocal,
+  formatLocalDate,
+  formatLocalDateTime,
+  formatLocalTime,
+  localDateRangeToUTC,
+  isValidDate,
+  isUTCDate,
+} from "./date";
+
 export function formatShortDate(dateStr?: string | null): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+  return formatLocalDate(dateStr);
 }
 
 export function formatDateTime(dateStr?: string | null): string {
-  if (!dateStr) return "—";
-  const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return "—";
-  return d.toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatLocalDateTime(dateStr);
 }

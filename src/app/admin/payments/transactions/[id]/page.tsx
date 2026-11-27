@@ -2,6 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import { formatLocalDate, formatLocalDateTime } from "@/lib/date";
 import {
   CheckCircle2,
   Clock,
@@ -194,8 +195,8 @@ export default function AdminPaymentDetailPage() {
                     payment.paymentStatus === "CAPTURED"
                       ? "success"
                       : payment.paymentStatus === "FAILED" || payment.paymentStatus === "REFUNDED"
-                      ? "danger"
-                      : "warning"
+                        ? "danger"
+                        : "warning"
                   }
                 >
                   {payment.paymentStatus}
@@ -242,7 +243,7 @@ export default function AdminPaymentDetailPage() {
                 <div>
                   <span className="text-text-muted">Captured At</span>
                   <p className="mt-0.5 text-text-primary">
-                    {payment.paidAt ? new Date(payment.paidAt).toLocaleString("en-IN") : "Not captured"}
+                    {payment.paidAt ? formatLocalDateTime(payment.paidAt) : "Not captured"}
                   </p>
                 </div>
               </div>
@@ -284,15 +285,15 @@ export default function AdminPaymentDetailPage() {
                             att.status === "CAPTURED"
                               ? "success"
                               : att.status === "FAILED"
-                              ? "danger"
-                              : "neutral"
+                                ? "danger"
+                                : "neutral"
                           }
                           size="sm"
                         >
                           {att.status}
                         </Badge>
                         <span className="text-text-muted">
-                          {new Date(att.createdAt).toLocaleString("en-IN")}
+                          {formatLocalDateTime(att.createdAt)}
                         </span>
                       </div>
                     </div>
@@ -332,8 +333,8 @@ export default function AdminPaymentDetailPage() {
                           rf.status === "PROCESSED"
                             ? "success"
                             : rf.status === "FAILED"
-                            ? "danger"
-                            : "warning"
+                              ? "danger"
+                              : "warning"
                         }
                         size="sm"
                       >
@@ -377,9 +378,9 @@ export default function AdminPaymentDetailPage() {
               </div>
               {payment.subscription?.startsAt && (
                 <p className="text-text-muted">
-                  Period: {new Date(payment.subscription.startsAt).toLocaleDateString("en-IN")} →{" "}
+                  Period: {formatLocalDate(payment.subscription.startsAt)} →{" "}
                   {payment.subscription.expiresAt
-                    ? new Date(payment.subscription.expiresAt).toLocaleDateString("en-IN")
+                    ? formatLocalDate(payment.subscription.expiresAt)
                     : "—"}
                 </p>
               )}

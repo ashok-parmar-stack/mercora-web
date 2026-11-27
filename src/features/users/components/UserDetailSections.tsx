@@ -11,6 +11,7 @@ import {
   Shield,
   User as UserIcon,
 } from "lucide-react";
+import { formatLocalDateTime } from "@/lib/date";
 
 interface UserDetailSectionsProps {
   user: any;
@@ -155,7 +156,7 @@ export function UserDetailSections({
               <Calendar className="w-3 h-3" /> Registered
             </span>
             <span className="font-semibold text-gray-800 mt-0.5 block">
-              {user.createdAt ? new Date(user.createdAt).toLocaleString() : "—"}
+              {formatLocalDateTime(user.createdAt)}
             </span>
           </div>
 
@@ -164,7 +165,7 @@ export function UserDetailSections({
               <Clock className="w-3 h-3" /> Last Modified
             </span>
             <span className="font-semibold text-gray-800 mt-0.5 block">
-              {user.updatedAt ? new Date(user.updatedAt).toLocaleString() : "—"}
+              {formatLocalDateTime(user.updatedAt)}
             </span>
           </div>
 

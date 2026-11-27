@@ -3,6 +3,7 @@
 import React from "react";
 import { User } from "../../../lib/admin-types";
 import { Calendar, Clock } from "lucide-react";
+import { formatLocalDateTime } from "@/lib/date";
 
 export interface UserDrawerAuditProps {
   user: User;
@@ -22,7 +23,7 @@ export function UserDrawerAudit({ user }: UserDrawerAuditProps) {
             <Calendar className="w-3 h-3" /> Registration Date
           </span>
           <span className="font-semibold text-foreground">
-            {user.createdAt ? new Date(user.createdAt).toLocaleString("en-US") : "Unknown"}
+            {formatLocalDateTime(user.createdAt, { fallback: "Unknown" })}
           </span>
         </div>
 
@@ -31,7 +32,7 @@ export function UserDrawerAudit({ user }: UserDrawerAuditProps) {
             <Clock className="w-3 h-3" /> Last Record Update
           </span>
           <span className="font-semibold text-foreground">
-            {user.updatedAt ? new Date(user.updatedAt).toLocaleString("en-US") : "Unknown"}
+            {formatLocalDateTime(user.updatedAt, { fallback: "Unknown" })}
           </span>
         </div>
       </div>

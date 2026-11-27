@@ -5,6 +5,7 @@ import { User } from "../../../lib/admin-types";
 import { StatusBadge } from "../../status/StatusBadge";
 import { Badge } from "@/components/common";
 import { Mail, Copy, Check, AlertTriangle } from "lucide-react";
+import { formatLocalDateTime } from "@/lib/date";
 
 export interface UserDrawerHeroProps {
   user: User;
@@ -87,7 +88,7 @@ export function UserDrawerHero({
           <AlertTriangle className="w-4 h-4 text-status-error flex-shrink-0" />
           <div>
             <strong>User Account in Trash:</strong> This user was soft-deleted on{" "}
-            {user.deletedAt ? new Date(user.deletedAt).toLocaleString() : "an unknown date"}. Login and
+            {formatLocalDateTime(user.deletedAt, { fallback: "an unknown date" })}. Login and
             system access are suspended.
           </div>
         </div>

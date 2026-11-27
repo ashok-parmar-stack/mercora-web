@@ -8,6 +8,7 @@ import { EmptyState, Badge, Button, Select, Skeleton } from "@/components/common
 import { APP_MESSAGES } from "@/config/messages";
 import { PAGE_METADATA } from "@/config/page-metadata";
 import { extractErrorMessage } from "@/lib/http/client";
+import { formatLocalDateTime } from "@/lib/date";
 import {
   fetchBusinessEnquiries,
   fetchOwnedBusinesses,
@@ -249,7 +250,7 @@ export default function CustomerEnquiriesPage() {
                       <p className="text-xs text-text-secondary">{lead.message}</p>
                       <p className="text-xs text-text-muted">
                         Phone: {lead.senderPhone || "—"} • Email: {lead.senderEmail || "Locked"} •{" "}
-                        {new Date(lead.createdAt).toLocaleString("en-IN")}
+                        {formatLocalDateTime(lead.createdAt)}
                       </p>
                     </div>
                     {lead.lockedByPlanQuota ? (

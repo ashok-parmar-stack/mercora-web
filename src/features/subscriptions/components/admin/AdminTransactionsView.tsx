@@ -15,6 +15,7 @@ import {
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
 import { formatCurrencyAmount } from "@/lib/format";
+import { formatLocalDateTime, localDateRangeToUTC } from "@/lib/date";
 import {
   downloadInvoicePdf,
   exportAdminPaymentsCsv,
@@ -61,6 +62,7 @@ export function AdminTransactionsView({
     (signal?: AbortSignal) => {
       setLoading(true);
       setError(null);
+      const { fromUtc, toUtcInclusive } = localDateRangeToUTC(fromDate, toDate);
       fetchAdminPayments(
         {
           page,
@@ -69,8 +71,8 @@ export function AdminTransactionsView({
           method: method || undefined,
           planId: planId || undefined,
           search: search.trim() || undefined,
-          fromDate: fromDate || undefined,
-          toDate: toDate || undefined,
+          fromDate: fromUtc,
+          toDate: toUtcInclusive,
         },
         signal
       )
@@ -95,13 +97,14 @@ export function AdminTransactionsView({
   const handleExport = async () => {
     setExporting(true);
     try {
+      const { fromUtc, toUtcInclusive } = localDateRangeToUTC(fromDate, toDate);
       await exportAdminPaymentsCsv({
         status: effectiveStatus,
         method: method || undefined,
         planId: planId || undefined,
         search: search.trim() || undefined,
-        fromDate: fromDate || undefined,
-        toDate: toDate || undefined,
+        fromDate: fromUtc,
+        toDate: toUtcInclusive,
       });
     } catch (err) {
       setError(extractErrorMessage(err));
@@ -196,7 +199,7 @@ export function AdminTransactionsView({
       header: "Date",
       render: (p) => (
         <span className="text-xs text-text-muted">
-          {new Date(p.paidAt || p.createdAt).toLocaleString("en-IN")}
+          {formatLocalDateTime(p.paidAt || p.createdAt)}
         </span>
       ),
     },

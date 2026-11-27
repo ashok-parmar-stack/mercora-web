@@ -7,6 +7,7 @@ import { Column } from "@/components/common/DataTable";
 import { StatusBadge } from "@/components/status/StatusBadge";
 import { Badge, Tooltip } from "@/components/common";
 import { Eye, KeyRound, Pencil, Trash2, RotateCcw } from "lucide-react";
+import { formatLocalDate } from "@/lib/date";
 
 export interface UseUserTableColumnsOptions {
   roles: Role[];
@@ -125,7 +126,7 @@ export function useUserTableColumns({
       className: "w-[18%]",
       render: (u) => (
         <span className="text-xs text-muted-foreground">
-          {u.createdAt ? new Date(u.createdAt).toLocaleDateString("en-US") : "Not Available"}
+          {formatLocalDate(u.createdAt, { fallback: "Not Available" })}
         </span>
       ),
     },
@@ -139,7 +140,7 @@ export function useUserTableColumns({
       hiddenByDefault: true,
       render: (u) => (
         <span className="text-xs text-muted-foreground">
-          {u.updatedAt ? new Date(u.updatedAt).toLocaleDateString("en-US") : "Not Available"}
+          {formatLocalDate(u.updatedAt, { fallback: "Not Available" })}
         </span>
       ),
     },

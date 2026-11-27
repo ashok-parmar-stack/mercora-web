@@ -23,6 +23,7 @@ import {
   EmptyState,
   PageHeader,
 } from "@/components/common";
+import { formatLocalDateTime } from "@/lib/date";
 import { Business } from "../../types/business.types";
 import { BusinessStatusBadge } from "./BusinessStatusBadge";
 import { BusinessVerificationModal } from "./BusinessVerificationModal";
@@ -334,10 +335,10 @@ export function AdminBusinessProfileView({
           <CardContent className="p-6 space-y-2 text-sm">
             <p className="font-semibold text-foreground">Timestamps</p>
             <p className="text-xs text-text-secondary">
-              Created: {business.createdAt ? new Date(business.createdAt).toLocaleString() : "—"}
+              Created: {formatLocalDateTime(business.createdAt)}
             </p>
             <p className="text-xs text-text-secondary">
-              Last Updated: {business.updatedAt ? new Date(business.updatedAt).toLocaleString() : "—"}
+              Last Updated: {formatLocalDateTime(business.updatedAt)}
             </p>
           </CardContent>
         </Card>

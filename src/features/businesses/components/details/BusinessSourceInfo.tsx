@@ -3,6 +3,7 @@ import { ShieldCheck, Calendar, Database, Navigation } from "lucide-react";
 import { Business } from "../../types/business.types";
 import { Button } from "@/components/common";
 import { APP_HEADERS } from "@/config/headers.config";
+import { formatLocalDate } from "@/lib/date";
 
 export interface BusinessSourceInfoProps {
   business: Business;
@@ -16,11 +17,7 @@ export function BusinessSourceInfo({ business }: BusinessSourceInfoProps) {
   const formattedUpdatedAt =
     business.lastUpdated ||
     (business.updatedAt
-      ? new Date(business.updatedAt).toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        })
+      ? formatLocalDate(business.updatedAt, { fallback: "Verified Record" })
       : "Verified Record");
 
   const sourceName = business.source || "Mercora Verified Directory";

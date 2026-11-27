@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Users, Loader2 } from "lucide-react";
 import { Badge, Button, Modal } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
-import { formatCurrencyMinor } from "@/lib/format";
+import { formatCurrencyMinor, formatLocalDate } from "@/lib/format";
 import { fetchAdminPlanSubscribers } from "../../api/subscription-api";
 import type { SubscriptionPlan } from "../../types";
 
@@ -87,7 +87,7 @@ export function AdminPlanSubscribersModal({ plan, onClose }: AdminPlanSubscriber
                 <div className="flex items-center gap-3 text-xs">
                   <div className="text-right text-text-muted">
                     <div>
-                      Expires: {sub.expiresAt ? new Date(sub.expiresAt).toLocaleDateString("en-IN") : "—"}
+                      Expires: {formatLocalDate(sub.expiresAt)}
                     </div>
                   </div>
                   <Badge

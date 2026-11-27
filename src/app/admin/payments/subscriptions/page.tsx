@@ -15,7 +15,7 @@ import {
   type Column,
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
-import { formatCurrencyMinor } from "@/lib/format";
+import { formatCurrencyMinor, formatLocalDate } from "@/lib/format";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { hasPermission } from "@/lib/auth-helpers";
 import {
@@ -191,10 +191,10 @@ export default function AdminSubscriptionsPage() {
       render: (sub) => (
         <div className="text-xs text-text-secondary">
           <div>
-            Start: {sub.startsAt ? new Date(sub.startsAt).toLocaleDateString("en-IN") : "—"}
+            Start: {formatLocalDate(sub.startsAt)}
           </div>
           <div>
-            Expires: {sub.expiresAt ? new Date(sub.expiresAt).toLocaleDateString("en-IN") : "—"}
+            Expires: {formatLocalDate(sub.expiresAt)}
           </div>
           {typeof sub.remainingDays === "number" && sub.status === "ACTIVE" && (
             <div className="text-[11px] text-primary font-medium">

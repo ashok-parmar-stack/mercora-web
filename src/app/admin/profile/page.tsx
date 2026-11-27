@@ -5,6 +5,7 @@ import { User, Sun, Key, Laptop, LogOut } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/common";
 import { apiHttpClient, extractErrorMessage } from "@/lib/http/client";
+import { getUserTimezone } from "@/lib/date";
 import { useAuthStore } from "@/lib/store/auth-store";
 import { useUIStore } from "@/lib/store/ui-store";
 import {
@@ -213,7 +214,7 @@ export default function AdminProfilePage() {
           initialCompany="Mercora Enterprise Global"
           initialDesignation={activePersona.roleName}
           initialBio=""
-          initialTimezone="Asia/Kolkata (IST, UTC+5:30)"
+          initialTimezone={getUserTimezone()}
           avatarUrl={avatarUrl}
           roleName={activePersona.roleName}
           storageInfo={storageInfo}

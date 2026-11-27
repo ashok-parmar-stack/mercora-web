@@ -13,7 +13,7 @@ import {
   type Column,
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatLocalDateTime } from "@/lib/format";
 import { fetchAdminRefunds } from "@/features/subscriptions/api/subscription-api";
 import type { RefundRecord } from "@/features/subscriptions/types";
 
@@ -120,7 +120,7 @@ export default function AdminRefundsPage() {
       header: "Initiated At",
       render: (r) => (
         <span className="text-xs text-text-muted">
-          {new Date(r.createdAt).toLocaleString("en-IN")}
+          {formatLocalDateTime(r.createdAt)}
         </span>
       ),
     },

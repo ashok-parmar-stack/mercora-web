@@ -66,7 +66,7 @@ export function DatePicker({
   ];
 
   const formatDateDisplay = (date: Date) => {
-    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    return date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
   };
 
   const isToday = (day: number) => {

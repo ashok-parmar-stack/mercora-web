@@ -160,11 +160,15 @@ export function ProfileGeneralTab({
             value={timezone}
             onChange={(e) => setTimezone(e.target.value)}
             options={[
-              { value: "Asia/Kolkata (IST, UTC+5:30)", label: "Asia/Kolkata (IST, UTC+5:30)" },
-              { value: "UTC (Universal Coordinated Time)", label: "UTC (Universal Coordinated Time)" },
-              { value: "America/New_York (EST, UTC-5)", label: "America/New_York (EST, UTC-5)" },
-              { value: "Europe/London (GMT, UTC+0)", label: "Europe/London (GMT, UTC+0)" },
-              { value: "Asia/Dubai (GST, UTC+4)", label: "Asia/Dubai (GST, UTC+4)" },
+              { value: "Asia/Kolkata", label: "Asia/Kolkata (India)" },
+              { value: "UTC", label: "UTC (Coordinated Universal Time)" },
+              { value: "America/New_York", label: "America/New_York (US Eastern)" },
+              { value: "Europe/London", label: "Europe/London (UK)" },
+              { value: "Asia/Dubai", label: "Asia/Dubai (Gulf)" },
+              ...(timezone &&
+              !["Asia/Kolkata", "UTC", "America/New_York", "Europe/London", "Asia/Dubai"].includes(timezone)
+                ? [{ value: timezone, label: timezone }]
+                : []),
             ]}
           />
         </div>

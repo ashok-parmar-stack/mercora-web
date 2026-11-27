@@ -13,7 +13,7 @@ import {
   type Column,
 } from "@/components/common";
 import { extractErrorMessage } from "@/lib/http/client";
-import { formatCurrencyAmount } from "@/lib/format";
+import { formatCurrencyAmount, formatLocalDate } from "@/lib/format";
 import {
   downloadInvoicePdf,
   fetchAdminInvoices,
@@ -81,7 +81,7 @@ export default function AdminInvoicesPage() {
         <div>
           <p className="font-mono text-xs font-bold text-text-primary">{inv.invoiceNumber}</p>
           <p className="text-[11px] text-text-muted">
-            {new Date(inv.invoiceDate).toLocaleDateString("en-IN")}
+            {formatLocalDate(inv.invoiceDate)}
           </p>
         </div>
       ),

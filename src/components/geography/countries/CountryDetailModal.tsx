@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { X, Pencil } from "lucide-react";
 import { Country } from "@mercora/shared-types";
+import { formatLocalDateTime } from "@/lib/date";
 
 interface CountryDetailModalProps {
   country: Country | null;
@@ -74,7 +75,7 @@ export function CountryDetailModal({ country, onClose }: CountryDetailModalProps
 
           <div className="flex flex-col gap-1 text-[11px] text-gray-500">
             <div>Internal UUID: <span className="font-mono text-[10px]">{country.id}</span></div>
-            <div>Created: <span>{new Date(country.createdAt).toLocaleString()}</span></div>
+            <div>Created: <span>{formatLocalDateTime(country.createdAt)}</span></div>
           </div>
         </div>
 
