@@ -1,8 +1,16 @@
 "use client";
 
 import React from "react";
-import { Button, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/common";
-import { ImageUploadDropzone } from "@/components/ui/ImageUploadDropzone";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  ImageUploadDropzone,
+} from "@/components/common";
 
 export interface ProfileAvatarModalProps {
   isOpen: boolean;

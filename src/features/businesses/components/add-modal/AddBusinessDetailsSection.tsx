@@ -2,8 +2,7 @@
 
 import React from "react";
 import { Phone, Mail, Globe } from "lucide-react";
-import { Input, Select, Textarea } from "@/components/common";
-import { ImageUploadDropzone } from "@/components/ui/ImageUploadDropzone";
+import { Input, Select, Textarea, ImageUploadDropzone } from "@/components/common";
 
 interface AddBusinessDetailsSectionProps {
   phone: string;

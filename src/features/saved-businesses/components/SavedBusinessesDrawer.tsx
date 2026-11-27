@@ -4,14 +4,14 @@ import React from "react";
 import Link from "next/link";
 import { Bookmark, ExternalLink, GitCompare, Trash2 } from "lucide-react";
 import { Business } from "../../businesses/types/business.types";
-import { EmptyState } from "@/components/common/EmptyState";
-import { APP_MESSAGES } from "@/config/messages";
 import {
+  EmptyState,
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/Sheet";
+} from "@/components/common";
+import { APP_MESSAGES } from "@/config/messages";
 
 export interface SavedBusinessesDrawerProps {
   isOpen: boolean;

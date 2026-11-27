@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 import { User, Mail, Phone, Building, Briefcase, Save, HardDrive } from "lucide-react";
-import { Button, Input, Select, Textarea } from "@/components/common";
-import { ImageUploadDropzone } from "@/components/ui/ImageUploadDropzone";
+import { Button, Input, Select, Textarea, ImageUploadDropzone } from "@/components/common";
 
 export interface ProfileGeneralTabProps {
   initialName: string;

@@ -19,6 +19,11 @@ export * from "./Switch";
 export * from "./Form";
 export * from "./FormField";
 export * from "./FileUpload";
+export {
+  ImageUploadDropzone,
+  type ImageUploadDropzoneProps,
+  type UploadMetaInfo,
+} from "./FileUpload/ImageUploadDropzone";
 
 // 3. Date & Time
 export * from "./DatePicker";
@@ -43,6 +48,7 @@ export {
 export { Modal, type ModalProps } from "./Modal/Modal";
 export * from "./AlertDialog";
 export * from "./ConfirmDialog";
+export * from "./Sheet/Sheet";
 
 // 5. Navigation & Layout
 export * from "./Tabs";
